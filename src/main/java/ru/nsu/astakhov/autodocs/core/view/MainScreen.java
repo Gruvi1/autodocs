@@ -1,0 +1,24 @@
+package ru.nsu.astakhov.autodocs.core.view;
+
+import ru.nsu.astakhov.autodocs.core.view.panels.NavigationPanel;
+import ru.nsu.astakhov.autodocs.core.view.panels.PlaceholderPanel;
+
+import javax.swing.*;
+import java.awt.*;
+
+public class MainScreen extends Screen {
+    @Override
+    void setupKeyBindings(JPanel panel) {
+
+    }
+
+    @Override
+    JPanel create() {
+        JPanel mainPanel = new JPanel(new BorderLayout());
+
+        mainPanel.add(new NavigationPanel(), BorderLayout.WEST);
+//        mainPanel.add(new ContentPanel(), BorderLayout.CENTER);
+        mainPanel.add(new PlaceholderPanel(), BorderLayout.CENTER);
+        return mainPanel;
+    }
+}
