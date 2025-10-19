@@ -1,4 +1,4 @@
-package ru.nsu.astakhov.autodocs.core.utils;
+package ru.nsu.astakhov.autodocs.core.utils.configs;
 
 public enum ConfigConstants {
     // CONSTANT("SECTION", "SETTING_NAME")

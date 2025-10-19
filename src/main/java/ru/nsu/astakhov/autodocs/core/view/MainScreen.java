@@ -1,11 +1,13 @@
 package ru.nsu.astakhov.autodocs.core.view;
 
+import org.springframework.stereotype.Component;
 import ru.nsu.astakhov.autodocs.core.view.panels.NavigationPanel;
 import ru.nsu.astakhov.autodocs.core.view.panels.PlaceholderPanel;
 
 import javax.swing.*;
 import java.awt.*;
 
+@Component
 public class MainScreen extends Screen {
     @Override
     void setupKeyBindings(JPanel panel) {

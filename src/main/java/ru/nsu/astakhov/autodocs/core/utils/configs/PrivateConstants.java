@@ -1,4 +1,4 @@
-package ru.nsu.astakhov.autodocs.core.utils;
+package ru.nsu.astakhov.autodocs.core.utils.configs;
 
 enum PrivateConstants {
     TAG_COLOR("TAG_COLOR"),

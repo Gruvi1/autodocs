@@ -1,7 +1,7 @@
 package ru.nsu.astakhov.autodocs.core.view;
 
-import ru.nsu.astakhov.autodocs.core.utils.ConfigConstants;
-import ru.nsu.astakhov.autodocs.core.utils.ConfigManager;
+import ru.nsu.astakhov.autodocs.core.utils.configs.ConfigConstants;
+import ru.nsu.astakhov.autodocs.core.utils.configs.ConfigManager;
 import ru.nsu.astakhov.autodocs.core.view.font.FontLoader;
 import ru.nsu.astakhov.autodocs.core.view.font.FontTypes;
 

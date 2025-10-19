@@ -1,4 +1,4 @@
-package ru.nsu.astakhov.autodocs.core.utils;
+package ru.nsu.astakhov.autodocs.core.utils.configs;
 
 import ru.nsu.astakhov.autodocs.core.utils.ini.Ini;
 
