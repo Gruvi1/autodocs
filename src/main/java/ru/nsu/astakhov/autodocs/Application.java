@@ -1,31 +1,21 @@
 package ru.nsu.astakhov.autodocs;
 
-
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import ru.nsu.astakhov.autodocs.core.model.*;
 import ru.nsu.astakhov.autodocs.core.services.Student;
-import ru.nsu.astakhov.autodocs.integration.google.GoogleSheetsService;
 import ru.nsu.astakhov.autodocs.core.services.StudentService;
+import ru.nsu.astakhov.autodocs.integration.google.GoogleSheetsService;
 import ru.nsu.astakhov.autodocs.utils.configs.ConfigManager;
 import ru.nsu.astakhov.autodocs.utils.ini.Ini;
-import ru.nsu.astakhov.autodocs.ui.view.Window;
 
-import javax.swing.*;
-import java.io.IOException;
-import java.util.List;
-
+@RequiredArgsConstructor
 @SpringBootApplication
 public class Application implements CommandLineRunner {
     private final StudentService studentService;
     private final GoogleSheetsService googleSheetsService;
-
-    public Application(StudentService studentService, GoogleSheetsService googleSheetsService) {
-//    public Main(StudentService studentService) {
-        this.studentService = studentService;
-        this.googleSheetsService = googleSheetsService;
-    }
 
     public static void main(String[] args) {
         System.setProperty("java.awt.headless", "false");

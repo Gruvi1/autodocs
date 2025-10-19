@@ -11,7 +11,6 @@ import java.awt.*;
 public class RoundedButton extends JButton {
     public RoundedButton(String text) {
         super(text);
-
         configureButton();
     }
 

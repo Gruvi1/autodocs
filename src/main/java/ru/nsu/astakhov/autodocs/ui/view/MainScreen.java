@@ -1,5 +1,6 @@
 package ru.nsu.astakhov.autodocs.ui.view;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ru.nsu.astakhov.autodocs.ui.view.panels.NavigationPanel;
 import ru.nsu.astakhov.autodocs.ui.view.panels.PlaceholderPanel;
@@ -7,12 +8,11 @@ import ru.nsu.astakhov.autodocs.ui.view.panels.PlaceholderPanel;
 import javax.swing.*;
 import java.awt.*;
 
+@Slf4j
 @Component
 public class MainScreen extends Screen {
     @Override
-    void setupKeyBindings(JPanel panel) {
-
-    }
+    void setupKeyBindings(JPanel panel) {}
 
     @Override
     JPanel create() {

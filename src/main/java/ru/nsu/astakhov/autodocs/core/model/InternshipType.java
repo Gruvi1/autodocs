@@ -10,7 +10,6 @@ public enum InternshipType {
     INDUSTRIAL_RESEARCH("Производственная практика (научно-исследовательская работа)"),
     INDUSTRIAL_TECHNICAL("Производственная практика (технологическая (проектно-технологическая) практика)");
 
-
     private final String value;
 
     InternshipType(String value) {

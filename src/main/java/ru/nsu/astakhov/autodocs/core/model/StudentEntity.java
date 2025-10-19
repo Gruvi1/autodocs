@@ -1,15 +1,16 @@
 package ru.nsu.astakhov.autodocs.core.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import ru.nsu.astakhov.autodocs.utils.converters.CourseConverter;
 import ru.nsu.astakhov.autodocs.utils.converters.EduProgramConverter;
 import ru.nsu.astakhov.autodocs.utils.converters.InternshipTypeConverter;
 import ru.nsu.astakhov.autodocs.utils.converters.SpecializationConverter;
 
-@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
+@Setter
 @Entity
 @Table(name = "students")
 public class StudentEntity {
@@ -89,38 +90,4 @@ public class StudentEntity {
     private String fullPlaceOfInternship; // Место практики полностью
 
     private String organizationName; // Наименование организации
-
-    public StudentEntity() {
-    }
-
-    public StudentEntity(Long id, String fullName, Course course, String email, String phoneNumber,
-                         EduProgram eduProgram, String groupName, Specialization specialization,
-                         String orderOnApprovalTopic, String orderOnCorrectionTopic, String actualSupervisor,
-                         String thesisCoSupervisor, String thesisConsultant, String thesisTopic, String reviewer,
-                         InternshipType internshipType, Supervisor thesisSupervisor, String fullOrganizationName,
-                         Supervisor thesisNSUSupervisor, Supervisor thesisOrganisationSupervisor,
-                         String fullPlaceOfInternship, String organizationName) {
-        this.id = id;
-        this.fullName = fullName;
-        this.course = course;
-        this.email = email;
-        this.phoneNumber = phoneNumber;
-        this.eduProgram = eduProgram;
-        this.groupName = groupName;
-        this.specialization = specialization;
-        this.orderOnApprovalTopic = orderOnApprovalTopic;
-        this.orderOnCorrectionTopic = orderOnCorrectionTopic;
-        this.actualSupervisor = actualSupervisor;
-        this.thesisCoSupervisor = thesisCoSupervisor;
-        this.thesisConsultant = thesisConsultant;
-        this.thesisTopic = thesisTopic;
-        this.reviewer = reviewer;
-        this.internshipType = internshipType;
-        this.thesisSupervisor = thesisSupervisor;
-        this.fullOrganizationName = fullOrganizationName;
-        this.thesisNSUSupervisor = thesisNSUSupervisor;
-        this.thesisOrganisationSupervisor = thesisOrganisationSupervisor;
-        this.fullPlaceOfInternship = fullPlaceOfInternship;
-        this.organizationName = organizationName;
-    }
 }

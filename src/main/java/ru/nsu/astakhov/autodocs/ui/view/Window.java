@@ -1,7 +1,6 @@
 package ru.nsu.astakhov.autodocs.ui.view;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ru.nsu.astakhov.autodocs.utils.configs.ConfigConstants;
 import ru.nsu.astakhov.autodocs.utils.configs.ConfigManager;
@@ -9,10 +8,9 @@ import ru.nsu.astakhov.autodocs.utils.configs.ConfigManager;
 import javax.swing.*;
 import java.awt.*;
 
+@Slf4j
 @Component
 public class Window extends JFrame {
-    private static final Logger logger = LoggerFactory.getLogger(Window.class);
-
     public Window() {
         configureWindow();
         createScreen();

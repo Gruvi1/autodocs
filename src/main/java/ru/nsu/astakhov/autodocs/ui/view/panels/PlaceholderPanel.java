@@ -12,7 +12,5 @@ public class PlaceholderPanel extends Panel {
 
         Color backgroundColor = ConfigManager.parseHexColor(ConfigManager.getSetting(ConfigConstants.BACKGROUND_COLOR));
         setBackground(backgroundColor);
-
-
     }
 }

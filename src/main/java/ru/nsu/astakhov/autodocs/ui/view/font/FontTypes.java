@@ -1,5 +1,8 @@
 package ru.nsu.astakhov.autodocs.ui.view.font;
 
+import lombok.Getter;
+
+@Getter
 public enum FontTypes {
     ADWAITA_SANS_REGULAR("/fonts/AdwaitaSans-Regular.ttf"),
     ADWAITA_SANS_ITALIC("/fonts/AdwaitaSans-Italic.ttf");
@@ -8,9 +11,5 @@ public enum FontTypes {
 
     FontTypes(String path) {
         this.path = path;
-    }
-
-    public String getPath() {
-        return path;
     }
 }

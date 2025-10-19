@@ -1,22 +1,20 @@
 package ru.nsu.astakhov.autodocs.core.services;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.nsu.astakhov.autodocs.core.model.StudentEntity;
 import ru.nsu.astakhov.autodocs.core.repositories.StudentRepository;
 import ru.nsu.astakhov.autodocs.utils.MapUtil;
 
+@Slf4j
 @Service
 public class StudentService {
-    private final static Logger logger = LoggerFactory.getLogger(StudentService.class);
     private final StudentRepository repository;
 
     public StudentService(StudentRepository repository) {
         this.repository = repository;
         logger.info("StudentService initialized");
     }
-
 
     public Student create(Student dto) {
         logger.debug("Creating new transaction: {}", dto);
@@ -56,5 +54,4 @@ public class StudentService {
 
         return MapUtil.toStudent(savedEntity);
     }
-
 }
