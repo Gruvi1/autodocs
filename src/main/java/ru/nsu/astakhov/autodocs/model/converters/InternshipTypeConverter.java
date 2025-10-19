@@ -1,8 +1,8 @@
-package ru.nsu.astakhov.autodocs.utils.converters;
+package ru.nsu.astakhov.autodocs.model.converters;
 
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
-import ru.nsu.astakhov.autodocs.core.model.InternshipType;
+import ru.nsu.astakhov.autodocs.model.InternshipType;
 
 @Converter
 public class InternshipTypeConverter implements AttributeConverter<InternshipType, String> {

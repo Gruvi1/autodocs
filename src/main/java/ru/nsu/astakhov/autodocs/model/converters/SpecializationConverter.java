@@ -1,8 +1,8 @@
-package ru.nsu.astakhov.autodocs.utils.converters;
+package ru.nsu.astakhov.autodocs.model.converters;
 
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
-import ru.nsu.astakhov.autodocs.core.model.Specialization;
+import ru.nsu.astakhov.autodocs.model.Specialization;
 
 @Converter
 public class SpecializationConverter implements AttributeConverter<Specialization, String> {

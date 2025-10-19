@@ -36,7 +36,6 @@ public class RoundedButton extends JButton {
         int arcWidth = 10;
         int arcHeight = 10;
         g2.fillRoundRect(0, 0, getWidth(), getHeight(), arcWidth, arcHeight);
-
         super.paintComponent(g);
     }
 
@@ -47,7 +46,7 @@ public class RoundedButton extends JButton {
 
 //        setMargin(new Insets(smallGap/2, smallGap, smallGap/2, smallGap));
         setMargin(new Insets(0, 0, 0, 0));
-        setFont(FontLoader.loadFont(FontTypes.ADWAITA_SANS_ITALIC, textSize));
+        setFont(FontLoader.loadFont(FontTypes.ADWAITA_SANS_REGULAR, textSize));
         setForeground(textColor);
 
         setContentAreaFilled(false);

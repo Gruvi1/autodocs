@@ -1,23 +1,26 @@
-package ru.nsu.astakhov.autodocs.core.services;
+package ru.nsu.astakhov.autodocs.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import ru.nsu.astakhov.autodocs.core.model.StudentEntity;
-import ru.nsu.astakhov.autodocs.core.repositories.StudentRepository;
-import ru.nsu.astakhov.autodocs.utils.MapUtil;
+import ru.nsu.astakhov.autodocs.model.StudentDto;
+import ru.nsu.astakhov.autodocs.model.StudentEntity;
+import ru.nsu.astakhov.autodocs.repository.StudentRepository;
+import ru.nsu.astakhov.autodocs.mapper.StudentMapper;
 
 @Slf4j
 @Service
 public class StudentService {
     private final StudentRepository repository;
+    private final StudentMapper studentMapper;
 
-    public StudentService(StudentRepository repository) {
+    public StudentService(StudentRepository repository, StudentMapper studentMapper) {
         this.repository = repository;
+        this.studentMapper = studentMapper;
         logger.info("StudentService initialized");
     }
 
-    public Student create(Student dto) {
-        logger.debug("Creating new transaction: {}", dto);
+    public StudentDto create(StudentDto dto) {
+        logger.debug("Creating new student: {}", dto);
 
         // id
         if (dto.id() != null) {
@@ -52,6 +55,6 @@ public class StudentService {
         StudentEntity savedEntity = repository.save(entity);
         logger.info("Student created successfully with id: {}", savedEntity.getId());
 
-        return MapUtil.toStudent(savedEntity);
+        return studentMapper.toDto(savedEntity);
     }
 }

@@ -1,8 +1,6 @@
-package ru.nsu.astakhov.autodocs.core.services;
+package ru.nsu.astakhov.autodocs.model;
 
-import ru.nsu.astakhov.autodocs.core.model.*;
-
-public record Student (
+public record StudentDto(
         Long id,
         String fullName,
         Course course,

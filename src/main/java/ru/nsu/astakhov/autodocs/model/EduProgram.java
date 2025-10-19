@@ -1,4 +1,4 @@
-package ru.nsu.astakhov.autodocs.core.model;
+package ru.nsu.astakhov.autodocs.model;
 
 import lombok.Getter;
 

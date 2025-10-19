@@ -1,8 +1,8 @@
-package ru.nsu.astakhov.autodocs.utils.converters;
+package ru.nsu.astakhov.autodocs.model.converters;
 
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
-import ru.nsu.astakhov.autodocs.core.model.Course;
+import ru.nsu.astakhov.autodocs.model.Course;
 
 @Converter
 public class CourseConverter implements AttributeConverter<Course, Integer> {

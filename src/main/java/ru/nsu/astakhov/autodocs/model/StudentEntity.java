@@ -1,11 +1,11 @@
-package ru.nsu.astakhov.autodocs.core.model;
+package ru.nsu.astakhov.autodocs.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import ru.nsu.astakhov.autodocs.utils.converters.CourseConverter;
-import ru.nsu.astakhov.autodocs.utils.converters.EduProgramConverter;
-import ru.nsu.astakhov.autodocs.utils.converters.InternshipTypeConverter;
-import ru.nsu.astakhov.autodocs.utils.converters.SpecializationConverter;
+import ru.nsu.astakhov.autodocs.model.converters.CourseConverter;
+import ru.nsu.astakhov.autodocs.model.converters.EduProgramConverter;
+import ru.nsu.astakhov.autodocs.model.converters.InternshipTypeConverter;
+import ru.nsu.astakhov.autodocs.model.converters.SpecializationConverter;
 
 @NoArgsConstructor
 @AllArgsConstructor

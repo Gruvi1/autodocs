@@ -4,9 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import ru.nsu.astakhov.autodocs.core.model.*;
-import ru.nsu.astakhov.autodocs.core.services.Student;
-import ru.nsu.astakhov.autodocs.core.services.StudentService;
+import ru.nsu.astakhov.autodocs.model.*;
+import ru.nsu.astakhov.autodocs.model.StudentDto;
+import ru.nsu.astakhov.autodocs.service.StudentService;
 import ru.nsu.astakhov.autodocs.integration.google.GoogleSheetsService;
 import ru.nsu.astakhov.autodocs.utils.configs.ConfigManager;
 import ru.nsu.astakhov.autodocs.utils.ini.Ini;
@@ -33,6 +33,7 @@ public class Application implements CommandLineRunner {
 
     @Override
     public void run(String... args)  {
+
 //        SwingUtilities.invokeLater(() -> new Window().setVisible(true));
 //
 //        try {
@@ -43,7 +44,7 @@ public class Application implements CommandLineRunner {
 //        } catch (IOException e) {
 //            throw new RuntimeException(e);
 //        }
-        Student dto = new Student(
+        StudentDto dto = new StudentDto(
                 null,
                 "Авдонина Лада Вадимовна",
                 Course.THIRD,

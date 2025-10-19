@@ -26,7 +26,7 @@ public class NavigationPanel extends Panel {
 
         setBackground(primaryColor);
         setForeground(textColor);
-        setFont(FontLoader.loadFont(FontTypes.ADWAITA_SANS_ITALIC, textSize));
+        setFont(FontLoader.loadFont(FontTypes.ADWAITA_SANS_REGULAR, textSize));
 
         int smallGap = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.GAP_SMALL));
 
@@ -89,7 +89,7 @@ public class NavigationPanel extends Panel {
 
         Color textColor = ConfigManager.parseHexColor(ConfigManager.getSetting(ConfigConstants.TEXT_COLOR));
         int textSize = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.TEXT_SIZE));
-        label.setFont(FontLoader.loadFont(FontTypes.ADWAITA_SANS_ITALIC, textSize));
+        label.setFont(FontLoader.loadFont(FontTypes.ADWAITA_SANS_REGULAR, textSize));
         label.setForeground(textColor);
 
         return label;
