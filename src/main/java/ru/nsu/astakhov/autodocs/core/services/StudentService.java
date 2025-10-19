@@ -3,9 +3,9 @@ package ru.nsu.astakhov.autodocs.core.services;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ru.nsu.astakhov.autodocs.core.repositories.StudentEntity;
+import ru.nsu.astakhov.autodocs.core.model.StudentEntity;
 import ru.nsu.astakhov.autodocs.core.repositories.StudentRepository;
-import ru.nsu.astakhov.autodocs.core.utils.MapUtil;
+import ru.nsu.astakhov.autodocs.utils.MapUtil;
 
 @Service
 public class StudentService {

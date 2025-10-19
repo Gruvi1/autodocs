@@ -1,6 +1,6 @@
 package ru.nsu.astakhov.autodocs.core.services;
 
-import ru.nsu.astakhov.autodocs.core.repositories.*;
+import ru.nsu.astakhov.autodocs.core.model.*;
 
 public record Student (
         Long id,
