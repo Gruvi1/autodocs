@@ -46,18 +46,18 @@ public class NavigationPanel extends Panel {
         int smallGap = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.GAP_SMALL));
 
         List<Component> components = new ArrayList<>(List.of(
-                createButton(ButtonCommand.APPLICATION_TEMPLATES.getString()),
-                createButton(ButtonCommand.CREATE_APPLICATION_TEMPLATE.getString()),
-                createButton(ButtonCommand.THREE.getString()),
+                createButton(ButtonCommand.APPLICATION_TEMPLATES.getName()),
+                createButton(ButtonCommand.CREATE_APPLICATION_TEMPLATE.getName()),
+                createButton(ButtonCommand.THREE.getName()),
                 createSeparator(),
                 createLabel(),
-                createButton(ButtonCommand.ALL_DOC.getString()),
-                createButton(ButtonCommand.INTERNSHIP_APPLICATION.getString()),
-                createButton(ButtonCommand.INDIVIDUAL_ASSIGNMENT.getString()),
-                createButton(ButtonCommand.INTERNSHIP_REPORT.getString()),
-                createButton(ButtonCommand.REVIEW.getString()),
-                createButton(ButtonCommand.REVIEWER_COMMENT.getString()),
-                createButton(ButtonCommand.THESIS_SUPERVISOR_REVIEW.getString()),
+                createButton(ButtonCommand.ALL_DOC.getName()),
+                createButton(ButtonCommand.INTERNSHIP_APPLICATION.getName()),
+                createButton(ButtonCommand.INDIVIDUAL_ASSIGNMENT.getName()),
+                createButton(ButtonCommand.INTERNSHIP_REPORT.getName()),
+                createButton(ButtonCommand.REVIEW.getName()),
+                createButton(ButtonCommand.REVIEWER_COMMENT.getName()),
+                createButton(ButtonCommand.THESIS_SUPERVISOR_REVIEW.getName()),
                 Box.createVerticalGlue(),
                 createLogoLabel()
         ));
