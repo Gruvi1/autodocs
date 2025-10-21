@@ -21,6 +21,7 @@ public record StudentDto(
         String fullOrganizationName,
         Supervisor thesisNSUSupervisor,
         Supervisor thesisOrganisationSupervisor,
+        String administrativeActFromOrganisation,
         String fullPlaceOfInternship,
         String organizationName
 ) {

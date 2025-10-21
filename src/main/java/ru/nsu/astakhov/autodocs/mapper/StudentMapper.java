@@ -28,6 +28,7 @@ public class StudentMapper {
                 entity.getFullOrganizationName(),
                 entity.getThesisNSUSupervisor(),
                 entity.getThesisOrganisationSupervisor(),
+                entity.getAdministrativeActFromOrganisation(),
                 entity.getFullPlaceOfInternship(),
                 entity.getOrganizationName()
         );
@@ -55,6 +56,7 @@ public class StudentMapper {
                 dto.fullOrganizationName(),
                 dto.thesisNSUSupervisor(),
                 dto.thesisOrganisationSupervisor(),
+                dto.administrativeActFromOrganisation(),
                 dto.fullPlaceOfInternship(),
                 dto.organizationName()
         );

@@ -14,12 +14,14 @@ import ru.nsu.astakhov.autodocs.model.converters.SpecializationConverter;
 @Entity
 @Table(name = "students")
 public class StudentEntity {
+    // TODO: поменять порядок полей
+    // TODO: привязать ли к таблице, либо отдельно отсортировать по логике
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
-    private String fullName; // имя
+    private String fullName; // фио
 
     @Convert(converter = CourseConverter.class)
     @Column(nullable = false)
@@ -43,7 +45,7 @@ public class StudentEntity {
 
     private String orderOnApprovalTopic; // распоряжение об утверждении темы
 
-    private String orderOnCorrectionTopic; // Распоряжение о корректировке темы
+    private String orderOnCorrectionTopic; // распоряжение о корректировке темы
 
     private String actualSupervisor; // с кем по факту работает
 
@@ -86,6 +88,8 @@ public class StudentEntity {
             @AttributeOverride(name = "title", column = @Column(name = "thesis_organisation_supervisor_title"))
     })
     private Supervisor thesisOrganisationSupervisor; // руководитель вкр от организации
+
+    private String administrativeActFromOrganisation; // распорядительный акт от организации
 
     private String fullPlaceOfInternship; // Место практики полностью
 
