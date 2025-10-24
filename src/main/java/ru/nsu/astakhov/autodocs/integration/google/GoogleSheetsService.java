@@ -120,14 +120,14 @@ public class GoogleSheetsService {
 
         if (course == Course.THIRD) {
             return rows.subList(startIndex, rows.size()).stream()
-                    .map(this::parseRowOnlyThirdCourse)
+                    .map(this::parseRowOnlyThirdCourseThesis)
                     .filter(Objects::nonNull)
                     .toList();
 
         }
 
         return rows.subList(startIndex, rows.size()).stream()
-                .map((row) -> parseRowFromThesis(row, course))
+                .map((row) -> parseRowThesis(row, course))
                 .filter(Objects::nonNull)
                 .toList();
 
@@ -163,7 +163,7 @@ public class GoogleSheetsService {
         return rows;
     }
 
-    private StudentDto parseRowFromThesis(List<Object> row, Course course) {
+    private StudentDto parseRowThesis(List<Object> row, Course course) {
         if (row == null || row.isEmpty()) {
             return null;
         }
@@ -186,12 +186,7 @@ public class GoogleSheetsService {
                     getString(row, 11),
                     course.getValue() == 4 ? null : getString(row, 13),
                     null,
-                    new Supervisor(
-                            getString(row, 8),
-                            null,
-                            null,
-                            null
-                    ),
+                    null,
                     null,
                     null,
                     null,
@@ -200,7 +195,7 @@ public class GoogleSheetsService {
                     null
             );
         }
-        catch (Exception e) {
+        catch (IllegalArgumentException e) {
             logger.info("|||||||||||||||||||||||||||");
             // TODO: тут теряется ошибка, которую кидают ниже
             logger.info(e.getMessage());
@@ -209,7 +204,7 @@ public class GoogleSheetsService {
         }
     }
 
-    private StudentDto parseRowOnlyThirdCourse(List<Object> row) {
+    private StudentDto parseRowOnlyThirdCourseThesis(List<Object> row) {
         if (row == null || row.isEmpty()) {
             return null;
         }
@@ -231,12 +226,7 @@ public class GoogleSheetsService {
                     null,
                     null,
                     null,
-                    new Supervisor(
-                            getString(row, 6),
-                            null,
-                            null,
-                            null
-                    ),
+                    null,
                     null,
                     null,
                     null,

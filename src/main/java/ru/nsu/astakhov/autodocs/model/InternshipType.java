@@ -22,6 +22,7 @@ public enum InternshipType {
                 return internshipType;
             }
         }
-        throw new IllegalArgumentException("Invalid internship type value: " + value);
+        return null;
+//        throw new IllegalArgumentException("Invalid internship type value: " + value);
     }
 }

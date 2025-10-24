@@ -19,6 +19,7 @@ public enum EduProgram {
                 return eduProgram;
             }
         }
-        throw new IllegalArgumentException("Invalid educational program value: " + value);
+        return null;
+//        throw new IllegalArgumentException("Invalid educational program value: " + value);
     }
 }

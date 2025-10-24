@@ -27,20 +27,20 @@ public class StudentEntity {
     @Column(nullable = false)
     private Course course; // курс
 
-    @Column(nullable = false)
+//    @Column(nullable = false)
     private String email; // почта
 
     private String phoneNumber; // телефон
 
     @Convert(converter = EduProgramConverter.class)
-    @Column(nullable = false)
+//    @Column(nullable = false)
     private EduProgram eduProgram; // образовательная программа
 
-    @Column(nullable = false)
+//    @Column(nullable = false)
     private String groupName; // группа
 
     @Convert(converter = SpecializationConverter.class)
-    @Column(nullable = false)
+//    @Column(nullable = false)
     private Specialization specialization;  // профиль обучения
 
     private String orderOnApprovalTopic; // распоряжение об утверждении темы

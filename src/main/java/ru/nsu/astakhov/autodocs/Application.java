@@ -4,8 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import ru.nsu.astakhov.autodocs.model.*;
-import ru.nsu.astakhov.autodocs.model.StudentDto;
 import ru.nsu.astakhov.autodocs.service.StudentService;
 import ru.nsu.astakhov.autodocs.integration.google.GoogleSheetsService;
 import ru.nsu.astakhov.autodocs.utils.configs.ConfigManager;
@@ -33,7 +31,7 @@ public class Application implements CommandLineRunner {
 
     @Override
     public void run(String... args)  {
-        studentService.readAllData();
+        studentService.scanAllData();
 //        SwingUtilities.invokeLater(() -> new Window().setVisible(true));
 //
 //        try {

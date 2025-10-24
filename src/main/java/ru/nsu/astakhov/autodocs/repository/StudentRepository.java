@@ -4,5 +4,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import ru.nsu.astakhov.autodocs.model.StudentEntity;
 
+import java.util.Optional;
+
 @Repository
-public interface StudentRepository extends JpaRepository<StudentEntity, Long> {}
+public interface StudentRepository extends JpaRepository<StudentEntity, Long> {
+    Optional<StudentEntity> findByFullName(String fullName);
+}
