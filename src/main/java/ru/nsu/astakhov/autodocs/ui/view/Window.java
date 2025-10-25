@@ -25,13 +25,13 @@ public class Window extends JFrame {
         setSize(window_width, window_height);
 
         // TODO: более умно завершать работу
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
         setLocationRelativeTo(null);
 
         boolean maximized = Boolean.parseBoolean(ConfigManager.getSetting(ConfigConstants.MAXIMIZED));
         if (maximized) {
-            setExtendedState(JFrame.MAXIMIZED_BOTH);
+            setExtendedState(Frame.MAXIMIZED_BOTH);
         }
     }
 
