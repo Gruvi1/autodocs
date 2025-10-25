@@ -1,14 +1,12 @@
-package ru.nsu.astakhov.autodocs.utils.configs;
+package ru.nsu.astakhov.autodocs.ui.configs;
 
-import ru.nsu.astakhov.autodocs.utils.ini.Ini;
+import ru.nsu.astakhov.autodocs.utils.Ini;
 
 import java.awt.*;
 
 public class ConfigManager {
     private static Ini ini = null;
-
     public static void setIni(Ini ini) {
-        // TODO: подумать, возможно убрать проверку
         if (ConfigManager.ini != null) {
             throw new IllegalStateException("Ini already initialized");
         }

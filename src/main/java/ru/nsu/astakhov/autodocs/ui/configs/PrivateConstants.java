@@ -1,4 +1,4 @@
-package ru.nsu.astakhov.autodocs.utils.configs;
+package ru.nsu.astakhov.autodocs.ui.configs;
 
 import lombok.Getter;
 

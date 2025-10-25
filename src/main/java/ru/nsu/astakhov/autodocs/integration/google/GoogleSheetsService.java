@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import java.util.function.Function;
 
 @Slf4j
 @Service
@@ -32,17 +33,11 @@ public class GoogleSheetsService {
         this.sheetsTaskExecutor = sheetsTaskExecutor;
     }
 
-    public List<StudentDto> readAllInternshipLists() {
-        // TODO: сейчас красные чуваки, которые в таблице написаны через пустую строку
-        // TODO: добавляются в список студентов - их нужно исключить
-
-        // TODO: заменить Future на CompletableFuture (надо?)
-
-        // TODO: создать дополнительный метод. Сейчас дублирование в двух методах
-        Future<List<StudentDto>> f1 = sheetsTaskExecutor.submit(() -> readInternshipList(Course.FIRST));
-        Future<List<StudentDto>> f2 = sheetsTaskExecutor.submit(() -> readInternshipList(Course.SECOND));
-        Future<List<StudentDto>> f3 = sheetsTaskExecutor.submit(() -> readInternshipList(Course.THIRD));
-        Future<List<StudentDto>> f4 = sheetsTaskExecutor.submit(() -> readInternshipList(Course.FOURTH));
+    private List<StudentDto> submitReadTask(Function<Course, List<StudentDto>> reader) {
+        Future<List<StudentDto>> f1 = sheetsTaskExecutor.submit(() -> reader.apply(Course.FIRST));
+        Future<List<StudentDto>> f2 = sheetsTaskExecutor.submit(() -> reader.apply(Course.SECOND));
+        Future<List<StudentDto>> f3 = sheetsTaskExecutor.submit(() -> reader.apply(Course.THIRD));
+        Future<List<StudentDto>> f4 = sheetsTaskExecutor.submit(() -> reader.apply(Course.FOURTH));
 
         try {
             List<StudentDto> studentDtos = new ArrayList<>();
@@ -63,30 +58,12 @@ public class GoogleSheetsService {
         }
     }
 
+    public List<StudentDto> readAllInternshipLists() {
+        return submitReadTask(this::readInternshipList);
+    }
+
     public List<StudentDto> readAllThesisLists() {
-        // TODO: создать дополнительный метод. Сейчас дублирование в двух методах
-        Future<List<StudentDto>> f1 = sheetsTaskExecutor.submit(() -> readThesisList(Course.FIRST));
-        Future<List<StudentDto>> f2 = sheetsTaskExecutor.submit(() -> readThesisList(Course.SECOND));
-        Future<List<StudentDto>> f3 = sheetsTaskExecutor.submit(() -> readThesisList(Course.THIRD));
-        Future<List<StudentDto>> f4 = sheetsTaskExecutor.submit(() -> readThesisList(Course.FOURTH));
-
-        try {
-            List<StudentDto> studentDtos = new ArrayList<>();
-
-            studentDtos.addAll(f1.get());
-            studentDtos.addAll(f2.get());
-            studentDtos.addAll(f3.get());
-            studentDtos.addAll(f4.get());
-
-            return studentDtos;
-        }
-        // TODO: исправить исключения
-        catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        catch (ExecutionException e) {
-            throw new RuntimeException(e);
-        }
+        return submitReadTask(this::readThesisList);
     }
 
     public List<StudentDto> readInternshipList(Course course) {
@@ -143,11 +120,21 @@ public class GoogleSheetsService {
         }
 
         int startIndex = 1;
+        int finalIndex = getFinalIndex(rows);
 
-        return rows.subList(startIndex, rows.size()).stream()
+        return rows.subList(startIndex, finalIndex).stream()
                 .map((row) -> parseRowFromInternship(row, course))
                 .filter(Objects::nonNull)
                 .toList();
+    }
+
+    private int getFinalIndex(List<List<Object>> rows) {
+        for (int i = rows.size() - 1; i != 1; --i) {
+            if (rows.get(i).isEmpty()) {
+                return i;
+            }
+        }
+        return rows.size();
     }
 
     private List<List<Object>> sendRequest(String range) throws IOException {
@@ -199,7 +186,6 @@ public class GoogleSheetsService {
             logger.info("|||||||||||||||||||||||||||");
             // TODO: тут теряется ошибка, которую кидают ниже
             logger.info(e.getMessage());
-            logger.info("|||||||||||||||||||||||||||");
             throw new IllegalArgumentException("Ошибка при парсинге строки: " + row, e);
         }
     }
@@ -239,7 +225,6 @@ public class GoogleSheetsService {
             logger.info("|||||||||||||||||||||||||||");
             // TODO: тут теряется ошибка, которую кидают ниже
             logger.info(e.getMessage());
-            logger.info("|||||||||||||||||||||||||||");
             throw new IllegalArgumentException("Ошибка при парсинге строки: " + row, e);
         }
     }
@@ -248,17 +233,12 @@ public class GoogleSheetsService {
         if (row == null || row.isEmpty()) {
             return null;
         }
-//        int EXPECTED_COLUMN_COUNT = 11111;
-        // Дополните до нужного количества колонок (на случай, если в строке меньше значений)
-//        while (row.size() < EXPECTED_COLUMN_COUNT) {
-//            row.add(""); // или null
-//        }
 
         try {
             return new StudentDto(
                     null,
                     getString(row, 0),
-                    course, // TODO: хуйня какая-то с этим course :D
+                    course,
                     getString(row, 20),
                     null,
                     EduProgram.fromValue(getString(row, 21)),
@@ -300,7 +280,6 @@ public class GoogleSheetsService {
             logger.info("|||||||||||||||||||||||||||");
             // TODO: тут теряется ошибка, которую кидают ниже
             logger.info(e.getMessage());
-            logger.info("|||||||||||||||||||||||||||");
             throw new IllegalArgumentException("Ошибка при парсинге строки: " + row, e);
         }
     }

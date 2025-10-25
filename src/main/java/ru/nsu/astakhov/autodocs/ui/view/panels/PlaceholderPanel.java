@@ -1,7 +1,7 @@
 package ru.nsu.astakhov.autodocs.ui.view.panels;
 
-import ru.nsu.astakhov.autodocs.utils.configs.ConfigConstants;
-import ru.nsu.astakhov.autodocs.utils.configs.ConfigManager;
+import ru.nsu.astakhov.autodocs.ui.configs.ConfigConstants;
+import ru.nsu.astakhov.autodocs.ui.configs.ConfigManager;
 
 import java.awt.*;
 

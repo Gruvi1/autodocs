@@ -1,4 +1,4 @@
-package ru.nsu.astakhov.autodocs.utils.ini;
+package ru.nsu.astakhov.autodocs.utils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -18,17 +18,6 @@ public class Ini {
         this.lastSection = null;
 
         parseFile(filePath);
-    }
-
-    public void print() { // TODO: удалить
-        for (String sectionName : config.keySet()) {
-            System.out.println('[' + sectionName + ']');
-            Map<String, String> section = config.get(sectionName);
-            for (String key : section.keySet()) {
-                System.out.println(key + " : " + section.get(key));
-            }
-            System.out.println();
-        }
     }
 
     public String getValue(String sectionName, String key) {

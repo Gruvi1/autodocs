@@ -2,8 +2,8 @@ package ru.nsu.astakhov.autodocs.ui.view;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import ru.nsu.astakhov.autodocs.utils.configs.ConfigConstants;
-import ru.nsu.astakhov.autodocs.utils.configs.ConfigManager;
+import ru.nsu.astakhov.autodocs.ui.configs.ConfigConstants;
+import ru.nsu.astakhov.autodocs.ui.configs.ConfigManager;
 
 import javax.swing.*;
 import java.awt.*;

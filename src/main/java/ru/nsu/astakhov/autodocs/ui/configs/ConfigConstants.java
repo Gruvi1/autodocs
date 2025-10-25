@@ -1,13 +1,9 @@
-package ru.nsu.astakhov.autodocs.utils.configs;
+package ru.nsu.astakhov.autodocs.ui.configs;
 
 import lombok.Getter;
 
-// TODO: перенести весь пакет configs в ui или в корень
-// TODO: так как это используется только там (?)
-// TODO: не совсем подходит под смысл utils
 @Getter
 public enum ConfigConstants {
-    // CONSTANT("SECTION", "SETTING_NAME")
     APP_NAME("App", "APP_NAME"),
     AUTHOR("App", "AUTHOR"),
     CORPORATION("App", "CORPORATION"),
