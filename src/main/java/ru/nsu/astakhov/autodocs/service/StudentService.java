@@ -67,47 +67,47 @@ public class StudentService {
     private void checkInternshipDto(StudentDto dto) {
         final String studentName = dto.fullName();
 
-        notifyIfStringFieldMissing(PracticeType.INTERNSHIP, studentName, dto.email(), "почта");
-        notifyIfObjectFieldMissing(PracticeType.INTERNSHIP, studentName, dto.eduProgram(), "образовательная программа");
-        notifyIfStringFieldMissing(PracticeType.INTERNSHIP, studentName, dto.groupName(), "группа");
-        notifyIfObjectFieldMissing(PracticeType.INTERNSHIP, studentName, dto.specialization(), "профиль обучения");
-        notifyIfStringFieldMissing(PracticeType.INTERNSHIP, studentName, dto.actualSupervisor(), "фактический руководитель");
-        notifyIfObjectFieldMissing(PracticeType.INTERNSHIP, studentName, dto.internshipType(), "вид практики");
+        notifyIfStringFieldMissing(TableType.INTERNSHIP, studentName, dto.email(), "почта");
+        notifyIfObjectFieldMissing(TableType.INTERNSHIP, studentName, dto.eduProgram(), "образовательная программа");
+        notifyIfStringFieldMissing(TableType.INTERNSHIP, studentName, dto.groupName(), "группа");
+        notifyIfObjectFieldMissing(TableType.INTERNSHIP, studentName, dto.specialization(), "профиль обучения");
+        notifyIfStringFieldMissing(TableType.INTERNSHIP, studentName, dto.actualSupervisor(), "фактический руководитель");
+        notifyIfObjectFieldMissing(TableType.INTERNSHIP, studentName, dto.internshipType(), "вид практики");
 
         checkInternshipSupervisor(dto.thesisSupervisor(), dto.fullName());
 
-        notifyIfStringFieldMissing(PracticeType.INTERNSHIP, studentName, dto.fullOrganizationName(), "название организации");
+        notifyIfStringFieldMissing(TableType.INTERNSHIP, studentName, dto.fullOrganizationName(), "название организации");
 
         checkInternshipSupervisor(dto.thesisNSUSupervisor(), dto.fullName());
         checkInternshipSupervisor(dto.thesisOrganisationSupervisor(), dto.fullName());
 
-        notifyIfStringFieldMissing(PracticeType.INTERNSHIP, studentName, dto.administrativeActFromOrganisation(), "распорядительный акт");
-        notifyIfStringFieldMissing(PracticeType.INTERNSHIP, studentName, dto.fullPlaceOfInternship(), "место практики");
-        notifyIfStringFieldMissing(PracticeType.INTERNSHIP, studentName, dto.organizationName(), "наименование организации");
+        notifyIfStringFieldMissing(TableType.INTERNSHIP, studentName, dto.administrativeActFromOrganisation(), "распорядительный акт");
+        notifyIfStringFieldMissing(TableType.INTERNSHIP, studentName, dto.fullPlaceOfInternship(), "место практики");
+        notifyIfStringFieldMissing(TableType.INTERNSHIP, studentName, dto.organizationName(), "наименование организации");
     }
 
-    private void notifyIfStringFieldMissing(PracticeType type, String student, String value, String fieldName) {
+    private void notifyIfStringFieldMissing(TableType type, String student, String value, String fieldName) {
         if (isNullOrBlank(value)) {
             logger.info(buildMissingFieldMessage(type), student, fieldName);
         }
     }
 
-    private void notifyIfObjectFieldMissing(PracticeType type, String student, Object value, String fieldName) {
+    private void notifyIfObjectFieldMissing(TableType type, String student, Object value, String fieldName) {
         if (value == null) {
             logger.info(buildMissingFieldMessage(type), student, fieldName);
         }
     }
 
-    private String buildMissingFieldMessage(PracticeType practiceType) {
-        String tableType = practiceType == PracticeType.INTERNSHIP ? "практике" : "ВКР";
+    private String buildMissingFieldMessage(TableType practiceType) {
+        String tableType = practiceType == TableType.INTERNSHIP ? "практике" : "ВКР";
         return "В таблице по " + tableType + " у студента {} не определено поле: {}";
     }
 
     private void checkInternshipSupervisor(Supervisor supervisor, String studentName) {
-        notifyIfStringFieldMissing(PracticeType.INTERNSHIP, studentName, supervisor.name(), "имя руководителя");
-        notifyIfStringFieldMissing(PracticeType.INTERNSHIP, studentName, supervisor.position(), "должность руководителя");
-        notifyIfStringFieldMissing(PracticeType.INTERNSHIP, studentName, supervisor.degree(), "учёная степень руководителя");
-        notifyIfStringFieldMissing(PracticeType.INTERNSHIP, studentName, supervisor.title(), "учёное звание руководителя");
+        notifyIfStringFieldMissing(TableType.INTERNSHIP, studentName, supervisor.name(), "имя руководителя");
+        notifyIfStringFieldMissing(TableType.INTERNSHIP, studentName, supervisor.position(), "должность руководителя");
+        notifyIfStringFieldMissing(TableType.INTERNSHIP, studentName, supervisor.degree(), "учёная степень руководителя");
+        notifyIfStringFieldMissing(TableType.INTERNSHIP, studentName, supervisor.title(), "учёное звание руководителя");
     }
 
     private void updateStudents(List<StudentDto> studentDtos) {
@@ -201,22 +201,22 @@ public class StudentService {
     private void checkThesisDto(StudentDto dto) {
         final String studentName = dto.fullName();
 
-        notifyIfStringFieldMissing(PracticeType.THESIS, studentName, dto.email(), "почта");
-        notifyIfStringFieldMissing(PracticeType.THESIS, studentName, dto.phoneNumber(), "телефон");
-        notifyIfObjectFieldMissing(PracticeType.THESIS, studentName, dto.eduProgram(), "образовательная программа");
-        notifyIfStringFieldMissing(PracticeType.THESIS, studentName, dto.groupName(), "группа");
-        notifyIfObjectFieldMissing(PracticeType.THESIS, studentName, dto.specialization(), "профиль обучения");
-        notifyIfStringFieldMissing(PracticeType.THESIS, studentName, dto.actualSupervisor(), "фактический руководитель");
+        notifyIfStringFieldMissing(TableType.THESIS, studentName, dto.email(), "почта");
+        notifyIfStringFieldMissing(TableType.THESIS, studentName, dto.phoneNumber(), "телефон");
+        notifyIfObjectFieldMissing(TableType.THESIS, studentName, dto.eduProgram(), "образовательная программа");
+        notifyIfStringFieldMissing(TableType.THESIS, studentName, dto.groupName(), "группа");
+        notifyIfObjectFieldMissing(TableType.THESIS, studentName, dto.specialization(), "профиль обучения");
+        notifyIfStringFieldMissing(TableType.THESIS, studentName, dto.actualSupervisor(), "фактический руководитель");
 
         if (dto.course() != Course.THIRD) {
-            notifyIfStringFieldMissing(PracticeType.THESIS, studentName, dto.orderOnApprovalTopic(), "распоряжение об утверждении");
-            notifyIfStringFieldMissing(PracticeType.THESIS, studentName, dto.orderOnCorrectionTopic(), "распоряжение о корректировке");
-            notifyIfStringFieldMissing(PracticeType.THESIS, studentName, dto.thesisCoSupervisor(), "соруководитель");
-            notifyIfStringFieldMissing(PracticeType.THESIS, studentName, dto.thesisConsultant(), "консультант");
-            notifyIfStringFieldMissing(PracticeType.THESIS, studentName, dto.thesisTopic(), "тема ВКР");
+            notifyIfStringFieldMissing(TableType.THESIS, studentName, dto.orderOnApprovalTopic(), "распоряжение об утверждении");
+            notifyIfStringFieldMissing(TableType.THESIS, studentName, dto.orderOnCorrectionTopic(), "распоряжение о корректировке");
+            notifyIfStringFieldMissing(TableType.THESIS, studentName, dto.thesisCoSupervisor(), "соруководитель");
+            notifyIfStringFieldMissing(TableType.THESIS, studentName, dto.thesisConsultant(), "консультант");
+            notifyIfStringFieldMissing(TableType.THESIS, studentName, dto.thesisTopic(), "тема ВКР");
 
             if (dto.course() != Course.FOURTH) {
-                notifyIfStringFieldMissing(PracticeType.THESIS, studentName, dto.reviewer(), "рецензент");
+                notifyIfStringFieldMissing(TableType.THESIS, studentName, dto.reviewer(), "рецензент");
             }
         }
     }
