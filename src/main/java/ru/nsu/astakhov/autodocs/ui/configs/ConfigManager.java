@@ -6,11 +6,18 @@ import java.awt.*;
 
 public class ConfigManager {
     private static Ini ini = null;
+
     public static void setIni(Ini ini) {
         if (ConfigManager.ini != null) {
             throw new IllegalStateException("Ini already initialized");
         }
         ConfigManager.ini = ini;
+    }
+
+    public static boolean isDarkTheme() {
+        ConfigConstants configConstants = ConfigConstants.THEME;
+        String theme = ini.getValue(configConstants.getSection(), configConstants.getSettingName());
+        return theme.equals(ThemeType.DARK.getValue());
     }
 
     public static String getSetting(ConfigConstants configConstants) {

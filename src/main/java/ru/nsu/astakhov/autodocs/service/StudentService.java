@@ -1,8 +1,10 @@
 package ru.nsu.astakhov.autodocs.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.nsu.astakhov.autodocs.documents.DocumentParser;
 import ru.nsu.astakhov.autodocs.integration.google.GoogleSheetsService;
 import ru.nsu.astakhov.autodocs.model.*;
 import ru.nsu.astakhov.autodocs.repository.StudentRepository;
@@ -21,11 +23,22 @@ public class StudentService {
     private final StudentRepository repository;
     private final StudentMapper studentMapper;
     private final GoogleSheetsService googleSheetsService;
+    private final DocumentParser documentParser;
 
     public void scanAllData() {
         scanInternshipLists();
 
         scanThesisLists();
+    }
+
+    public void createIndWorkDoc() {
+        StudentEntity entity = repository.findByFullName("Зималтынов Кирилл Русланович")
+                .orElseThrow(() ->new EntityNotFoundException("Нет такого =("));
+        StudentDto dto = studentMapper.toDto(entity);
+
+        logger.info("1");
+
+        documentParser.createIndWorkDocBach3(dto);
     }
 
     private void scanInternshipLists() {
@@ -78,10 +91,10 @@ public class StudentService {
 
         notifyIfStringFieldMissing(TableType.INTERNSHIP, studentName, dto.fullOrganizationName(), "название организации");
 
-        checkInternshipSupervisor(dto.thesisNSUSupervisor(), dto.fullName());
-        checkInternshipSupervisor(dto.thesisOrganisationSupervisor(), dto.fullName());
+        checkInternshipSupervisor(dto.NSUSupervisor(), dto.fullName());
+        checkInternshipSupervisor(dto.organizationSupervisor(), dto.fullName());
 
-        notifyIfStringFieldMissing(TableType.INTERNSHIP, studentName, dto.administrativeActFromOrganisation(), "распорядительный акт");
+        notifyIfStringFieldMissing(TableType.INTERNSHIP, studentName, dto.administrativeActFromOrganization(), "распорядительный акт");
         notifyIfStringFieldMissing(TableType.INTERNSHIP, studentName, dto.fullPlaceOfInternship(), "место практики");
         notifyIfStringFieldMissing(TableType.INTERNSHIP, studentName, dto.organizationName(), "наименование организации");
     }

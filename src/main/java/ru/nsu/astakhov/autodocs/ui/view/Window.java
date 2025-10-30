@@ -4,6 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ru.nsu.astakhov.autodocs.ui.configs.ConfigConstants;
 import ru.nsu.astakhov.autodocs.ui.configs.ConfigManager;
+import ru.nsu.astakhov.autodocs.ui.view.panels.NavigationPanel;
+import ru.nsu.astakhov.autodocs.ui.view.panels.PlaceholderPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,7 +15,7 @@ import java.awt.*;
 public class Window extends JFrame {
     public Window() {
         configureWindow();
-        createScreen();
+        createWindow();
         logger.info("Window initialized");
     }
 
@@ -35,13 +37,18 @@ public class Window extends JFrame {
         }
     }
 
-    private void createScreen() {
+    private void createWindow() {
         super.getContentPane().removeAll();
 
-        super.add(new MainScreen().create(), BorderLayout.CENTER);
+        super.add(new NavigationPanel(), BorderLayout.WEST);
+        super.add(new PlaceholderPanel(), BorderLayout.CENTER);
+
+        //        super.add(new MainScreen().create(), BorderLayout.CENTER);
 //        controller.setCurrentScreen(currentScreen);
 
         super.revalidate();
         super.repaint();
     }
+
+    private void updateWindow() {}
 }

@@ -73,23 +73,23 @@ public class StudentEntity {
 
     @Embedded
     @AttributeOverrides({
-            @AttributeOverride(name = "name", column = @Column(name = "thesis_nsu_supervisor_name")),
-            @AttributeOverride(name = "position", column = @Column(name = "thesis_nsu_supervisor_position")),
-            @AttributeOverride(name = "degree", column = @Column(name = "thesis_nsu_supervisor_degree")),
-            @AttributeOverride(name = "title", column = @Column(name = "thesis_nsu_supervisor_title"))
+            @AttributeOverride(name = "name", column = @Column(name = "nsu_supervisor_name")),
+            @AttributeOverride(name = "position", column = @Column(name = "nsu_supervisor_position")),
+            @AttributeOverride(name = "degree", column = @Column(name = "nsu_supervisor_degree")),
+            @AttributeOverride(name = "title", column = @Column(name = "nsu_supervisor_title"))
     })
-    private Supervisor thesisNSUSupervisor; // руководитель вкр от нгу
+    private Supervisor NSUSupervisor; // руководитель вкр от нгу
 
     @Embedded
     @AttributeOverrides({
-            @AttributeOverride(name = "name", column = @Column(name = "thesis_organisation_supervisor_name")),
-            @AttributeOverride(name = "position", column = @Column(name = "thesis_organisation_supervisor_position")),
-            @AttributeOverride(name = "degree", column = @Column(name = "thesis_organisation_supervisor_degree")),
-            @AttributeOverride(name = "title", column = @Column(name = "thesis_organisation_supervisor_title"))
+            @AttributeOverride(name = "name", column = @Column(name = "organization_supervisor_name")),
+            @AttributeOverride(name = "position", column = @Column(name = "organization_supervisor_position")),
+            @AttributeOverride(name = "degree", column = @Column(name = "organization_supervisor_degree")),
+            @AttributeOverride(name = "title", column = @Column(name = "organization_supervisor_title"))
     })
-    private Supervisor thesisOrganisationSupervisor; // руководитель вкр от организации
+    private Supervisor organizationSupervisor; // руководитель вкр от организации
 
-    private String administrativeActFromOrganisation; // распорядительный акт от организации
+    private String administrativeActFromOrganization; // распорядительный акт от организации
 
     private String fullPlaceOfInternship; // Место практики полностью
 

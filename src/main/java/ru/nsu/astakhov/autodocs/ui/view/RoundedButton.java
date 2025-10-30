@@ -3,7 +3,7 @@ package ru.nsu.astakhov.autodocs.ui.view;
 import ru.nsu.astakhov.autodocs.ui.configs.ConfigConstants;
 import ru.nsu.astakhov.autodocs.ui.configs.ConfigManager;
 import ru.nsu.astakhov.autodocs.ui.view.font.FontLoader;
-import ru.nsu.astakhov.autodocs.ui.view.font.FontTypes;
+import ru.nsu.astakhov.autodocs.ui.view.font.FontType;
 
 import javax.swing.*;
 import java.awt.*;
@@ -46,7 +46,7 @@ public class RoundedButton extends JButton {
 
 //        setMargin(new Insets(smallGap/2, smallGap, smallGap/2, smallGap));
         setMargin(new Insets(0, 0, 0, 0));
-        setFont(FontLoader.loadFont(FontTypes.ADWAITA_SANS_REGULAR, textSize));
+        setFont(FontLoader.loadFont(FontType.ADWAITA_SANS_REGULAR, textSize));
         setForeground(textColor);
 
         setContentAreaFilled(false);

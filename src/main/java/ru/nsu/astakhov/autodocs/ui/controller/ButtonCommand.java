@@ -6,7 +6,6 @@ import lombok.Getter;
 public enum ButtonCommand {
     APPLICATION_TEMPLATES("Шаблоны заявлений"),
     CREATE_APPLICATION_TEMPLATE("Создать шаблон заявления"),
-    THREE("Three"),
     ALL_DOC("Все документы"),
     INTERNSHIP_APPLICATION("Заявление на практику"),
     INDIVIDUAL_ASSIGNMENT("Индивидуальное задание"),

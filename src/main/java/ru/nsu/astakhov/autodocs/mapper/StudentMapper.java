@@ -26,9 +26,9 @@ public class StudentMapper {
                 entity.getInternshipType(),
                 entity.getThesisSupervisor(),
                 entity.getFullOrganizationName(),
-                entity.getThesisNSUSupervisor(),
-                entity.getThesisOrganisationSupervisor(),
-                entity.getAdministrativeActFromOrganisation(),
+                entity.getNSUSupervisor(),
+                entity.getOrganizationSupervisor(),
+                entity.getAdministrativeActFromOrganization(),
                 entity.getFullPlaceOfInternship(),
                 entity.getOrganizationName()
         );
@@ -54,9 +54,9 @@ public class StudentMapper {
                 dto.internshipType(),
                 dto.thesisSupervisor(),
                 dto.fullOrganizationName(),
-                dto.thesisNSUSupervisor(),
-                dto.thesisOrganisationSupervisor(),
-                dto.administrativeActFromOrganisation(),
+                dto.NSUSupervisor(),
+                dto.organizationSupervisor(),
+                dto.administrativeActFromOrganization(),
                 dto.fullPlaceOfInternship(),
                 dto.organizationName()
         );

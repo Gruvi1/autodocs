@@ -4,16 +4,14 @@ import ru.nsu.astakhov.autodocs.ui.controller.ButtonCommand;
 import ru.nsu.astakhov.autodocs.ui.configs.ConfigConstants;
 import ru.nsu.astakhov.autodocs.ui.configs.ConfigManager;
 import ru.nsu.astakhov.autodocs.ui.view.font.FontLoader;
-import ru.nsu.astakhov.autodocs.ui.view.font.FontTypes;
+import ru.nsu.astakhov.autodocs.ui.view.font.FontType;
+import ru.nsu.astakhov.autodocs.ui.view.logo.LogoLoader;
+import ru.nsu.astakhov.autodocs.ui.view.logo.LogoType;
 
-import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.util.Objects;
 
 public class NavigationPanel extends Panel {
     @Override
@@ -26,7 +24,7 @@ public class NavigationPanel extends Panel {
 
         setBackground(primaryColor);
         setForeground(textColor);
-        setFont(FontLoader.loadFont(FontTypes.ADWAITA_SANS_REGULAR, textSize));
+        setFont(FontLoader.loadFont(FontType.ADWAITA_SANS_REGULAR, textSize));
 
         int smallGap = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.GAP_SMALL));
 
@@ -48,7 +46,6 @@ public class NavigationPanel extends Panel {
         List<Component> components = new ArrayList<>(List.of(
                 createButton(ButtonCommand.APPLICATION_TEMPLATES.getName()),
                 createButton(ButtonCommand.CREATE_APPLICATION_TEMPLATE.getName()),
-                createButton(ButtonCommand.THREE.getName()),
                 createSeparator(),
                 createLabel(),
                 createButton(ButtonCommand.ALL_DOC.getName()),
@@ -89,32 +86,16 @@ public class NavigationPanel extends Panel {
 
         Color textColor = ConfigManager.parseHexColor(ConfigManager.getSetting(ConfigConstants.TEXT_COLOR));
         int textSize = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.TEXT_SIZE));
-        label.setFont(FontLoader.loadFont(FontTypes.ADWAITA_SANS_REGULAR, textSize));
+        label.setFont(FontLoader.loadFont(FontType.ADWAITA_SANS_REGULAR, textSize));
         label.setForeground(textColor);
 
         return label;
     }
 
-    public JLabel createLogoLabel() {
-        final int widthLogo = 350;
-        final int heightLogo = 100;
+    private JLabel createLogoLabel() {
+        int widthLogo = 350;
+        int heightLogo = 100;
 
-        JLabel label;
-
-        // TODO: подумать над формированием пути
-        String logo_path = "/logo/" + ConfigManager.getSetting(ConfigConstants.THEME) + "_logo_h.png";
-        try {
-            BufferedImage rawImage =
-                    ImageIO.read(Objects.requireNonNull(NavigationPanel.class.getResourceAsStream(logo_path)));
-            Image scaledImage = rawImage.getScaledInstance(widthLogo, heightLogo, Image.SCALE_SMOOTH);
-            ImageIcon icon = new ImageIcon(scaledImage);
-
-            label = new JLabel(icon);
-        }
-        catch (RuntimeException | IOException e) {
-            label = new JLabel();
-        }
-
-        return label;
+        return LogoLoader.loadLogo(LogoType.HORIZONTAL_LOGO, widthLogo, heightLogo);
     }
 }

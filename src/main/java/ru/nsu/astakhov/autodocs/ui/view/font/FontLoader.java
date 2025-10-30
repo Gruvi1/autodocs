@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class FontLoader {
-    public static Font loadFont(FontTypes type, int size) {
+    public static Font loadFont(FontType type, int size) {
         String path = type.getPath();
         try (InputStream inputStream = FontLoader.class.getResourceAsStream(path)) {
             if (inputStream == null) {
