@@ -18,4 +18,13 @@ public enum ButtonCommand {
     THESIS_SUPERVISOR_REVIEW("Отзыв руководителя ВКР");
 
     private final String name;
+
+    public static ButtonCommand fromString(String strCommand) {
+        for (ButtonCommand command : ButtonCommand.values()) {
+            if (command.getName().equals(strCommand)) {
+                return command;
+            }
+        }
+        throw new IllegalArgumentException("No such button command: " + strCommand);
+    }
 }

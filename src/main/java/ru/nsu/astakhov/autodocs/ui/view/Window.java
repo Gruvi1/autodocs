@@ -1,6 +1,7 @@
 package ru.nsu.astakhov.autodocs.ui.view;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import ru.nsu.astakhov.autodocs.ui.configs.ConfigConstants;
 import ru.nsu.astakhov.autodocs.ui.configs.ConfigManager;
@@ -13,7 +14,10 @@ import java.awt.*;
 @Slf4j
 @Component
 public class Window extends JFrame {
-    public Window() {
+    private final ApplicationContext applicationContext;
+
+    public Window(ApplicationContext applicationContext) {
+        this.applicationContext = applicationContext;
         configureWindow();
         createWindow();
         logger.info("Window initialized");
@@ -38,17 +42,19 @@ public class Window extends JFrame {
     }
 
     private void createWindow() {
-        super.getContentPane().removeAll();
+        getContentPane().removeAll();
 
-        super.add(new NavigationPanel(), BorderLayout.WEST);
-        super.add(new PlaceholderPanel(), BorderLayout.CENTER);
+        NavigationPanel navPanel = applicationContext.getBean(NavigationPanel.class);
+        PlaceholderPanel centerPanel = applicationContext.getBean(PlaceholderPanel.class);
 
-        //        super.add(new MainScreen().create(), BorderLayout.CENTER);
+
+        add(navPanel, BorderLayout.WEST);
+        add(centerPanel, BorderLayout.CENTER);
+
+        //        add(new MainScreen().create(), BorderLayout.CENTER);
 //        controller.setCurrentScreen(currentScreen);
 
-        super.revalidate();
-        super.repaint();
+        revalidate();
+        repaint();
     }
-
-    private void updateWindow() {}
 }

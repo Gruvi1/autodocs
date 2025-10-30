@@ -1,7 +1,9 @@
 package ru.nsu.astakhov.autodocs.ui.view.panels;
 
+import org.springframework.context.annotation.Scope;
 import ru.nsu.astakhov.autodocs.ui.configs.ConfigConstants;
 import ru.nsu.astakhov.autodocs.ui.configs.ConfigManager;
+import ru.nsu.astakhov.autodocs.ui.controller.ButtonEventHandler;
 import ru.nsu.astakhov.autodocs.ui.view.font.FontLoader;
 import ru.nsu.astakhov.autodocs.ui.view.font.FontType;
 import ru.nsu.astakhov.autodocs.ui.view.logo.LogoLoader;
@@ -11,8 +13,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
-
+@Scope("prototype")
+@org.springframework.stereotype.Component
 public class PlaceholderPanel extends Panel {
+    public PlaceholderPanel(ButtonEventHandler buttonEventHandler) {
+        super(buttonEventHandler);
+    }
+
     @Override
     public void configurePanel() {
         setLayout(new BorderLayout());

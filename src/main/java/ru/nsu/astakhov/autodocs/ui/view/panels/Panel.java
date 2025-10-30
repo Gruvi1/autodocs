@@ -1,11 +1,16 @@
 package ru.nsu.astakhov.autodocs.ui.view.panels;
 
+import lombok.RequiredArgsConstructor;
+import ru.nsu.astakhov.autodocs.ui.controller.ButtonEventHandler;
 import ru.nsu.astakhov.autodocs.ui.view.RoundedButton;
 
 import javax.swing.*;
 
 public abstract class Panel extends JPanel {
-    public Panel() {
+    private final ButtonEventHandler buttonEventHandler;
+
+    public Panel(ButtonEventHandler buttonEventHandler) {
+        this.buttonEventHandler = buttonEventHandler;
         configurePanel();
     }
 
@@ -15,7 +20,7 @@ public abstract class Panel extends JPanel {
         RoundedButton button = new RoundedButton(buttonName);
 
         button.setActionCommand(buttonName);
-//        button.addActionListener(buttonEventHandler);
+        button.addActionListener(buttonEventHandler);
 
         return button;
     }

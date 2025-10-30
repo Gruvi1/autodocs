@@ -1,8 +1,10 @@
 package ru.nsu.astakhov.autodocs.ui.view.panels;
 
+import org.springframework.context.annotation.Scope;
 import ru.nsu.astakhov.autodocs.ui.controller.ButtonCommand;
 import ru.nsu.astakhov.autodocs.ui.configs.ConfigConstants;
 import ru.nsu.astakhov.autodocs.ui.configs.ConfigManager;
+import ru.nsu.astakhov.autodocs.ui.controller.ButtonEventHandler;
 import ru.nsu.astakhov.autodocs.ui.view.font.FontLoader;
 import ru.nsu.astakhov.autodocs.ui.view.font.FontType;
 import ru.nsu.astakhov.autodocs.ui.view.logo.LogoLoader;
@@ -13,7 +15,13 @@ import java.util.List;
 import javax.swing.*;
 import java.awt.*;
 
+@Scope("prototype")
+@org.springframework.stereotype.Component
 public class NavigationPanel extends Panel {
+    public NavigationPanel(ButtonEventHandler buttonEventHandler) {
+        super(buttonEventHandler);
+    }
+
     @Override
     public void configurePanel() {
         setLayout(new BorderLayout());

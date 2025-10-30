@@ -1,6 +1,7 @@
 package ru.nsu.astakhov.autodocs.service;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -31,13 +32,17 @@ public class StudentService {
         scanThesisLists();
     }
 
+    @Transactional
+    public void clearAllStudents() {
+        repository.deleteAll();
+    }
+
     public void createIndWorkDoc() {
         StudentEntity entity = repository.findByFullName("Зималтынов Кирилл Русланович")
                 .orElseThrow(() ->new EntityNotFoundException("Нет такого =("));
         StudentDto dto = studentMapper.toDto(entity);
 
         logger.info("1");
-
         documentParser.createIndWorkDocBach3(dto);
     }
 

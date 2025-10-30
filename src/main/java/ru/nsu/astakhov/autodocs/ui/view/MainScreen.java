@@ -18,9 +18,9 @@ public class MainScreen extends Screen {
     JPanel create() {
         JPanel mainPanel = new JPanel(new BorderLayout());
 
-        mainPanel.add(new NavigationPanel(), BorderLayout.WEST);
+//        mainPanel.add(new NavigationPanel(), BorderLayout.WEST);
 //        mainPanel.add(new ContentPanel(), BorderLayout.CENTER);
-        mainPanel.add(new PlaceholderPanel(), BorderLayout.CENTER);
+//        mainPanel.add(new PlaceholderPanel(), BorderLayout.CENTER);
         return mainPanel;
     }
 }

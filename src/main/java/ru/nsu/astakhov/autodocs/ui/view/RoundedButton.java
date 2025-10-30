@@ -44,8 +44,8 @@ public class RoundedButton extends JButton {
         int textSize = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.TEXT_SIZE));
         Color textColor = ConfigManager.parseHexColor(ConfigManager.getSetting(ConfigConstants.TEXT_COLOR));
 
-//        setMargin(new Insets(smallGap/2, smallGap, smallGap/2, smallGap));
-        setMargin(new Insets(0, 0, 0, 0));
+        setMargin(new Insets(smallGap/2, smallGap, smallGap/2, smallGap));
+//        setMargin(new Insets(0, 0, 0, 0));
         setFont(FontLoader.loadFont(FontType.ADWAITA_SANS_REGULAR, textSize));
         setForeground(textColor);
 
