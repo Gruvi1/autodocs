@@ -1,7 +1,9 @@
 package ru.nsu.astakhov.autodocs.ui.configs;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 @Getter
 public enum ConfigConstants {
     APP_NAME("App", "APP_NAME"),
@@ -26,10 +28,4 @@ public enum ConfigConstants {
 
     private final String section;
     private final String settingName;
-
-    ConfigConstants(String section, String settingName) {
-        this.section = section;
-        this.settingName = settingName;
-    }
-
 }

@@ -1,7 +1,9 @@
 package ru.nsu.astakhov.autodocs.ui.configs;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 @Getter
 enum PrivateConstants {
     TAG_COLOR("TAG_COLOR"),
@@ -11,8 +13,4 @@ enum PrivateConstants {
     LIGHT_THEME("light");
 
     private final String value;
-
-    PrivateConstants(String value) {
-        this.value = value;
-    }
 }

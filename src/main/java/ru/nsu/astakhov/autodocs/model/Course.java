@@ -1,7 +1,9 @@
 package ru.nsu.astakhov.autodocs.model;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 @Getter
 public enum Course {
     FIRST(1),
@@ -10,10 +12,6 @@ public enum Course {
     FOURTH(4);
 
     private final int value;
-
-    Course(int value) {
-        this.value = value;
-    }
 
     public static Course fromValue(int value) {
         for (Course course : Course.values()) {

@@ -1,9 +1,12 @@
 package ru.nsu.astakhov.autodocs.ui.controller;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 @Getter
 public enum ButtonCommand {
+    UPDATE_TABLE("Обновить таблицу"),
     APPLICATION_TEMPLATES("Шаблоны заявлений"),
     CREATE_APPLICATION_TEMPLATE("Создать шаблон заявления"),
     ALL_DOC("Все документы"),
@@ -15,17 +18,4 @@ public enum ButtonCommand {
     THESIS_SUPERVISOR_REVIEW("Отзыв руководителя ВКР");
 
     private final String name;
-
-    ButtonCommand(String name) {
-        this.name = name;
-    }
-
-    static ButtonCommand fromString(String commandName) {
-        for (ButtonCommand command : ButtonCommand.values()) {
-            if (command.getName().equals(commandName)) {
-                return command;
-            }
-        }
-        throw new IllegalArgumentException("No such command: " + commandName);
-    }
 }

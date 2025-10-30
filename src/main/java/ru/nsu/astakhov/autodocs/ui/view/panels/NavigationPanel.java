@@ -44,6 +44,8 @@ public class NavigationPanel extends Panel {
         int smallGap = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.GAP_SMALL));
 
         List<Component> components = new ArrayList<>(List.of(
+                createButton(ButtonCommand.UPDATE_TABLE.getName()),
+                createSeparator(),
                 createButton(ButtonCommand.APPLICATION_TEMPLATES.getName()),
                 createButton(ButtonCommand.CREATE_APPLICATION_TEMPLATE.getName()),
                 createSeparator(),

@@ -12,40 +12,30 @@ import java.util.Objects;
 
 public class LogoLoader {
     public static JLabel loadLogo(LogoType type, int width, int height) {
+        return createLogo(type, width, height);
+    }
+
+    public static JLabel loadLogo(LogoType type) {
+        return createLogo(type, null, null);
+    }
+
+    private static JLabel createLogo(LogoType type, Integer width, Integer height) {
         JLabel label;
         String path = getPath(type);
 
         try {
             BufferedImage rawImage =
                     ImageIO.read(Objects.requireNonNull(LogoLoader.class.getResourceAsStream(path)));
+
+            width = width == null ? rawImage.getWidth() : width;
+            height = height == null ? rawImage.getHeight() : height;
+
             Image scaledImage = rawImage.getScaledInstance(width, height, Image.SCALE_SMOOTH);
             ImageIcon icon = new ImageIcon(scaledImage);
 
             label = new JLabel(icon);
         }
-        catch (RuntimeException | IOException e) {
-            label = new JLabel();
-        }
-        return label;
-    }
-
-    public static JLabel loadLogo(LogoType type) {
-        JLabel label;
-        String path = getPath(type);
-
-        try {
-            BufferedImage rawImage =
-                    ImageIO.read(Objects.requireNonNull(LogoLoader.class.getResourceAsStream(path)));
-            ImageIcon icon = new ImageIcon(rawImage);
-
-
-            label = new JLabel(icon);
-//            label.setBorder(BorderFactory.createEmptyBorder());  // Убираем бордер
-//            label.setOpaque(false);
-//            label.setHorizontalAlignment(JLabel.CENTER);
-//            label.setAlignmentX(Component.CENTER_ALIGNMENT);
-            }
-        catch (RuntimeException | IOException e) {
+        catch (IOException e) {
             label = new JLabel();
         }
         return label;

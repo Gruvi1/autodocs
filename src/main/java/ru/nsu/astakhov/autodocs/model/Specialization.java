@@ -1,7 +1,9 @@
 package ru.nsu.astakhov.autodocs.model;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 @Getter
 public enum Specialization {
     SOFTWARE_ENGINEERING_AND_CS("Программная инженерия и компьютерные науки"),
@@ -11,10 +13,6 @@ public enum Specialization {
     INTERNET_OF_THINGS("Интернет вещей");
 
     private final String value;
-
-    Specialization(String value) {
-        this.value = value;
-    }
 
     public static Specialization fromValue(String value) {
         for (Specialization specialization : Specialization.values()) {
