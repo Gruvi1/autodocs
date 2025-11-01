@@ -1,10 +1,11 @@
 package ru.nsu.astakhov.autodocs.ui.view.panels;
 
-import org.springframework.context.annotation.Scope;
+import ru.nsu.astakhov.autodocs.ui.Listener;
 import ru.nsu.astakhov.autodocs.ui.controller.ButtonCommand;
 import ru.nsu.astakhov.autodocs.ui.configs.ConfigConstants;
 import ru.nsu.astakhov.autodocs.ui.configs.ConfigManager;
-import ru.nsu.astakhov.autodocs.ui.controller.ButtonEventHandler;
+import ru.nsu.astakhov.autodocs.ui.controller.Controller;
+import ru.nsu.astakhov.autodocs.ui.controller.NavigationPanelEventHandler;
 import ru.nsu.astakhov.autodocs.ui.view.font.FontLoader;
 import ru.nsu.astakhov.autodocs.ui.view.font.FontType;
 import ru.nsu.astakhov.autodocs.ui.view.logo.LogoLoader;
@@ -15,12 +16,17 @@ import java.util.List;
 import javax.swing.*;
 import java.awt.*;
 
-@Scope("prototype")
 @org.springframework.stereotype.Component
-public class NavigationPanel extends Panel {
+public class NavigationPanel extends Panel implements Listener {
+    private final Controller controller;
 
-    public NavigationPanel(ButtonEventHandler buttonEventHandler) {
-        super(buttonEventHandler);
+    public NavigationPanel(Controller controller) {
+        this.controller = controller;
+
+        controller.addListener(this);
+        setEventHandler(new NavigationPanelEventHandler(controller,this));
+
+        configurePanel();
     }
 
     @Override
@@ -113,5 +119,9 @@ public class NavigationPanel extends Panel {
         int heightLogo = 100;
 
         return LogoLoader.loadLogo(LogoType.HORIZONTAL_LOGO, widthLogo, heightLogo);
+    }
+
+    @Override
+    public void onTableUpdate(String updateStatus) {
     }
 }

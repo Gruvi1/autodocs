@@ -2,16 +2,15 @@ package ru.nsu.astakhov.autodocs.ui.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import ru.nsu.astakhov.autodocs.ui.view.panels.NavigationPanel;
 
-import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 @RequiredArgsConstructor
 @Component
-public class ButtonEventHandler implements ActionListener {
+public class NavigationPanelEventHandler implements EventHandler {
     private final Controller controller;
+    private final NavigationPanel panel;
 
     @Override
     public void actionPerformed(ActionEvent e) {

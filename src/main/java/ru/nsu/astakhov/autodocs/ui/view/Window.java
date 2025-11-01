@@ -1,5 +1,6 @@
 package ru.nsu.astakhov.autodocs.ui.view;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
@@ -48,6 +49,7 @@ public class Window extends JFrame {
         NavigationPanel navPanel = applicationContext.getBean(NavigationPanel.class);
         PlaceholderPanel centerPanel = applicationContext.getBean(PlaceholderPanel.class);
         BottomPanel bottomPanel = applicationContext.getBean(BottomPanel.class);
+
 
         add(navPanel, BorderLayout.WEST);
         add(centerPanel, BorderLayout.CENTER);

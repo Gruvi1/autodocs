@@ -1,9 +1,10 @@
 package ru.nsu.astakhov.autodocs.ui.view.panels;
 
-import org.springframework.context.annotation.Scope;
+import ru.nsu.astakhov.autodocs.ui.Listener;
 import ru.nsu.astakhov.autodocs.ui.configs.ConfigConstants;
 import ru.nsu.astakhov.autodocs.ui.configs.ConfigManager;
-import ru.nsu.astakhov.autodocs.ui.controller.ButtonEventHandler;
+import ru.nsu.astakhov.autodocs.ui.controller.Controller;
+import ru.nsu.astakhov.autodocs.ui.controller.PlaceholderPanelEventHandler;
 import ru.nsu.astakhov.autodocs.ui.view.font.FontLoader;
 import ru.nsu.astakhov.autodocs.ui.view.font.FontType;
 import ru.nsu.astakhov.autodocs.ui.view.logo.LogoLoader;
@@ -13,12 +14,17 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
-@Scope("prototype")
 @org.springframework.stereotype.Component
-public class PlaceholderPanel extends Panel {
+public class PlaceholderPanel extends Panel implements Listener {
+    private final Controller controller;
 
-    public PlaceholderPanel(ButtonEventHandler buttonEventHandler) {
-        super(buttonEventHandler);
+    public PlaceholderPanel(Controller controller) {
+        this.controller = controller;
+
+        controller.addListener(this);
+        setEventHandler(new PlaceholderPanelEventHandler(controller, this));
+
+        configurePanel();
     }
 
     @Override
@@ -68,5 +74,9 @@ public class PlaceholderPanel extends Panel {
         textLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         return textLabel;
+    }
+
+    @Override
+    public void onTableUpdate(String updateStatus) {
     }
 }

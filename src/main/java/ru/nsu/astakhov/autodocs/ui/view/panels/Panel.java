@@ -1,25 +1,24 @@
 package ru.nsu.astakhov.autodocs.ui.view.panels;
 
-import ru.nsu.astakhov.autodocs.ui.controller.ButtonEventHandler;
+import ru.nsu.astakhov.autodocs.ui.controller.EventHandler;
 import ru.nsu.astakhov.autodocs.ui.view.RoundedButton;
 
 import javax.swing.*;
 
 public abstract class Panel extends JPanel {
-    private final ButtonEventHandler buttonEventHandler;
-
-    public Panel(ButtonEventHandler buttonEventHandler) {
-        this.buttonEventHandler = buttonEventHandler;
-        configurePanel();
-    }
+    private EventHandler eventHandler;
 
     abstract public void configurePanel();
+
+    protected void setEventHandler(EventHandler eventHandler) {
+        this.eventHandler = eventHandler;
+    }
 
     JButton createButton(String buttonName) {
         RoundedButton button = new RoundedButton(buttonName);
 
         button.setActionCommand(buttonName);
-        button.addActionListener(buttonEventHandler);
+        button.addActionListener(eventHandler);
 
         return button;
     }
