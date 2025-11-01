@@ -16,6 +16,7 @@ import java.util.List;
 @Scope("prototype")
 @org.springframework.stereotype.Component
 public class PlaceholderPanel extends Panel {
+
     public PlaceholderPanel(ButtonEventHandler buttonEventHandler) {
         super(buttonEventHandler);
     }

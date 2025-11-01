@@ -59,9 +59,6 @@ public class DocumentParser {
         String filePath = "/бак_3_ИЗ.docx";
         String newFilePath = "new_practice_doc.docx";
 
-        logger.info("2");
-
-
 
         List<String> indWorkBach3Placeholders = List.of(
                 "$(eduProgram)",
@@ -77,22 +74,17 @@ public class DocumentParser {
                 "$(organizationSupervisor.name)",
                 "$(organizationSupervisor.position)");
 
-        logger.info("3");
-
 
         try (InputStream in = DocumentParser.class.getResourceAsStream(filePath);
              XWPFDocument newDoc = new XWPFDocument(in);
              FileOutputStream out = new FileOutputStream(newFilePath)) {
-            logger.info("4");
 
             for (XWPFParagraph p : newDoc.getParagraphs()) {
-                logger.info("5");
                 String text = p.getText();
                 if (containList(text, indWorkBach3Placeholders)) {
                     processParagraph(p, indWorkBach3Placeholders, dto);
                 }
             }
-            logger.info("6");
 
             newDoc.write(out);
         } catch (IOException e) {
@@ -104,7 +96,6 @@ public class DocumentParser {
     private void processParagraph(XWPFParagraph p, List<String> list, StudentDto dto) {
         for (XWPFRun run : p.getRuns()) {
             String allRunText = run.text();
-            logger.info("RUN TEXT: [{}]", allRunText);
 
             if (allRunText == null) {
                 continue;
@@ -112,7 +103,6 @@ public class DocumentParser {
 
             String replaceable;
             while ((replaceable = getFirstReplaceFromList(allRunText, list)) != null) {
-                logger.info("7");
 
                 String fromDto = resolvers.get(replaceable).apply(dto);
                 allRunText = allRunText.replace(replaceable, fromDto);

@@ -1,6 +1,5 @@
 package ru.nsu.astakhov.autodocs.ui.view.panels;
 
-import lombok.RequiredArgsConstructor;
 import ru.nsu.astakhov.autodocs.ui.controller.ButtonEventHandler;
 import ru.nsu.astakhov.autodocs.ui.view.RoundedButton;
 

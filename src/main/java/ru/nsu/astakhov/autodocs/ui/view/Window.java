@@ -5,6 +5,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import ru.nsu.astakhov.autodocs.ui.configs.ConfigConstants;
 import ru.nsu.astakhov.autodocs.ui.configs.ConfigManager;
+import ru.nsu.astakhov.autodocs.ui.view.panels.BottomPanel;
 import ru.nsu.astakhov.autodocs.ui.view.panels.NavigationPanel;
 import ru.nsu.astakhov.autodocs.ui.view.panels.PlaceholderPanel;
 
@@ -46,12 +47,13 @@ public class Window extends JFrame {
 
         NavigationPanel navPanel = applicationContext.getBean(NavigationPanel.class);
         PlaceholderPanel centerPanel = applicationContext.getBean(PlaceholderPanel.class);
-
+        BottomPanel bottomPanel = applicationContext.getBean(BottomPanel.class);
 
         add(navPanel, BorderLayout.WEST);
         add(centerPanel, BorderLayout.CENTER);
+        add(bottomPanel, BorderLayout.SOUTH);
 
-        //        add(new MainScreen().create(), BorderLayout.CENTER);
+//        add(new MainScreen().create(), BorderLayout.CENTER);
 //        controller.setCurrentScreen(currentScreen);
 
         revalidate();

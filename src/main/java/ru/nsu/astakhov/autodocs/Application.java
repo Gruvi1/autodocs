@@ -5,8 +5,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import ru.nsu.astakhov.autodocs.service.StudentService;
-import ru.nsu.astakhov.autodocs.ui.UiLauncher;
 import ru.nsu.astakhov.autodocs.ui.configs.ConfigManager;
+import ru.nsu.astakhov.autodocs.ui.view.Window;
 import ru.nsu.astakhov.autodocs.utils.Ini;
 
 import javax.swing.*;
@@ -15,7 +15,7 @@ import javax.swing.*;
 @SpringBootApplication
 public class Application implements CommandLineRunner {
     private final StudentService studentService;
-    private final UiLauncher uiLauncher;
+    private final Window window;
 
     public static void main(String[] args) {
         System.setProperty("java.awt.headless", "false");
@@ -33,7 +33,7 @@ public class Application implements CommandLineRunner {
 
     @Override
     public void run(String... args)  {
-        uiLauncher.launch();
+        SwingUtilities.invokeLater(() -> window.setVisible(true));
 //        studentService.scanAllData();
     }
 }

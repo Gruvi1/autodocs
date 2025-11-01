@@ -18,6 +18,7 @@ import java.awt.*;
 @Scope("prototype")
 @org.springframework.stereotype.Component
 public class NavigationPanel extends Panel {
+
     public NavigationPanel(ButtonEventHandler buttonEventHandler) {
         super(buttonEventHandler);
     }
@@ -28,11 +29,15 @@ public class NavigationPanel extends Panel {
 
         Color primaryColor = ConfigManager.parseHexColor(ConfigManager.getSetting(ConfigConstants.PRIMARY_COLOR));
         Color textColor = ConfigManager.parseHexColor(ConfigManager.getSetting(ConfigConstants.TEXT_COLOR));
+        Color focusColor = ConfigManager.parseHexColor(ConfigManager.getSetting(ConfigConstants.FOCUS_COLOR));
         int textSize = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.TEXT_SIZE));
 
         setBackground(primaryColor);
         setForeground(textColor);
         setFont(FontLoader.loadFont(FontType.ADWAITA_SANS_REGULAR, textSize));
+
+        setBorder(BorderFactory.createMatteBorder(0, 0, 0, 2, focusColor));
+
 
         int smallGap = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.GAP_SMALL));
 
@@ -46,6 +51,7 @@ public class NavigationPanel extends Panel {
     private JPanel createButtonPanel() {
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
+
         Color primaryColor = ConfigManager.parseHexColor(ConfigManager.getSetting(ConfigConstants.PRIMARY_COLOR));
         buttonPanel.setBackground(primaryColor);
 
@@ -80,7 +86,7 @@ public class NavigationPanel extends Panel {
         JSeparator separator = new JSeparator();
 
         Color focusColor = ConfigManager.parseHexColor(ConfigManager.getSetting(ConfigConstants.FOCUS_COLOR));
-        int separatorHeight = 5;
+        int separatorHeight = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.GAP_SMALL));
 
         separator.setOpaque(true);
         separator.setForeground(focusColor);

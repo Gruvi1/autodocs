@@ -42,7 +42,6 @@ public class StudentService {
                 .orElseThrow(() ->new EntityNotFoundException("Нет такого =("));
         StudentDto dto = studentMapper.toDto(entity);
 
-        logger.info("1");
         documentParser.createIndWorkDocBach3(dto);
     }
 
