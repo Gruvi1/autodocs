@@ -1,6 +1,6 @@
 package ru.nsu.astakhov.autodocs.service;
 
-import jakarta.persistence.EntityNotFoundException;
+import  jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +14,6 @@ import ru.nsu.astakhov.autodocs.mapper.StudentMapper;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -28,7 +27,6 @@ public class StudentService {
 
     public void scanAllData() {
         scanInternshipLists();
-
         scanThesisLists();
     }
 
@@ -45,14 +43,20 @@ public class StudentService {
         documentParser.createIndWorkDocBach3(dto);
     }
 
-    private void scanInternshipLists() {
+    public void scanInternshipLists() {
         List<StudentDto> studentDtos = googleSheetsService.readAllInternshipLists();
         createStudents(studentDtos);
     }
 
-    private void scanThesisLists() {
+    public List<FieldCollision> scanThesisLists() {
         List<StudentDto> studentDtos = googleSheetsService.readAllThesisLists();
-        updateStudents(studentDtos);
+        return updateStudents(studentDtos);
+    }
+
+    public void saveResolvedField(List<FieldCollision> resolvedCollisions) {
+        List<StudentEntity> entities = resolvedCollisions.stream().map(FieldCollision::entity).toList();
+
+        repository.saveAll(entities);
     }
 
     private void createStudents(List<StudentDto> studentDtos) {
@@ -127,7 +131,7 @@ public class StudentService {
         notifyIfStringFieldMissing(TableType.INTERNSHIP, studentName, supervisor.title(), "учёное звание руководителя");
     }
 
-    private void updateStudents(List<StudentDto> studentDtos) {
+    private List<FieldCollision> updateStudents(List<StudentDto> studentDtos) {
         logger.info("Updating students with length: {}", studentDtos.size());
 
         List<StudentDto> validDtos = new ArrayList<>();
@@ -150,7 +154,8 @@ public class StudentService {
                 .collect(Collectors.toMap(StudentEntity::getFullName, Function.identity()));
 
         List<StudentEntity> entitiesToSave = new ArrayList<>();
-        Scanner scan = new Scanner(System.in);
+
+        List<FieldCollision> collisions = new ArrayList<>();
 
         for (StudentDto dto : validDtos) {
             StudentEntity entity = existingByFullName.get(dto.fullName());
@@ -159,60 +164,44 @@ public class StudentService {
                 entity = studentMapper.toEntity(dto);
             }
             else {
-                checkCollision(entity, dto, scan);
-                mergeFromThesis(entity, dto);
+                checkCollision(entity, dto, collisions);
+                mergeFromThesis(entity, dto); // TODO: временно мержим всё(плохо) из ВКР, но коллизии переопределим позже
             }
             entitiesToSave.add(entity);
         }
 
         List<StudentEntity> savedEntity = repository.saveAll(entitiesToSave);
         logger.info("Students updated successfully with length: {}", savedEntity.size());
+
+        return collisions;
     }
 
-    private String buildCollisionFieldMessage() {
-        return """
-                Студент {} имеет разные поля "{}" на листе практики и на листе ВКР
-                Выберите, что сохранить (введите цифру):
-                практика(1): {} \t ВКР(2): {}
-                """;
+    private void checkCollision(StudentEntity entity, StudentDto dto, List<FieldCollision> collisions) {
+        checkFieldCollision(entity.getEmail(), dto.email(), entity::setEmail, entity, "почта", collisions);
+        checkFieldCollision(entity.getEduProgram().getValue(), dto.eduProgram().getValue(), entity::setEduProgram, entity, "образовательная программа", collisions);
+        checkFieldCollision(entity.getGroupName(), dto.groupName(), entity::setGroupName, entity, "группа", collisions);
+        checkFieldCollision(entity.getSpecialization().getValue(), dto.specialization().getValue(), entity::setSpecialization, entity, "профиль обучения", collisions);
+        checkFieldCollision(entity.getActualSupervisor(), dto.actualSupervisor(), entity::setActualSupervisor, entity, "фактический руководитель", collisions);
     }
 
-    private void checkCollision(StudentEntity entity, StudentDto dto, Scanner scan) {
-        String studentName = entity.getFullName();
-
-        checkFieldCollision(entity::getEmail, dto::email, entity::setEmail, studentName, "почта", scan);
-        checkFieldCollision(entity::getEduProgram, dto::eduProgram, entity::setEduProgram, studentName, "образовательная программа", scan);
-        checkFieldCollision(entity::getGroupName, dto::groupName, entity::setGroupName, studentName, "группа", scan);
-        checkFieldCollision(entity::getSpecialization, dto::specialization, entity::setSpecialization, studentName, "профиль обучения", scan);
-        checkFieldCollision(entity::getActualSupervisor, dto::actualSupervisor, entity::setActualSupervisor, studentName, "фактический руководитель", scan);
-    }
-
-    private <T> void checkFieldCollision(
-            Supplier<T> entityGetter,
-            Supplier<T> dtoGetter,
-            Consumer<T> entitySetter,
-            String studentName,
+    private void checkFieldCollision(
+            String entityValue,
+            String dtoValue,
+            Consumer<String> entitySetter,
+            StudentEntity entity,
             String fieldName,
-            Scanner scan
+            List<FieldCollision> collisions
     ) {
-       T entityValue = entityGetter.get();
-       T dtoValue = dtoGetter.get();
        if (!Objects.equals(entityValue, dtoValue)) {
-           logger.info(buildCollisionFieldMessage(), studentName, fieldName, entityValue, dtoValue);
-           if (shouldUpdateField(scan)) {
-               entitySetter.accept(dtoValue);
-           }
+           collisions.add(new FieldCollision(
+                   entity,
+                   entity.getFullName(),
+                   fieldName,
+                   entitySetter,
+                   entityValue,
+                   dtoValue
+           ));
        }
-    }
-
-    private boolean shouldUpdateField(Scanner scan) {
-        int res = scan.nextInt();
-        while (res != 1 && res != 2) {
-            logger.info("Пожалуйста, выберите 1 или 2");
-            res = scan.nextInt();
-        }
-
-        return res == 2;
     }
 
     private void checkThesisDto(StudentDto dto) {

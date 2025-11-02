@@ -31,7 +31,10 @@ public class BottomPanel extends Panel implements Listener {
     public void configurePanel() {
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 
-        int height = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.GAP_MEDIUM));
+        int smallGap = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.GAP_SMALL));
+        int mediumGap = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.GAP_MEDIUM));
+
+        int height = smallGap + mediumGap;
         setPreferredSize(new Dimension(0, height));
 
         Color primaryColor = ConfigManager.parseHexColor(ConfigManager.getSetting(ConfigConstants.PRIMARY_COLOR));
@@ -39,7 +42,7 @@ public class BottomPanel extends Panel implements Listener {
         setBackground(primaryColor);
         setBorder(BorderFactory.createMatteBorder(2, 0, 0, 0, focusColor));
 
-        int gap = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.GAP_SMALL));
+        int gap = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.GAP_MEDIUM));
         add(Box.createHorizontalGlue());
         add(statusLabel);
         add(Box.createHorizontalStrut(gap));

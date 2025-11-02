@@ -129,7 +129,11 @@ public class GoogleSheetsService {
     }
 
     private int getFinalIndex(List<List<Object>> rows) {
-        for (int i = rows.size() - 1; i != 1; --i) {
+        int size = rows.size();
+        if (size < 2) {
+            return 1;
+        }
+        for (int i = size - 1; i != 1; --i) {
             if (rows.get(i).isEmpty()) {
                 return i;
             }

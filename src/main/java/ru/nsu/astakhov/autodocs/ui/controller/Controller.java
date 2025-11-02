@@ -1,14 +1,16 @@
 package ru.nsu.astakhov.autodocs.ui.controller;
 
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import ru.nsu.astakhov.autodocs.model.FieldCollision;
 import ru.nsu.astakhov.autodocs.service.StudentService;
 import ru.nsu.astakhov.autodocs.ui.Listener;
 import ru.nsu.astakhov.autodocs.ui.Observable;
+import ru.nsu.astakhov.autodocs.ui.view.panels.CollisionDialog;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,16 +44,22 @@ public class Controller implements Observable {
     }
 
     public void updateTable() {
-        SwingWorker<Void, String> worker = new SwingWorker<>() {
+        SwingWorker<List<FieldCollision>, String> worker = new SwingWorker<>() {
             @Override
-            protected Void doInBackground() {
-                publish("Удаление старых данных");
+            protected List<FieldCollision> doInBackground() {
+                publish("Удаление старых данных...");
                 studentService.clearAllStudents();
 
-                publish("Обновление таблицы");
-                studentService.scanAllData();
+                publish("Получение данных из таблиц практики...");
+                studentService.scanInternshipLists();
 
-                return null;
+                publish("Получение данных из таблиц ВКР...");
+                List<FieldCollision> collisions = studentService.scanThesisLists();
+
+                publish("Разрешение конфликта данных...");
+
+
+                return collisions;
             }
 
             @Override
@@ -61,13 +69,44 @@ public class Controller implements Observable {
                     notifyAllTableUpdate(chunks.getLast());
                 }
             }
-
             @Override
             protected void done() {
-                notifyAllTableUpdate("Обновление завершено");
+                String successUpdateMessage = "Обновление завершено!";
+                try {
+                    List<FieldCollision> collisions = get();
+                    if (collisions.isEmpty()) {
+                        notifyAllTableUpdate(successUpdateMessage);
+                    }
+                    else {
+                        resolveCollisions(collisions);
+                        notifyAllTableUpdate(successUpdateMessage);
+                    }
+                }
+                catch (Exception e) {
+                    e.printStackTrace(); // TODO: исправить исключение
+                    notifyAllTableUpdate("Ошибка при обновлении");
+                }
             }
         };
         worker.execute();
+    }
+
+    public void testShowDialog(Frame owner) {
+        CollisionDialog.showCollisionDialog(owner, null);
+    }
+
+    private void resolveCollisions(List<FieldCollision> collisions) {
+        if (collisions.isEmpty()) {
+            return;
+        }
+
+        for (FieldCollision collision : collisions) {
+            String ans = CollisionDialog.showCollisionDialog(null, collision);
+            collision.resolve(ans);
+            System.out.println(ans);
+        }
+
+        studentService.saveResolvedField(collisions);
     }
 }
 

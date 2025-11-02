@@ -27,17 +27,15 @@ public class StudentEntity {
     @Column(nullable = false)
     private Course course; // курс
 
-//    @Column(nullable = false)
     private String email; // почта
 
     private String phoneNumber; // телефон
 
     @Convert(converter = EduProgramConverter.class)
-//    @Column(nullable = false)
     private EduProgram eduProgram; // образовательная программа
 
 //    @Column(nullable = false)
-    private String groupName; // группа
+    private String  groupName; // группа
 
     @Convert(converter = SpecializationConverter.class)
 //    @Column(nullable = false)
@@ -94,4 +92,25 @@ public class StudentEntity {
     private String fullPlaceOfInternship; // Место практики полностью
 
     private String organizationName; // Наименование организации
+
+    public void setEduProgram(String value) {
+        EduProgram eduProgram = EduProgram.fromValue(value);
+        if (eduProgram != null) {
+            this.eduProgram = eduProgram;
+        }
+    }
+
+    public void setSpecialization(String value) {
+        Specialization specialization = Specialization.fromValue(value);
+        if (specialization != null) {
+            this.specialization = specialization;
+        }
+    }
+
+    public void setInternshipType(String value) {
+        InternshipType internshipType = InternshipType.fromValue(value);
+        if (internshipType != null) {
+            this.internshipType = internshipType;
+        }
+    }
 }

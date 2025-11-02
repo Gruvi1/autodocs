@@ -9,8 +9,11 @@ import javax.swing.*;
 import java.awt.*;
 
 public class RoundedButton extends JButton {
-    public RoundedButton(String text) {
+    private final int rounding;
+    public RoundedButton(String text, int rounding) {
         super(text);
+        this.rounding = rounding;
+
         configureButton();
     }
 
@@ -40,12 +43,10 @@ public class RoundedButton extends JButton {
     }
 
     private void configureButton() {
-        int smallGap = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.GAP_SMALL));
         int textSize = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.TEXT_SIZE));
         Color textColor = ConfigManager.parseHexColor(ConfigManager.getSetting(ConfigConstants.TEXT_COLOR));
 
-        setMargin(new Insets(smallGap/2, smallGap, smallGap/2, smallGap));
-//        setMargin(new Insets(0, 0, 0, 0));
+        setMargin(new Insets(rounding / 2, rounding, rounding / 2, rounding));
         setFont(FontLoader.loadFont(FontType.ADWAITA_SANS_REGULAR, textSize));
         setForeground(textColor);
 
