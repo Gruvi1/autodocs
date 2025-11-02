@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 public enum ButtonCommand {
     UPDATE_TABLE("Обновить таблицу"),
+    WARNING_TABLE("Предупреждения по таблице"),
     APPLICATION_TEMPLATES("Шаблоны заявлений"),
     CREATE_APPLICATION_TEMPLATE("Создать шаблон заявления"),
     ALL_DOC("Все документы"),

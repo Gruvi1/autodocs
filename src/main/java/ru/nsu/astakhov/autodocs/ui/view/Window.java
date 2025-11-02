@@ -9,6 +9,7 @@ import ru.nsu.astakhov.autodocs.ui.configs.ConfigManager;
 import ru.nsu.astakhov.autodocs.ui.view.panels.BottomPanel;
 import ru.nsu.astakhov.autodocs.ui.view.panels.NavigationPanel;
 import ru.nsu.astakhov.autodocs.ui.view.panels.PlaceholderPanel;
+import ru.nsu.astakhov.autodocs.ui.view.panels.WarningsPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -49,14 +50,13 @@ public class Window extends JFrame {
         NavigationPanel navPanel = applicationContext.getBean(NavigationPanel.class);
         PlaceholderPanel centerPanel = applicationContext.getBean(PlaceholderPanel.class);
         BottomPanel bottomPanel = applicationContext.getBean(BottomPanel.class);
+        WarningsPanel warningsPanel = applicationContext.getBean(WarningsPanel.class);
 
 
         add(navPanel, BorderLayout.WEST);
-        add(centerPanel, BorderLayout.CENTER);
+//        add(centerPanel, BorderLayout.CENTER);
+        add(warningsPanel, BorderLayout.CENTER);
         add(bottomPanel, BorderLayout.SOUTH);
-
-//        add(new MainScreen().create(), BorderLayout.CENTER);
-//        controller.setCurrentScreen(currentScreen);
 
         revalidate();
         repaint();

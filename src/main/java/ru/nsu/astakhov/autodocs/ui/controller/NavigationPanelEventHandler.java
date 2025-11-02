@@ -20,11 +20,8 @@ public class NavigationPanelEventHandler implements EventHandler {
         ButtonCommand buttonCommand = ButtonCommand.fromString(command);
 
         switch (buttonCommand) {
-            case UPDATE_TABLE   -> controller.updateTable();
-            case ALL_DOC -> {
-                Frame owner = JOptionPane.getFrameForComponent((java.awt.Component) e.getSource());
-                controller.testShowDialog(owner);
-            }
+            case UPDATE_TABLE   -> controller.updateTable(JOptionPane.getFrameForComponent(panel));
+            case ALL_DOC -> {}
             default             -> {}
         }
     }

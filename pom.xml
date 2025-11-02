@@ -103,6 +103,13 @@
             <version>5.2.4</version>
         </dependency>
 
+<!--        JetBrains Annotations-->
+        <dependency>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <version>24.1.0</version>
+        </dependency>
+
 
         <!-- Test Dependencies -->
         <dependency>

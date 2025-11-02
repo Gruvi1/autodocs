@@ -24,6 +24,7 @@ public class StudentService {
     private final StudentMapper studentMapper;
     private final GoogleSheetsService googleSheetsService;
     private final DocumentParser documentParser;
+    private final WarningList warningList;
 
     public void scanAllData() {
         scanInternshipLists();
@@ -31,11 +32,13 @@ public class StudentService {
     }
 
     @Transactional
-    public void clearAllStudents() {
+    public void clearAllData() {
+        warningList.clear();
         repository.deleteAll();
     }
 
     public void createIndWorkDoc() {
+        // TODO: убрать явное имя
         StudentEntity entity = repository.findByFullName("Зималтынов Кирилл Русланович")
                 .orElseThrow(() ->new EntityNotFoundException("Нет такого =("));
         StudentDto dto = studentMapper.toDto(entity);
@@ -109,19 +112,14 @@ public class StudentService {
 
     private void notifyIfStringFieldMissing(TableType type, String student, String value, String fieldName) {
         if (isNullOrBlank(value)) {
-            logger.info(buildMissingFieldMessage(type), student, fieldName);
+            warningList.addWarning(type, student, fieldName);
         }
     }
 
     private void notifyIfObjectFieldMissing(TableType type, String student, Object value, String fieldName) {
         if (value == null) {
-            logger.info(buildMissingFieldMessage(type), student, fieldName);
+            warningList.addWarning(type, student, fieldName);
         }
-    }
-
-    private String buildMissingFieldMessage(TableType practiceType) {
-        String tableType = practiceType == TableType.INTERNSHIP ? "практике" : "ВКР";
-        return "В таблице по " + tableType + " у студента {} не определено поле: {}";
     }
 
     private void checkInternshipSupervisor(Supervisor supervisor, String studentName) {

@@ -65,6 +65,7 @@ public class NavigationPanel extends Panel implements Listener {
 
         List<Component> components = new ArrayList<>(List.of(
                 createButton(ButtonCommand.UPDATE_TABLE.getName()),
+                createButton(ButtonCommand.WARNING_TABLE.getName()),
                 createSeparator(),
                 createButton(ButtonCommand.APPLICATION_TEMPLATES.getName()),
                 createButton(ButtonCommand.CREATE_APPLICATION_TEMPLATE.getName()),

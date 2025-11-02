@@ -43,12 +43,12 @@ public class Controller implements Observable {
         }
     }
 
-    public void updateTable() {
+    public void updateTable(Frame owner) {
         SwingWorker<List<FieldCollision>, String> worker = new SwingWorker<>() {
             @Override
             protected List<FieldCollision> doInBackground() {
                 publish("Удаление старых данных...");
-                studentService.clearAllStudents();
+                studentService.clearAllData();
 
                 publish("Получение данных из таблиц практики...");
                 studentService.scanInternshipLists();
@@ -57,7 +57,6 @@ public class Controller implements Observable {
                 List<FieldCollision> collisions = studentService.scanThesisLists();
 
                 publish("Разрешение конфликта данных...");
-
 
                 return collisions;
             }
@@ -78,12 +77,12 @@ public class Controller implements Observable {
                         notifyAllTableUpdate(successUpdateMessage);
                     }
                     else {
-                        resolveCollisions(collisions);
+                        resolveCollisions(collisions, owner);
                         notifyAllTableUpdate(successUpdateMessage);
                     }
                 }
                 catch (Exception e) {
-                    e.printStackTrace(); // TODO: исправить исключение
+                    // TODO: исправить исключение
                     notifyAllTableUpdate("Ошибка при обновлении");
                 }
             }
@@ -91,25 +90,16 @@ public class Controller implements Observable {
         worker.execute();
     }
 
-    public void testShowDialog(Frame owner) {
-        CollisionDialog.showCollisionDialog(owner, null);
-    }
-
-    private void resolveCollisions(List<FieldCollision> collisions) {
+    private void resolveCollisions(List<FieldCollision> collisions, Frame owner) {
         if (collisions.isEmpty()) {
             return;
         }
 
         for (FieldCollision collision : collisions) {
-            String ans = CollisionDialog.showCollisionDialog(null, collision);
+            String ans = CollisionDialog.showCollisionDialog(owner, collision);
             collision.resolve(ans);
-            System.out.println(ans);
         }
 
         studentService.saveResolvedField(collisions);
     }
 }
-
-
-
-

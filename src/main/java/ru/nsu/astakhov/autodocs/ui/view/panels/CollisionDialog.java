@@ -9,8 +9,6 @@ import ru.nsu.astakhov.autodocs.ui.view.font.FontType;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,19 +16,22 @@ public class CollisionDialog extends JDialog {
     private static final String dialogName = "Конфликт данных";
     private final FieldCollision collision;
     private String selectedOption = null;
+    private Component originalGlassPane;
+    private JPanel overlay;
 
-    public CollisionDialog(Frame owner, FieldCollision collision) {
+    private CollisionDialog(Frame owner, FieldCollision collision) {
         super(owner, dialogName, true);
         this.collision = collision;
 
         configureDialog();
-        createOverlay(owner);
     }
 
     public static String showCollisionDialog(Frame owner, FieldCollision collision) {
         CollisionDialog dialog = new CollisionDialog(owner, collision);
 
+        dialog.createOverlay(owner);
         dialog.setVisible(true);
+        dialog.removeOverlay(owner);
 
         return dialog.selectedOption;
     }
@@ -41,20 +42,6 @@ public class CollisionDialog extends JDialog {
 //        int width = 800;
 //        int height = 250;
 //        setSize(width, height);
-
-        addWindowListener(new WindowAdapter() {
-            @Override
-                public void windowClosed(WindowEvent e) {
-                selectedOption = null;
-                removeOverlay((Frame) getOwner());
-            }
-
-            @Override
-            public void windowClosing(WindowEvent e) {
-                selectedOption = null;
-                removeOverlay((Frame) getOwner());
-            }
-        });
 
         Color focusColor = ConfigManager.parseHexColor(ConfigManager.getSetting(ConfigConstants.FOCUS_COLOR));
 
@@ -115,7 +102,6 @@ public class CollisionDialog extends JDialog {
         return panel;
     }
 
-
     private JPanel createTitleMessage() {
         JPanel firstLine = new JPanel();
         firstLine.setLayout(new BoxLayout(firstLine, BoxLayout.X_AXIS));
@@ -143,27 +129,17 @@ public class CollisionDialog extends JDialog {
         return column;
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+    // TODO: ДУБЛИРУЕТСЯ В CollisionDialog И WarningsPanel
     private JLabel createBorderedLabel(String text) {
         return createCustomLabel(text, true);
     }
 
+    // TODO: ДУБЛИРУЕТСЯ В CollisionDialog И WarningsPanel
     private JLabel createTextLabel(String text) {
         return createCustomLabel(text, false);
     }
 
+    // TODO: ДУБЛИРУЕТСЯ В CollisionDialog И WarningsPanel
     private JLabel createCustomLabel(String text, boolean opaque) {
         JLabel label = new JLabel(text);
 
@@ -213,31 +189,19 @@ public class CollisionDialog extends JDialog {
         return button;
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     private void createOverlay(Frame owner) {
         if (owner == null) {
             return;
         }
-        JPanel overlay = new JPanel() {
+
+        JRootPane rootPane = SwingUtilities.getRootPane(owner);
+        if (rootPane == null) {
+            return;
+        }
+
+        originalGlassPane = rootPane.getGlassPane();
+
+        overlay = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
@@ -245,21 +209,26 @@ public class CollisionDialog extends JDialog {
                 g.fillRect(0, 0, getWidth(), getHeight());
             }
         };
+
         overlay.setOpaque(false);
-        JRootPane rootPane = SwingUtilities.getRootPane(owner);
-        if (rootPane != null) {
-            rootPane.setGlassPane(overlay);
-            overlay.setVisible(true);
-        }
+        rootPane.setGlassPane(overlay);
+        overlay.setVisible(true);
     }
 
     private void removeOverlay(Frame owner) {
-        if (owner == null) {
+        if (owner == null || overlay == null) {
             return;
         }
+        overlay.setVisible(false);
+
         JRootPane rootPane = SwingUtilities.getRootPane(owner);
+
         if (rootPane != null) {
+            rootPane.setGlassPane(originalGlassPane);
             rootPane.getGlassPane().setVisible(false);
         }
+
+        overlay = null;
+        originalGlassPane = null;
     }
 }
