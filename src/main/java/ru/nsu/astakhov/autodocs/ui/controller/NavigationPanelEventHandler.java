@@ -3,6 +3,7 @@ package ru.nsu.astakhov.autodocs.ui.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.nsu.astakhov.autodocs.ui.view.panels.NavigationPanel;
+import ru.nsu.astakhov.autodocs.ui.view.panels.WarningsPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -21,7 +22,9 @@ public class NavigationPanelEventHandler implements EventHandler {
 
         switch (buttonCommand) {
             case UPDATE_TABLE   -> controller.updateTable(JOptionPane.getFrameForComponent(panel));
+            case WARNING_TABLE  -> controller.setPanel(WarningsPanel.class);
             case ALL_DOC -> {}
+            case INDIVIDUAL_ASSIGNMENT -> controller.createIndWorkDoc();
             default             -> {}
         }
     }

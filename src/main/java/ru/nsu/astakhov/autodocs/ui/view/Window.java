@@ -1,15 +1,12 @@
 package ru.nsu.astakhov.autodocs.ui.view;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import ru.nsu.astakhov.autodocs.ui.configs.ConfigConstants;
 import ru.nsu.astakhov.autodocs.ui.configs.ConfigManager;
 import ru.nsu.astakhov.autodocs.ui.view.panels.BottomPanel;
 import ru.nsu.astakhov.autodocs.ui.view.panels.NavigationPanel;
 import ru.nsu.astakhov.autodocs.ui.view.panels.PlaceholderPanel;
-import ru.nsu.astakhov.autodocs.ui.view.panels.WarningsPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,10 +14,11 @@ import java.awt.*;
 @Slf4j
 @Component
 public class Window extends JFrame {
-    private final ApplicationContext applicationContext;
+    private final PanelManager panelManager;
 
-    public Window(ApplicationContext applicationContext) {
-        this.applicationContext = applicationContext;
+    public Window(PanelManager panelManager) {
+        this.panelManager = panelManager;
+        panelManager.setWindow(this);
         configureWindow();
         createWindow();
         logger.info("Window initialized");
@@ -45,20 +43,8 @@ public class Window extends JFrame {
     }
 
     private void createWindow() {
-        getContentPane().removeAll();
-
-        NavigationPanel navPanel = applicationContext.getBean(NavigationPanel.class);
-        PlaceholderPanel centerPanel = applicationContext.getBean(PlaceholderPanel.class);
-        BottomPanel bottomPanel = applicationContext.getBean(BottomPanel.class);
-        WarningsPanel warningsPanel = applicationContext.getBean(WarningsPanel.class);
-
-
-        add(navPanel, BorderLayout.WEST);
-//        add(centerPanel, BorderLayout.CENTER);
-        add(warningsPanel, BorderLayout.CENTER);
-        add(bottomPanel, BorderLayout.SOUTH);
-
-        revalidate();
-        repaint();
+        panelManager.setPanel(NavigationPanel.class);
+        panelManager.setPanel(PlaceholderPanel.class);
+        panelManager.setPanel(BottomPanel.class);
     }
 }

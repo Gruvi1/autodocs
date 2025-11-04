@@ -5,7 +5,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import ru.nsu.astakhov.autodocs.documents.DocumentParser;
+import ru.nsu.astakhov.autodocs.documents.IndWorkBach3Generator;
 import ru.nsu.astakhov.autodocs.integration.google.GoogleSheetsService;
 import ru.nsu.astakhov.autodocs.model.*;
 import ru.nsu.astakhov.autodocs.repository.StudentRepository;
@@ -16,35 +16,35 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-@Slf4j
-@RequiredArgsConstructor
-@Service
-public class StudentService {
-    private final StudentRepository repository;
-    private final StudentMapper studentMapper;
-    private final GoogleSheetsService googleSheetsService;
-    private final DocumentParser documentParser;
-    private final WarningList warningList;
+    @Slf4j
+    @RequiredArgsConstructor
+    @Service
+    public class StudentService {
+        private final StudentRepository repository;
+        private final StudentMapper studentMapper;
+        private final GoogleSheetsService googleSheetsService;
+        private final IndWorkBach3Generator indWorkBach3Generator;
+        private final WarningList warningList;
 
-    public void scanAllData() {
-        scanInternshipLists();
-        scanThesisLists();
-    }
+        public void scanAllData() {
+            scanInternshipLists();
+            scanThesisLists();
+        }
 
-    @Transactional
-    public void clearAllData() {
-        warningList.clear();
-        repository.deleteAll();
-    }
+        @Transactional
+        public void clearAllData() {
+            warningList.clear();
+            repository.deleteAll();
+        }
 
-    public void createIndWorkDoc() {
-        // TODO: убрать явное имя
-        StudentEntity entity = repository.findByFullName("Зималтынов Кирилл Русланович")
-                .orElseThrow(() ->new EntityNotFoundException("Нет такого =("));
-        StudentDto dto = studentMapper.toDto(entity);
+        public void createIndWorkDoc() {
+            // TODO: убрать явное имя
+            StudentEntity entity = repository.findByFullName("Зималтынов Кирилл Русланович")
+                    .orElseThrow(() ->new EntityNotFoundException("Нет такого =("));
+            StudentDto dto = studentMapper.toDto(entity);
 
-        documentParser.createIndWorkDocBach3(dto);
-    }
+            indWorkBach3Generator.generate(dto);
+        }
 
     public void scanInternshipLists() {
         List<StudentDto> studentDtos = googleSheetsService.readAllInternshipLists();

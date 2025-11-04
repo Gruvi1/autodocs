@@ -1,9 +1,11 @@
 package ru.nsu.astakhov.autodocs;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.xmlbeans.impl.inst2xsd.RussianDollStrategy;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import ru.nsu.astakhov.autodocs.documents.RussianWordDecliner;
 import ru.nsu.astakhov.autodocs.service.StudentService;
 import ru.nsu.astakhov.autodocs.ui.configs.ConfigManager;
 import ru.nsu.astakhov.autodocs.ui.view.Window;
@@ -23,6 +25,7 @@ public class Application implements CommandLineRunner {
         final String configPath = "/config/default_config.ini";
         final String constantsPath = "/config/constants.ini";
 
+
         Ini ini = new Ini(configPath);
         ini.addNewFile(constantsPath);
 
@@ -34,6 +37,6 @@ public class Application implements CommandLineRunner {
     @Override
     public void run(String... args)  {
         SwingUtilities.invokeLater(() -> window.setVisible(true));
-//        studentService.scanAllData();
+        studentService.scanAllData();
     }
 }
