@@ -22,7 +22,7 @@ public class PanelManager {
     public <P extends Panel> void setPanel(Class<P> requiredType) {
         Panel panel = applicationContext.getBean(requiredType);
 
-        if (panel instanceof WarningsPanel || panel instanceof PlaceholderPanel) {
+        if (panel instanceof WarningsPanel || panel instanceof PlaceholderPanel || panel instanceof GeneratorPanel) {
             setCenterPanel(panel);
         }
         else if (panel instanceof NavigationPanel) {

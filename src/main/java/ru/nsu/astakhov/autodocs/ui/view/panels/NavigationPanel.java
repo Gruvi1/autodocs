@@ -42,15 +42,10 @@ public class NavigationPanel extends Panel implements Listener {
         setForeground(textColor);
         setFont(FontLoader.loadFont(FontType.ADWAITA_SANS_REGULAR, textSize));
 
-        setBorder(BorderFactory.createMatteBorder(0, 0, 0, 2, focusColor));
-
-
         int smallGap = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.GAP_SMALL));
 
-        add(Box.createVerticalStrut(smallGap), BorderLayout.NORTH);
-        add(Box.createVerticalStrut(smallGap), BorderLayout.SOUTH);
-        add(Box.createHorizontalStrut(smallGap), BorderLayout.WEST);
-        add(Box.createHorizontalStrut(smallGap), BorderLayout.EAST);
+        setBorder(BorderFactory.createLineBorder(primaryColor, smallGap));
+
         add(createButtonPanel(), BorderLayout.CENTER);
     }
 
@@ -70,7 +65,7 @@ public class NavigationPanel extends Panel implements Listener {
                 createButton(ButtonCommand.APPLICATION_TEMPLATES.getName()),
                 createButton(ButtonCommand.CREATE_APPLICATION_TEMPLATE.getName()),
                 createSeparator(),
-                createLabel(),
+                createLabel("Сгенерировать"),
                 createButton(ButtonCommand.ALL_DOC.getName()),
                 createButton(ButtonCommand.INTERNSHIP_APPLICATION.getName()),
                 createButton(ButtonCommand.INDIVIDUAL_ASSIGNMENT.getName()),
@@ -103,8 +98,8 @@ public class NavigationPanel extends Panel implements Listener {
         return separator;
     }
 
-    private JLabel createLabel() {
-        final String textLabel = "Сгенерировать:";
+    private JLabel createLabel(String text) {
+        final String textLabel = text;
         JLabel label = new JLabel(textLabel);
 
         Color textColor = ConfigManager.parseHexColor(ConfigManager.getSetting(ConfigConstants.TEXT_COLOR));
@@ -121,6 +116,19 @@ public class NavigationPanel extends Panel implements Listener {
 
         return LogoLoader.loadLogo(LogoType.HORIZONTAL_LOGO, widthLogo, heightLogo);
     }
+
+//    private JPanel createThesisButtons() {
+//        JPanel panel = new JPanel();
+//        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+//
+//        Color primaryColor = ConfigManager.parseHexColor(ConfigManager.getSetting(ConfigConstants.PRIMARY_COLOR));
+//        panel.setBackground(primaryColor);
+//
+//        int smallGap = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.GAP_SMALL));
+//
+//        panel.add(createLabel("Практика:"));
+////        panel.
+//    }
 
     @Override
     public void onTableUpdate(String updateStatus) {

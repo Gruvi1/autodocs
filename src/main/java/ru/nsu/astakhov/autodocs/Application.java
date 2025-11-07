@@ -37,6 +37,6 @@ public class Application implements CommandLineRunner {
     @Override
     public void run(String... args)  {
         SwingUtilities.invokeLater(() -> window.setVisible(true));
-        studentService.scanAllData();
+//        studentService.scanAllData();
     }
 }

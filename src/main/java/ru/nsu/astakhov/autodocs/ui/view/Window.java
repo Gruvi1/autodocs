@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import ru.nsu.astakhov.autodocs.ui.configs.ConfigConstants;
 import ru.nsu.astakhov.autodocs.ui.configs.ConfigManager;
 import ru.nsu.astakhov.autodocs.ui.view.panels.BottomPanel;
+import ru.nsu.astakhov.autodocs.ui.view.panels.GeneratorPanel;
 import ru.nsu.astakhov.autodocs.ui.view.panels.NavigationPanel;
 import ru.nsu.astakhov.autodocs.ui.view.panels.PlaceholderPanel;
 
@@ -44,7 +45,8 @@ public class Window extends JFrame {
 
     private void createWindow() {
         panelManager.setPanel(NavigationPanel.class);
-        panelManager.setPanel(PlaceholderPanel.class);
+//        panelManager.setPanel(PlaceholderPanel.class);
+        panelManager.setPanel(GeneratorPanel.class);
         panelManager.setPanel(BottomPanel.class);
     }
 }
