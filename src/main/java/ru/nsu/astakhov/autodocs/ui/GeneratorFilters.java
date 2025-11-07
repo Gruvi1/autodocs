@@ -10,7 +10,7 @@ public enum GeneratorFilters {
     TYPE("TypeFilter"),
     DEGREE("DegreeFilter"),
     COURSE("CourseFilter"),
-    SPECIALIZATION_("SpecializationFilter");
+    SPECIALIZATION("SpecializationFilter");
 
     private final String value;
 }

@@ -59,32 +59,26 @@ public class StudentEntity {
     private InternshipType internshipType; // вид практики
 
     @Embedded
-    @AttributeOverrides({
-            @AttributeOverride(name = "name", column = @Column(name = "thesis_supervisor_name")),
-            @AttributeOverride(name = "position", column = @Column(name = "thesis_supervisor_position")),
-            @AttributeOverride(name = "degree", column = @Column(name = "thesis_supervisor_degree")),
-            @AttributeOverride(name = "title", column = @Column(name = "thesis_supervisor_title"))
-    })
+    @AttributeOverride(name = "name", column = @Column(name = "thesis_supervisor_name"))
+    @AttributeOverride(name = "position", column = @Column(name = "thesis_supervisor_position"))
+    @AttributeOverride(name = "degree", column = @Column(name = "thesis_supervisor_degree"))
+    @AttributeOverride(name = "title", column = @Column(name = "thesis_supervisor_title"))
     private Supervisor thesisSupervisor; // руководитель вкр
 
     private String fullOrganizationName; // Название организации, структурного подразделения номер кабинета
 
     @Embedded
-    @AttributeOverrides({
-            @AttributeOverride(name = "name", column = @Column(name = "nsu_supervisor_name")),
-            @AttributeOverride(name = "position", column = @Column(name = "nsu_supervisor_position")),
-            @AttributeOverride(name = "degree", column = @Column(name = "nsu_supervisor_degree")),
-            @AttributeOverride(name = "title", column = @Column(name = "nsu_supervisor_title"))
-    })
+    @AttributeOverride(name = "name", column = @Column(name = "nsu_supervisor_name"))
+    @AttributeOverride(name = "position", column = @Column(name = "nsu_supervisor_position"))
+    @AttributeOverride(name = "degree", column = @Column(name = "nsu_supervisor_degree"))
+    @AttributeOverride(name = "title", column = @Column(name = "nsu_supervisor_title"))
     private Supervisor NSUSupervisor; // руководитель вкр от нгу
 
     @Embedded
-    @AttributeOverrides({
-            @AttributeOverride(name = "name", column = @Column(name = "organization_supervisor_name")),
-            @AttributeOverride(name = "position", column = @Column(name = "organization_supervisor_position")),
-            @AttributeOverride(name = "degree", column = @Column(name = "organization_supervisor_degree")),
-            @AttributeOverride(name = "title", column = @Column(name = "organization_supervisor_title"))
-    })
+    @AttributeOverride(name = "name", column = @Column(name = "organization_supervisor_name"))
+    @AttributeOverride(name = "position", column = @Column(name = "organization_supervisor_position"))
+    @AttributeOverride(name = "degree", column = @Column(name = "organization_supervisor_degree"))
+    @AttributeOverride(name = "title", column = @Column(name = "organization_supervisor_title"))
     private Supervisor organizationSupervisor; // руководитель вкр от организации
 
     private String administrativeActFromOrganization; // распорядительный акт от организации
@@ -94,23 +88,23 @@ public class StudentEntity {
     private String organizationName; // Наименование организации
 
     public void setEduProgram(String value) {
-        EduProgram eduProgram = EduProgram.fromValue(value);
-        if (eduProgram != null) {
-            this.eduProgram = eduProgram;
+        EduProgram newEduProgram = EduProgram.fromValue(value);
+        if (newEduProgram != null) {
+            this.eduProgram = newEduProgram;
         }
     }
 
     public void setSpecialization(String value) {
-        Specialization specialization = Specialization.fromValue(value);
-        if (specialization != null) {
-            this.specialization = specialization;
+        Specialization newSpecialization = Specialization.fromValue(value);
+        if (newSpecialization != null) {
+            this.specialization = newSpecialization;
         }
     }
 
     public void setInternshipType(String value) {
-        InternshipType internshipType = InternshipType.fromValue(value);
-        if (internshipType != null) {
-            this.internshipType = internshipType;
+        InternshipType newInternshipType = InternshipType.fromValue(value);
+        if (newInternshipType != null) {
+            this.internshipType = newInternshipType;
         }
     }
 }

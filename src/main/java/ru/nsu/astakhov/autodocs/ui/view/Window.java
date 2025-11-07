@@ -15,7 +15,7 @@ import java.awt.*;
 @Slf4j
 @Component
 public class Window extends JFrame {
-    private final PanelManager panelManager;
+    private final transient PanelManager panelManager;
 
     public Window(PanelManager panelManager) {
         this.panelManager = panelManager;
@@ -28,9 +28,9 @@ public class Window extends JFrame {
     private void configureWindow() {
         setTitle(ConfigManager.getSetting(ConfigConstants.APP_NAME));
 
-        int window_width = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.WINDOW_WIDTH));
-        int window_height = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.WINDOW_HEIGHT));
-        setSize(window_width, window_height);
+        int width = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.WINDOW_WIDTH));
+        int height = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.WINDOW_HEIGHT));
+        setSize(width, height);
 
         // TODO: более умно завершать работу
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);

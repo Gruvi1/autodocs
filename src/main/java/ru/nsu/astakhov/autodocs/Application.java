@@ -1,11 +1,9 @@
 package ru.nsu.astakhov.autodocs;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.xmlbeans.impl.inst2xsd.RussianDollStrategy;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import ru.nsu.astakhov.autodocs.documents.RussianWordDecliner;
 import ru.nsu.astakhov.autodocs.service.StudentService;
 import ru.nsu.astakhov.autodocs.ui.configs.ConfigManager;
 import ru.nsu.astakhov.autodocs.ui.view.Window;

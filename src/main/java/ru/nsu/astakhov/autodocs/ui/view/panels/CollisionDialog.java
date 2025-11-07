@@ -13,14 +13,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CollisionDialog extends JDialog {
-    private static final String dialogName = "Конфликт данных";
+    private static final String DIALOG_NAME = "Конфликт данных";
     private final FieldCollision collision;
     private String selectedOption = null;
     private Component originalGlassPane;
     private JPanel overlay;
 
     private CollisionDialog(Frame owner, FieldCollision collision) {
-        super(owner, dialogName, true);
+        super(owner, DIALOG_NAME, true);
         this.collision = collision;
 
         configureDialog();

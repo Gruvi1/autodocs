@@ -24,17 +24,17 @@ import static java.util.Map.entry;
 @Slf4j
 @Service
 public abstract class AbstractDocumentGenerator {
-    private final RussianWordDecliner decliner;
-    protected final String documentDirectory = "documents";
+    protected static final String DOCUMENT_DIRECTORY = "documents";
+    private final RussianWordDecliner russianWordDecliner;
 
-    public AbstractDocumentGenerator(RussianWordDecliner decliner) {
-        this.decliner = decliner;
+    protected AbstractDocumentGenerator(RussianWordDecliner russianWordDecliner) {
+        this.russianWordDecliner = russianWordDecliner;
         initDocumentDirectory();
     }
 
     private void initDocumentDirectory() {
         try {
-            Files.createDirectories(Paths.get(documentDirectory));
+            Files.createDirectories(Paths.get(DOCUMENT_DIRECTORY));
         } catch (IOException e) {
             throw new RuntimeException("Не удалось создать директорию для документов", e);
         }
@@ -91,7 +91,7 @@ public abstract class AbstractDocumentGenerator {
     );
 
     protected void generateDocument(String templatePath, String outputFileName, List<String> placeholders, StudentDto dto) {
-        String newFilePath = documentDirectory + "/" + outputFileName;
+        String newFilePath = DOCUMENT_DIRECTORY + "/" + outputFileName;
 
         try (InputStream in = getClass().getResourceAsStream(templatePath);
              XWPFDocument doc = new XWPFDocument(in);
@@ -115,9 +115,9 @@ public abstract class AbstractDocumentGenerator {
             String text = run.text();
             if (text == null) continue;
 
-            System.out.println(text);
             String updatedText = text;
             String replaceable;
+
             while ((replaceable = findFirstPlaceholder(updatedText, placeholders)) != null) {
                 Function<StudentDto, String> resolver = RESOLVERS.get(replaceable);
                 String value;
@@ -126,7 +126,7 @@ public abstract class AbstractDocumentGenerator {
                 }
                 else {
                     BiFunction<StudentDto, RussianWordDecliner, String> additionalResolver = ADDITIONAL_RESOLVERS.get(replaceable);
-                    value = additionalResolver.apply(dto, decliner);
+                    value = additionalResolver.apply(dto, russianWordDecliner);
                 }
                 updatedText = updatedText.replace(replaceable, value);
             }

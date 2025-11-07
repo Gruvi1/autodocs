@@ -1,6 +1,5 @@
 package ru.nsu.astakhov.autodocs.ui.view.panels;
 
-import org.apache.poi.ss.formula.functions.T;
 import ru.nsu.astakhov.autodocs.ui.configs.ConfigConstants;
 import ru.nsu.astakhov.autodocs.ui.configs.ConfigManager;
 import ru.nsu.astakhov.autodocs.ui.controller.EventHandler;
@@ -8,12 +7,11 @@ import ru.nsu.astakhov.autodocs.ui.view.CustomComboBox;
 import ru.nsu.astakhov.autodocs.ui.view.RoundedButton;
 
 import javax.swing.*;
-import java.util.List;
 
 public abstract class Panel extends JPanel {
     private EventHandler eventHandler;
 
-    abstract public void configurePanel();
+    public abstract void configurePanel();
 
     protected void setEventHandler(EventHandler eventHandler) {
         this.eventHandler = eventHandler;

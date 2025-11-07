@@ -2,9 +2,9 @@ package ru.nsu.astakhov.autodocs.ui.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import ru.nsu.astakhov.autodocs.ui.view.CustomComboBox;
 import ru.nsu.astakhov.autodocs.ui.view.panels.GeneratorPanel;
 
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 
 @RequiredArgsConstructor
@@ -15,11 +15,10 @@ public class GeneratorPanelEventHandler implements EventHandler {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        System.out.println(e.getActionCommand());
-        System.out.println(e.getSource());
+        Object source = e.getSource();
 
-        CustomComboBox source = (CustomComboBox) e.getSource();
-
-        System.out.println(source.getSelectedItem());
+        if (source instanceof JComboBox<?> comboBox) {
+            System.out.println(comboBox.getSelectedItem());
+        }
     }
 }
