@@ -3,7 +3,8 @@ package ru.nsu.astakhov.autodocs.ui.view.panels;
 import ru.nsu.astakhov.autodocs.model.FieldCollision;
 import ru.nsu.astakhov.autodocs.ui.configs.ConfigConstants;
 import ru.nsu.astakhov.autodocs.ui.configs.ConfigManager;
-import ru.nsu.astakhov.autodocs.ui.view.RoundedButton;
+import ru.nsu.astakhov.autodocs.ui.view.component.CustomLabel;
+import ru.nsu.astakhov.autodocs.ui.view.component.RoundedButton;
 import ru.nsu.astakhov.autodocs.ui.view.font.FontLoader;
 import ru.nsu.astakhov.autodocs.ui.view.font.FontType;
 
@@ -68,7 +69,7 @@ public class CollisionDialog extends JDialog {
         List<Component> components = new ArrayList<>(List.of(
                 createTitleMessage(),
                 Box.createVerticalStrut(25),
-                createTextLabel(message),
+                new CustomLabel(message),
                 Box.createVerticalStrut(10)
         ));
 
@@ -107,16 +108,16 @@ public class CollisionDialog extends JDialog {
         firstLine.setLayout(new BoxLayout(firstLine, BoxLayout.X_AXIS));
         firstLine.setOpaque(false);
 
-        firstLine.add(createTextLabel("Студент "));
-        firstLine.add(createBorderedLabel(collision.studentName()));
-        firstLine.add(createTextLabel(" имеет разные значения поля "));
+        firstLine.add(new CustomLabel("Студент "));
+        firstLine.add(new CustomLabel(collision.studentName(), true));
+        firstLine.add(new CustomLabel(" имеет разные значения поля "));
 
         JPanel secondLine = new JPanel();
         secondLine.setLayout(new BoxLayout(secondLine, BoxLayout.X_AXIS));
         secondLine.setOpaque(false);
 
-        secondLine.add(createBorderedLabel(collision.fieldName()));
-        secondLine.add(createTextLabel(" на листах практики и ВКР"));
+        secondLine.add(new CustomLabel(collision.fieldName(), true));
+        secondLine.add(new CustomLabel(" на листах практики и ВКР"));
 
         JPanel column = new JPanel();
         column.setLayout(new BoxLayout(column, BoxLayout.Y_AXIS));
@@ -129,57 +130,13 @@ public class CollisionDialog extends JDialog {
         return column;
     }
 
-    // TODO: ДУБЛИРУЕТСЯ В CollisionDialog И WarningsPanel
-    private JLabel createBorderedLabel(String text) {
-        return createCustomLabel(text, true);
-    }
-
-    // TODO: ДУБЛИРУЕТСЯ В CollisionDialog И WarningsPanel
-    private JLabel createTextLabel(String text) {
-        return createCustomLabel(text, false);
-    }
-
-    // TODO: ДУБЛИРУЕТСЯ В CollisionDialog И WarningsPanel
-    private JLabel createCustomLabel(String text, boolean opaque) {
-        JLabel label = new JLabel(text);
-
-        Color textColor = ConfigManager.parseHexColor(ConfigManager.getSetting(ConfigConstants.TEXT_COLOR));
-        int textSize = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.MENU_SIZE));
-
-        Color backgroundColor = ConfigManager.parseHexColor(ConfigManager.getSetting(ConfigConstants.BACKGROUND_COLOR));
-
-        label.setBackground(backgroundColor);
-
-        label.setOpaque(opaque);
-        if (opaque) {
-            label.setBorder(BorderFactory.createLineBorder(backgroundColor, 5));
-        }
-        label.setFont(FontLoader.loadFont(FontType.ADWAITA_SANS_REGULAR, textSize));
-        label.setForeground(textColor);
-
-        label.setAlignmentX(Component.CENTER_ALIGNMENT);
-        label.setHorizontalAlignment(SwingConstants.CENTER);
-
-        return label;
-    }
-
     private JButton createButton(String buttonName) {
-//        JButton button = new JButton(buttonName);
-        RoundedButton button = new RoundedButton(buttonName, 5);
-//        Color backgroundColor = ConfigManager.parseHexColor(ConfigManager.getSetting(ConfigConstants.BACKGROUND_COLOR));
-//        Color textColor = ConfigManager.parseHexColor(ConfigManager.getSetting(ConfigConstants.TEXT_COLOR));
+        RoundedButton button = new RoundedButton(buttonName);
+
         int textSize = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.MENU_SIZE));
-//
+
         button.setFont(FontLoader.loadFont(FontType.ADWAITA_SANS_REGULAR, textSize));
-//        button.setBackground(backgroundColor);
-//        button.setForeground(textColor);
-//        button.setBorderPainted(false);
-//        button.setFocusPainted(false);
-//
-//        button.setAlignmentX(Component.CENTER_ALIGNMENT);
-//        button.setHorizontalAlignment(SwingConstants.CENTER);
-//
-//        button.setActionCommand(buttonName);
+
         button.addActionListener(e -> {
             selectedOption = buttonName;
             setVisible(false);

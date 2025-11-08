@@ -1,5 +1,6 @@
-package ru.nsu.astakhov.autodocs.ui.view;
+package ru.nsu.astakhov.autodocs.ui.view.component;
 
+import jakarta.persistence.criteria.CriteriaBuilder;
 import ru.nsu.astakhov.autodocs.ui.configs.ConfigConstants;
 import ru.nsu.astakhov.autodocs.ui.configs.ConfigManager;
 import ru.nsu.astakhov.autodocs.ui.view.font.FontLoader;
@@ -13,6 +14,14 @@ public class RoundedButton extends JButton {
     public RoundedButton(String text, int rounding) {
         super(text);
         this.rounding = rounding;
+
+        configureButton();
+    }
+
+    public RoundedButton(String text) {
+        super(text);
+
+        this.rounding = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.GAP_SMALL));
 
         configureButton();
     }

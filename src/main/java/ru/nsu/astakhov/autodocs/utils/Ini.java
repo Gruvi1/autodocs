@@ -1,5 +1,7 @@
 package ru.nsu.astakhov.autodocs.utils;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -7,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+@Slf4j
 public class Ini {
     private final Map<String, Map<String, String>> config;
 
@@ -54,14 +57,14 @@ public class Ini {
         }
         else {
             if (lastSection == null) {
-                System.err.println("Некорректный INI файл: Отсутствует секция");
+                logger.error("Некорректный INI файл: Отсутствует секция");
                 return;
             }
 
             String[] lineParts = line.replace(" ", "").split("=");
 
             if (lineParts.length != 2) {
-                System.err.println("Некорректная строка в INI файле: " + line);
+                logger.error("Некорректная строка в INI файле: \"{}\"", line);
                 return;
             }
 

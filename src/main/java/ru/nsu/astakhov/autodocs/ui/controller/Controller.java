@@ -7,7 +7,7 @@ import ru.nsu.astakhov.autodocs.model.FieldCollision;
 import ru.nsu.astakhov.autodocs.service.StudentService;
 import ru.nsu.astakhov.autodocs.ui.Listener;
 import ru.nsu.astakhov.autodocs.ui.Observable;
-import ru.nsu.astakhov.autodocs.ui.view.PanelManager;
+import ru.nsu.astakhov.autodocs.ui.view.panels.PanelManager;
 import ru.nsu.astakhov.autodocs.ui.view.panels.CollisionDialog;
 import ru.nsu.astakhov.autodocs.ui.view.panels.Panel;
 

@@ -1,11 +1,9 @@
-package ru.nsu.astakhov.autodocs.ui.view;
+package ru.nsu.astakhov.autodocs.ui.view.panels;
 
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
-import ru.nsu.astakhov.autodocs.ui.view.panels.*;
-import ru.nsu.astakhov.autodocs.ui.view.panels.Panel;
 
 import javax.swing.*;
 import java.awt.*;

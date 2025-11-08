@@ -9,8 +9,7 @@ import ru.nsu.astakhov.autodocs.ui.configs.ConfigConstants;
 import ru.nsu.astakhov.autodocs.ui.configs.ConfigManager;
 import ru.nsu.astakhov.autodocs.ui.controller.Controller;
 import ru.nsu.astakhov.autodocs.ui.controller.WarningsPanelEventHandler;
-import ru.nsu.astakhov.autodocs.ui.view.font.FontLoader;
-import ru.nsu.astakhov.autodocs.ui.view.font.FontType;
+import ru.nsu.astakhov.autodocs.ui.view.component.CustomLabel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,12 +18,10 @@ import java.util.List;
 @Component
 public class WarningsPanel extends Panel implements Listener {
     private final WarningList warningList;
-    private final Controller controller;
     private final JPanel lines;
 
     public WarningsPanel(WarningList warningList, Controller controller) {
         this.warningList = warningList;
-        this.controller = controller;
 
         lines = new JPanel();
         lines.setLayout(new BoxLayout(lines, BoxLayout.Y_AXIS));
@@ -73,47 +70,15 @@ public class WarningsPanel extends Panel implements Listener {
         // TODO: возможно добавить параметр в перечисление, чтобы не мудохаться каждый раз
         String tableType = warning.tableType() == TableType.INTERNSHIP ? "практики" : "ВКР";
 
-        line.add(createTextLabel("В таблице "));
-        line.add(createBorderedLabel(tableType));
-        line.add(createTextLabel(" у студента "));
-        line.add(createBorderedLabel(warning.studentName()));
-        line.add(createTextLabel(" не определено поле: "));
-        line.add(createBorderedLabel(warning.fieldName()));
+        line.add(new CustomLabel("В таблице "));
+        line.add(new CustomLabel(tableType, true));
+        line.add(new CustomLabel(" у студента "));
+        line.add(new CustomLabel(warning.studentName(), true));
+        line.add(new CustomLabel(" не определено поле: "));
+        line.add(new CustomLabel(warning.fieldName(), true));
 
         line.setAlignmentX(LEFT_ALIGNMENT);
 
         return line;
-    }
-
-
-    // TODO: ДУБЛИРУЕТСЯ В CollisionDialog И WarningsPanel
-    private JLabel createBorderedLabel(String text) {
-        return createCustomLabel(text, true);
-    }
-
-    // TODO: ДУБЛИРУЕТСЯ В CollisionDialog И WarningsPanel
-    private JLabel createTextLabel(String text) {
-        return createCustomLabel(text, false);
-    }
-
-    // TODO: ДУБЛИРУЕТСЯ В CollisionDialog И WarningsPanel
-    private JLabel createCustomLabel(String text, boolean opaque) {
-        JLabel label = new JLabel(text);
-
-        Color textColor = ConfigManager.parseHexColor(ConfigManager.getSetting(ConfigConstants.TEXT_COLOR));
-        int textSize = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.MENU_SIZE));
-
-        Color backgroundColor = ConfigManager.parseHexColor(ConfigManager.getSetting(ConfigConstants.BACKGROUND_COLOR));
-
-        label.setBackground(backgroundColor);
-
-        label.setOpaque(opaque);
-        if (opaque) {
-            label.setBorder(BorderFactory.createLineBorder(backgroundColor, 5));
-        }
-        label.setFont(FontLoader.loadFont(FontType.ADWAITA_SANS_REGULAR, textSize));
-        label.setForeground(textColor);
-
-        return label;
     }
 }

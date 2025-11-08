@@ -1,4 +1,4 @@
-package ru.nsu.astakhov.autodocs.ui.view;
+package ru.nsu.astakhov.autodocs.model;
 
 
 import lombok.Getter;
@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Getter
-public enum DegreeFilter {
+public enum Degree {
     BACHELORS("Бакалавриат"),
     MASTERS("Магистратура");
 

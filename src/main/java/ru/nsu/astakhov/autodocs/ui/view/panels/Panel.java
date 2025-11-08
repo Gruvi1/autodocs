@@ -3,8 +3,8 @@ package ru.nsu.astakhov.autodocs.ui.view.panels;
 import ru.nsu.astakhov.autodocs.ui.configs.ConfigConstants;
 import ru.nsu.astakhov.autodocs.ui.configs.ConfigManager;
 import ru.nsu.astakhov.autodocs.ui.controller.EventHandler;
-import ru.nsu.astakhov.autodocs.ui.view.CustomComboBox;
-import ru.nsu.astakhov.autodocs.ui.view.RoundedButton;
+import ru.nsu.astakhov.autodocs.ui.view.component.CustomComboBox;
+import ru.nsu.astakhov.autodocs.ui.view.component.RoundedButton;
 
 import javax.swing.*;
 
@@ -30,20 +30,10 @@ public abstract class Panel extends JPanel {
 
     protected JComboBox<String> createComboBox(String comboBoxName, String[] parameters) {
         CustomComboBox comboBox = new CustomComboBox(parameters);
-
+        int a = 5;
         comboBox.setActionCommand(comboBoxName);
         comboBox.addActionListener(eventHandler);
 
         return comboBox;
-    }
-
-    protected JMenuItem createMenuItem(String itemName) {
-        JMenuItem menuItem = new JMenuItem(itemName);
-
-        menuItem.setBorder(BorderFactory.createEmptyBorder());
-        menuItem.setActionCommand(itemName);
-        menuItem.addActionListener(eventHandler);
-
-        return menuItem;
     }
 }

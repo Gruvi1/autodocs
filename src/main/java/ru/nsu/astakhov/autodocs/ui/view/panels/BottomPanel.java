@@ -6,8 +6,7 @@ import ru.nsu.astakhov.autodocs.ui.configs.ConfigConstants;
 import ru.nsu.astakhov.autodocs.ui.configs.ConfigManager;
 import ru.nsu.astakhov.autodocs.ui.controller.BottomPanelEventHandler;
 import ru.nsu.astakhov.autodocs.ui.controller.Controller;
-import ru.nsu.astakhov.autodocs.ui.view.font.FontLoader;
-import ru.nsu.astakhov.autodocs.ui.view.font.FontType;
+import ru.nsu.astakhov.autodocs.ui.view.component.CustomLabel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,11 +14,9 @@ import java.awt.*;
 @Component
 public class BottomPanel extends Panel implements Listener {
     private final JLabel statusLabel;
-    private final Controller controller;
 
     public BottomPanel(Controller controller) {
-        this.controller = controller;
-        statusLabel = createStatusLabel();
+        statusLabel = new CustomLabel("");
 
         controller.addListener(this);
         setEventHandler(new BottomPanelEventHandler(controller, this));
@@ -46,19 +43,6 @@ public class BottomPanel extends Panel implements Listener {
         add(Box.createHorizontalGlue());
         add(statusLabel);
         add(Box.createHorizontalStrut(gap));
-    }
-
-    private JLabel createStatusLabel() {
-        JLabel label = new JLabel();
-
-        int textSize = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.MENU_SIZE));
-        label.setFont(FontLoader.loadFont(FontType.ADWAITA_SANS_REGULAR, textSize));
-
-        Color textColor = ConfigManager.parseHexColor(ConfigManager.getSetting(ConfigConstants.TEXT_COLOR));
-
-        label.setForeground(textColor);
-
-        return label;
     }
 
     @Override

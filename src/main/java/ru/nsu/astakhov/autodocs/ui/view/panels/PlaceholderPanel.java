@@ -5,6 +5,7 @@ import ru.nsu.astakhov.autodocs.ui.configs.ConfigConstants;
 import ru.nsu.astakhov.autodocs.ui.configs.ConfigManager;
 import ru.nsu.astakhov.autodocs.ui.controller.Controller;
 import ru.nsu.astakhov.autodocs.ui.controller.PlaceholderPanelEventHandler;
+import ru.nsu.astakhov.autodocs.ui.view.component.CustomLabel;
 import ru.nsu.astakhov.autodocs.ui.view.font.FontLoader;
 import ru.nsu.astakhov.autodocs.ui.view.font.FontType;
 import ru.nsu.astakhov.autodocs.ui.view.logo.LogoLoader;
@@ -64,13 +65,10 @@ public class PlaceholderPanel extends Panel implements Listener {
     }
 
     private JLabel createTextLabel(String text) {
-        JLabel textLabel = new JLabel(text);
+        JLabel textLabel = new CustomLabel(text);
 
         int textSize = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.TITLE_SIZE));
-        Color textColor = ConfigManager.parseHexColor(ConfigManager.getSetting(ConfigConstants.TEXT_COLOR));
-
         textLabel.setFont(FontLoader.loadFont(FontType.ADWAITA_SANS_ITALIC, textSize));
-        textLabel.setForeground(textColor);
         textLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         return textLabel;

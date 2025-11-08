@@ -6,6 +6,7 @@ import ru.nsu.astakhov.autodocs.ui.configs.ConfigConstants;
 import ru.nsu.astakhov.autodocs.ui.configs.ConfigManager;
 import ru.nsu.astakhov.autodocs.ui.controller.Controller;
 import ru.nsu.astakhov.autodocs.ui.controller.NavigationPanelEventHandler;
+import ru.nsu.astakhov.autodocs.ui.view.component.CustomLabel;
 import ru.nsu.astakhov.autodocs.ui.view.font.FontLoader;
 import ru.nsu.astakhov.autodocs.ui.view.font.FontType;
 import ru.nsu.astakhov.autodocs.ui.view.logo.LogoLoader;
@@ -18,11 +19,7 @@ import java.awt.*;
 
 @org.springframework.stereotype.Component
 public class NavigationPanel extends Panel implements Listener {
-    private final Controller controller;
-
     public NavigationPanel(Controller controller) {
-        this.controller = controller;
-
         controller.addListener(this);
         setEventHandler(new NavigationPanelEventHandler(controller,this));
 
@@ -35,7 +32,6 @@ public class NavigationPanel extends Panel implements Listener {
 
         Color primaryColor = ConfigManager.parseHexColor(ConfigManager.getSetting(ConfigConstants.PRIMARY_COLOR));
         Color textColor = ConfigManager.parseHexColor(ConfigManager.getSetting(ConfigConstants.TEXT_COLOR));
-        Color focusColor = ConfigManager.parseHexColor(ConfigManager.getSetting(ConfigConstants.FOCUS_COLOR));
         int textSize = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.TEXT_SIZE));
 
         setBackground(primaryColor);
@@ -57,6 +53,7 @@ public class NavigationPanel extends Panel implements Listener {
         buttonPanel.setBackground(primaryColor);
 
         int smallGap = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.GAP_SMALL));
+        int textSize = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.TEXT_SIZE));
 
         List<Component> components = new ArrayList<>(List.of(
                 createButton(ButtonCommand.UPDATE_TABLE.getName()),
@@ -65,7 +62,7 @@ public class NavigationPanel extends Panel implements Listener {
                 createButton(ButtonCommand.APPLICATION_TEMPLATES.getName()),
                 createButton(ButtonCommand.CREATE_APPLICATION_TEMPLATE.getName()),
                 createSeparator(),
-                createLabel("Сгенерировать"),
+                new CustomLabel("Сгенерировать", textSize, false),
                 createButton(ButtonCommand.ALL_DOC.getName()),
                 createButton(ButtonCommand.INTERNSHIP_APPLICATION.getName()),
                 createButton(ButtonCommand.INDIVIDUAL_ASSIGNMENT.getName()),
@@ -98,37 +95,12 @@ public class NavigationPanel extends Panel implements Listener {
         return separator;
     }
 
-    private JLabel createLabel(String text) {
-        final String textLabel = text;
-        JLabel label = new JLabel(textLabel);
-
-        Color textColor = ConfigManager.parseHexColor(ConfigManager.getSetting(ConfigConstants.TEXT_COLOR));
-        int textSize = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.TEXT_SIZE));
-        label.setFont(FontLoader.loadFont(FontType.ADWAITA_SANS_REGULAR, textSize));
-        label.setForeground(textColor);
-
-        return label;
-    }
-
     private JLabel createLogoLabel() {
         int widthLogo = 350;
         int heightLogo = 100;
 
         return LogoLoader.loadLogo(LogoType.HORIZONTAL_LOGO, widthLogo, heightLogo);
     }
-
-//    private JPanel createThesisButtons() {
-//        JPanel panel = new JPanel();
-//        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-//
-//        Color primaryColor = ConfigManager.parseHexColor(ConfigManager.getSetting(ConfigConstants.PRIMARY_COLOR));
-//        panel.setBackground(primaryColor);
-//
-//        int smallGap = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.GAP_SMALL));
-//
-//        panel.add(createLabel("Практика:"));
-////        panel.
-//    }
 
     @Override
     public void onTableUpdate(String updateStatus) {

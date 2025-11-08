@@ -1,4 +1,4 @@
-package ru.nsu.astakhov.autodocs.ui.view;
+package ru.nsu.astakhov.autodocs.ui.view.component;
 
 import ru.nsu.astakhov.autodocs.ui.configs.ConfigConstants;
 import ru.nsu.astakhov.autodocs.ui.configs.ConfigManager;
@@ -13,7 +13,16 @@ import java.awt.*;
 
 public class CustomComboBox extends JComboBox<String> {
     public CustomComboBox(String[] parameters) {
-        super(parameters);
+        super();
+
+        String placeholder = "–";
+        String[] items = new String[parameters.length + 1];
+        items[0] = placeholder;
+        System.arraycopy(parameters, 0, items, 1, parameters.length);
+
+        setModel(new DefaultComboBoxModel<>(items));
+        setSelectedIndex(0); // выбираем placeholder
+
         configureComboBox();
     }
 
@@ -96,8 +105,8 @@ public class CustomComboBox extends JComboBox<String> {
 
         @Override
         public void paint(Graphics g, JComponent c) {
-            if (c instanceof CustomComboBox) {
-                ((CustomComboBox) c).paintComponent(g);
+            if (c instanceof CustomComboBox customComboBox) {
+                customComboBox.paintComponent(g);
             }
         }
 
