@@ -205,7 +205,6 @@ public class GeneratorPanel extends Panel implements Listener {
             for (Degree degree : degrees) {
                 for (Course course : courses) {
                     for (Specialization specialization : specializations) {
-                        if (selectedSpecialization != null && !selectedSpecialization.equals(specialization.getValue())) continue;
                         panel.add(new FileBox(type, degree, course, specialization), constraints);
 
                         ++constraints.gridx;

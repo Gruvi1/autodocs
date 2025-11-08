@@ -1,5 +1,7 @@
 package ru.nsu.astakhov.autodocs.ui.view.logo;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import ru.nsu.astakhov.autodocs.ui.configs.ConfigConstants;
 import ru.nsu.astakhov.autodocs.ui.configs.ConfigManager;
 
@@ -10,6 +12,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Objects;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class LogoLoader {
     public static JLabel loadLogo(LogoType type, int width, int height) {
         return createLogo(type, width, height);

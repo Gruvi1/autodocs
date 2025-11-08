@@ -1,11 +1,15 @@
 package ru.nsu.astakhov.autodocs.ui.view.font;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
 import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.EnumMap;
 import java.util.Map;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class FontLoader {
     private static final Map<FontType, Font> cachedFonts = new EnumMap<>(FontType.class);
 
