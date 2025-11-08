@@ -53,7 +53,6 @@ public class NavigationPanel extends Panel implements Listener {
         buttonPanel.setBackground(primaryColor);
 
         int smallGap = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.GAP_SMALL));
-        int textSize = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.TEXT_SIZE));
 
         List<Component> components = new ArrayList<>(List.of(
                 createButton(ButtonCommand.UPDATE_TABLE.getName()),
@@ -62,14 +61,7 @@ public class NavigationPanel extends Panel implements Listener {
                 createButton(ButtonCommand.APPLICATION_TEMPLATES.getName()),
                 createButton(ButtonCommand.CREATE_APPLICATION_TEMPLATE.getName()),
                 createSeparator(),
-                new CustomLabel("Сгенерировать", textSize, false),
-                createButton(ButtonCommand.ALL_DOC.getName()),
-                createButton(ButtonCommand.INTERNSHIP_APPLICATION.getName()),
-                createButton(ButtonCommand.INDIVIDUAL_ASSIGNMENT.getName()),
-                createButton(ButtonCommand.INTERNSHIP_REPORT.getName()),
-                createButton(ButtonCommand.REVIEW.getName()),
-                createButton(ButtonCommand.REVIEWER_COMMENT.getName()),
-                createButton(ButtonCommand.THESIS_SUPERVISOR_REVIEW.getName()),
+                createButton(ButtonCommand.GENERATE_DOCUMENT.getName()),
                 Box.createVerticalGlue(),
                 createLogoLabel()
         ));
@@ -78,6 +70,14 @@ public class NavigationPanel extends Panel implements Listener {
             buttonPanel.add(component);
             buttonPanel.add(Box.createVerticalStrut(smallGap));
         }
+
+        int menuTextSize = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.MENU_SIZE));
+
+        JButton guideButton = createButton(ButtonCommand.SHORT_GUIDE.getName());
+        guideButton.setFont(FontLoader.loadFont(FontType.ADWAITA_SANS_REGULAR, menuTextSize));
+
+        buttonPanel.add(guideButton);
+
         return buttonPanel;
     }
 

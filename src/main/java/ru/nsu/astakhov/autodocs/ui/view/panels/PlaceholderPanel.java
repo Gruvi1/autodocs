@@ -47,8 +47,8 @@ public class PlaceholderPanel extends Panel implements Listener {
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
         contentPanel.setOpaque(false);
 
-        String text = "Пожалуйста, выберите нужный документ в меню слева";
-        String text2 = "Чтобы посмотреть краткое руководство, нажмите сюда";
+        String text  = "Выберите действие в левом меню";
+        String text2 = "Посмотрите краткое руководство, чтобы начать";
 
         JLabel textLabel = createTextLabel(text);
         JLabel textLabel2 = createTextLabel(text2);

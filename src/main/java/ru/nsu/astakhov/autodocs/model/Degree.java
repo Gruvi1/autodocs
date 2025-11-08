@@ -11,4 +11,13 @@ public enum Degree {
     MASTERS("Магистратура");
 
     private final String value;
+
+    public static Degree fromValue(String value) {
+        for (Degree degree : Degree.values()) {
+            if (degree.value.equals(value)) {
+                return degree;
+            }
+        }
+        return null;
+    }
 }

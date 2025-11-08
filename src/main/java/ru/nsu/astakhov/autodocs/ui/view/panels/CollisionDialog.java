@@ -66,10 +66,13 @@ public class CollisionDialog extends JDialog {
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setOpaque(false);
 
+        JLabel label = new CustomLabel(message);
+        label.setAlignmentX(Component.CENTER_ALIGNMENT);
+
         List<Component> components = new ArrayList<>(List.of(
                 createTitleMessage(),
                 Box.createVerticalStrut(25),
-                new CustomLabel(message),
+                label,
                 Box.createVerticalStrut(10)
         ));
 

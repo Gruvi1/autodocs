@@ -49,10 +49,11 @@ public class WarningsPanel extends Panel implements Listener {
         setLayout(new BorderLayout());
 
         JScrollPane scrollPane = new JScrollPane(lines);
+        JScrollBar verticalBar = scrollPane.getVerticalScrollBar();
+        verticalBar.setUnitIncrement(10);
 
         Color focusColor = ConfigManager.parseHexColor(ConfigManager.getSetting(ConfigConstants.FOCUS_COLOR));
         setBackground(focusColor);
-        scrollPane.getViewport().setBackground(Color.BLUE); // TODO: убрать это
 
         scrollPane.setBackground(focusColor);
 

@@ -45,9 +45,7 @@ public class Window extends JFrame {
         panelManager.setPanel(NavigationPanel.class);
 
         // Center
-//        panelManager.setPanel(WarningsPanel.class);
-//        panelManager.setPanel(PlaceholderPanel.class);
-        panelManager.setPanel(GeneratorPanel.class);
+        panelManager.setPanel(PlaceholderPanel.class);
 
         // Bottom
         panelManager.setPanel(BottomPanel.class);

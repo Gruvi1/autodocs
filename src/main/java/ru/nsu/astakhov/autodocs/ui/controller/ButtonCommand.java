@@ -11,14 +11,9 @@ public enum ButtonCommand {
     WARNING_TABLE("Предупреждения по таблице"),
     APPLICATION_TEMPLATES("Шаблоны заявлений"),
     CREATE_APPLICATION_TEMPLATE("Создать шаблон заявления"),
-    ALL_DOC("Все документы"),
-    INTERNSHIP_APPLICATION("Заявление на практику"),
-    INDIVIDUAL_ASSIGNMENT("Индивидуальное задание"),
-    INTERNSHIP_REPORT("Отчёт о практике"),
-    INTERNSHIP_SUPERVISOR_REVIEW("Отзыв руководителя практики"),
-    REVIEW("Отзыв"),
-    REVIEWER_COMMENT("Рецензия"),
-    THESIS_SUPERVISOR_REVIEW("Отзыв руководителя ВКР");
+    GENERATE_DOCUMENT("Сгенерировать документы"),
+    SHORT_GUIDE("Краткое руководство"),
+    GENERATE("Сгенерировать");
 
     private final String name;
 
