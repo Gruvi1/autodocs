@@ -1,6 +1,7 @@
 package ru.nsu.astakhov.autodocs.ui.view.panels;
 
 import org.springframework.stereotype.Component;
+import ru.nsu.astakhov.autodocs.TemplateType;
 import ru.nsu.astakhov.autodocs.documents.GeneratorType;
 import ru.nsu.astakhov.autodocs.model.Course;
 import ru.nsu.astakhov.autodocs.model.Specialization;
@@ -13,6 +14,7 @@ import ru.nsu.astakhov.autodocs.ui.controller.Controller;
 import ru.nsu.astakhov.autodocs.ui.controller.GeneratorPanelEventHandler;
 import ru.nsu.astakhov.autodocs.model.Degree;
 import ru.nsu.astakhov.autodocs.ui.view.component.CustomLabel;
+import ru.nsu.astakhov.autodocs.ui.view.component.FileBox;
 
 import javax.swing.*;
 import java.awt.*;
@@ -111,11 +113,48 @@ public class GeneratorPanel extends Panel implements Listener {
     }
 
 
-    private JPanel createDocumentsPanel() {
-        JPanel panel = new JPanel(new GridLayout(11, 3));
-        panel.setOpaque(false);
+    private JScrollPane createDocumentsPanel() {
+//        JPanel panel = new JPanel(new GridLayout(0, 3, 5, 5));
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+//        panel.setOpaque(false);
 
-        return panel;
+        Color backgroundColor = ConfigManager.parseHexColor(ConfigManager.getSetting(ConfigConstants.BACKGROUND_COLOR));
+        panel.setBorder(BorderFactory.createLineBorder(backgroundColor, 5));
+        panel.setBackground(backgroundColor);
+
+
+        for (TemplateType type : TemplateType.values()) {
+//            for (Degree degree : Degree.values()) {
+//                for (Course course : Course.values()) {
+//                    for (Specialization specialization : Specialization.values()) {
+                        panel.add(new FileBox(type, Degree.BACHELORS, Course.THIRD, Specialization.CS_AND_SYSTEMS_ENGINEERING));
+//                    }
+//                }
+//            }
+        }
+        panel.add(new FileBox(TemplateType.INDIVIDUAL_ASSIGNMENT, Degree.BACHELORS, Course.THIRD, Specialization.CS_AND_SYSTEMS_ENGINEERING));
+        panel.add(new FileBox(TemplateType.INDIVIDUAL_ASSIGNMENT, Degree.BACHELORS, Course.THIRD, Specialization.CS_AND_SYSTEMS_ENGINEERING));
+        panel.add(new FileBox(TemplateType.INDIVIDUAL_ASSIGNMENT, Degree.BACHELORS, Course.THIRD, Specialization.CS_AND_SYSTEMS_ENGINEERING));
+        panel.add(new FileBox(TemplateType.INDIVIDUAL_ASSIGNMENT, Degree.BACHELORS, Course.THIRD, Specialization.CS_AND_SYSTEMS_ENGINEERING));
+        panel.add(new FileBox(TemplateType.INDIVIDUAL_ASSIGNMENT, Degree.BACHELORS, Course.THIRD, Specialization.CS_AND_SYSTEMS_ENGINEERING));
+        panel.add(new FileBox(TemplateType.INDIVIDUAL_ASSIGNMENT, Degree.BACHELORS, Course.THIRD, Specialization.CS_AND_SYSTEMS_ENGINEERING));
+        panel.add(new FileBox(TemplateType.INDIVIDUAL_ASSIGNMENT, Degree.BACHELORS, Course.THIRD, Specialization.CS_AND_SYSTEMS_ENGINEERING));
+        panel.add(new FileBox(TemplateType.INDIVIDUAL_ASSIGNMENT, Degree.BACHELORS, Course.THIRD, Specialization.CS_AND_SYSTEMS_ENGINEERING));
+        panel.add(new FileBox(TemplateType.INDIVIDUAL_ASSIGNMENT, Degree.BACHELORS, Course.THIRD, Specialization.CS_AND_SYSTEMS_ENGINEERING));
+        panel.add(new FileBox(TemplateType.INDIVIDUAL_ASSIGNMENT, Degree.BACHELORS, Course.THIRD, Specialization.CS_AND_SYSTEMS_ENGINEERING));
+        panel.add(new FileBox(TemplateType.INDIVIDUAL_ASSIGNMENT, Degree.BACHELORS, Course.THIRD, Specialization.CS_AND_SYSTEMS_ENGINEERING));
+        panel.add(new FileBox(TemplateType.INDIVIDUAL_ASSIGNMENT, Degree.BACHELORS, Course.THIRD, Specialization.CS_AND_SYSTEMS_ENGINEERING));
+        panel.add(new FileBox(TemplateType.INDIVIDUAL_ASSIGNMENT, Degree.BACHELORS, Course.THIRD, Specialization.CS_AND_SYSTEMS_ENGINEERING));
+        panel.add(new FileBox(TemplateType.INDIVIDUAL_ASSIGNMENT, Degree.BACHELORS, Course.THIRD, Specialization.CS_AND_SYSTEMS_ENGINEERING));
+        panel.add(new FileBox(TemplateType.INDIVIDUAL_ASSIGNMENT, Degree.BACHELORS, Course.THIRD, Specialization.CS_AND_SYSTEMS_ENGINEERING));
+        panel.add(new FileBox(TemplateType.INDIVIDUAL_ASSIGNMENT, Degree.BACHELORS, Course.THIRD, Specialization.CS_AND_SYSTEMS_ENGINEERING));
+
+        JScrollPane scrollPane = new JScrollPane(panel);
+        scrollPane.setOpaque(false);
+        scrollPane.setBorder(BorderFactory.createEmptyBorder());
+        return scrollPane;
+//        return panel;
     }
 
 

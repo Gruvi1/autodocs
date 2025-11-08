@@ -30,7 +30,6 @@ public abstract class Panel extends JPanel {
 
     protected JComboBox<String> createComboBox(String comboBoxName, String[] parameters) {
         CustomComboBox comboBox = new CustomComboBox(parameters);
-        int a = 5;
         comboBox.setActionCommand(comboBoxName);
         comboBox.addActionListener(eventHandler);
 

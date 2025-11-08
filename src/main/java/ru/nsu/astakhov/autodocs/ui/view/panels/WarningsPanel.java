@@ -52,7 +52,7 @@ public class WarningsPanel extends Panel implements Listener {
 
         Color focusColor = ConfigManager.parseHexColor(ConfigManager.getSetting(ConfigConstants.FOCUS_COLOR));
         setBackground(focusColor);
-        scrollPane.getViewport().setBackground(Color.BLUE);
+        scrollPane.getViewport().setBackground(Color.BLUE); // TODO: убрать это
 
         scrollPane.setBackground(focusColor);
 
