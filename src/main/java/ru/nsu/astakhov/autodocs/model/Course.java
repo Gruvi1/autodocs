@@ -19,6 +19,6 @@ public enum Course {
                 return course;
             }
         }
-        throw new IllegalArgumentException("Invalid course value: " + value);
+        return null;
     }
 }

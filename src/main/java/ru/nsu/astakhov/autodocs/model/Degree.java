@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Getter
+// TODO: переименовать, потому что пересекается с degree полем у Supervisor
 public enum Degree {
     BACHELORS("Бакалавриат"),
     MASTERS("Магистратура");

@@ -2,7 +2,6 @@ package ru.nsu.astakhov.autodocs.ui.controller;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import ru.nsu.astakhov.autodocs.model.TableType;
 
 @RequiredArgsConstructor
 @Getter

@@ -6,10 +6,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Getter
 public enum GeneratorFilters {
-    TYPE("Тип"),
+    WORK_TYPE("Тип работы"),
     DEGREE("Степень"),
     COURSE("Курс"),
-    // TODO: добавить фильтр или убрать параметр
     SPECIALIZATION("Направление");
 
     private final String value;

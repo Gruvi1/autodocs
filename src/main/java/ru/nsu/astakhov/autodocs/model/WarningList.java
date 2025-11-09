@@ -1,6 +1,5 @@
 package ru.nsu.astakhov.autodocs.model;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -14,8 +13,8 @@ public class WarningList {
         warnings = new ArrayList<>();
     }
 
-    public void addWarning(TableType tableType, String student, String fieldName) {
-        warnings.add(new TableWarning(tableType, student, fieldName));
+    public void addWarning(WorkType workType, String student, String fieldName) {
+        warnings.add(new TableWarning(workType, student, fieldName));
     }
 
     public List<TableWarning> getWarnings() {

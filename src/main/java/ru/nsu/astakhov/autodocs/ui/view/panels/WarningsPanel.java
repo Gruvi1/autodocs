@@ -1,7 +1,7 @@
 package ru.nsu.astakhov.autodocs.ui.view.panels;
 
 import org.springframework.stereotype.Component;
-import ru.nsu.astakhov.autodocs.model.TableType;
+import ru.nsu.astakhov.autodocs.model.WorkType;
 import ru.nsu.astakhov.autodocs.model.TableWarning;
 import ru.nsu.astakhov.autodocs.model.WarningList;
 import ru.nsu.astakhov.autodocs.ui.Listener;
@@ -69,7 +69,7 @@ public class WarningsPanel extends Panel implements Listener {
         line.setOpaque(false);
 
         // TODO: возможно добавить параметр в перечисление, чтобы не мудохаться каждый раз
-        String tableType = warning.tableType() == TableType.INTERNSHIP ? "практики" : "ВКР";
+        String tableType = warning.workType() == WorkType.INTERNSHIP ? "практики" : "ВКР";
 
         line.add(new CustomLabel("В таблице "));
         line.add(new CustomLabel(tableType, true));

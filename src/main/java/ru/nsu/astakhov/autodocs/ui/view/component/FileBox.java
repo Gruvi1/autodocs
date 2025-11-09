@@ -1,9 +1,5 @@
 package ru.nsu.astakhov.autodocs.ui.view.component;
 
-import ru.nsu.astakhov.autodocs.model.TemplateType;
-import ru.nsu.astakhov.autodocs.model.Course;
-import ru.nsu.astakhov.autodocs.model.Degree;
-import ru.nsu.astakhov.autodocs.model.Specialization;
 import ru.nsu.astakhov.autodocs.ui.configs.ConfigConstants;
 import ru.nsu.astakhov.autodocs.ui.configs.ConfigManager;
 
@@ -11,23 +7,23 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.List;
+
 
 public class FileBox extends JPanel {
-    private final TemplateType templateType;
-    private final Degree degree;
-    private final Course course;
-    private final Specialization specialization;
+    private final List<String> partsDescription;
     private boolean isActive;
 
-    public FileBox(TemplateType templateType, Degree degree, Course course, Specialization specialization) {
-        this.templateType = templateType;
-        this.degree = degree;
-        this.course = course;
-        this.specialization = specialization;
 
+    public FileBox(String partsDescription) {
         isActive = false;
 
+        this.partsDescription = parseFileDescription(partsDescription);
         configureFileBox();
+    }
+
+    private List<String> parseFileDescription(String fileDescription) {
+        return List.of(fileDescription.split("\n"));
     }
 
     private void configureFileBox() {
@@ -56,14 +52,11 @@ public class FileBox extends JPanel {
         contentPanel.setBackground(focusColor);
         contentPanel.setBorder(BorderFactory.createLineBorder(focusColor, 25));
 
-        String temp = degree.getValue() + ", " + course.getValue() + " курс";
-        JLabel templateTypeLabel = new CustomLabel(templateType.getValue());
 
-        templateTypeLabel.setFont(templateTypeLabel.getFont().deriveFont(Font.BOLD));
-
-        contentPanel.add(templateTypeLabel);
-        contentPanel.add(new CustomLabel(temp));
-        contentPanel.add(new CustomLabel(specialization.getValue()));
+//        templateTypeLabel.setFont(templateTypeLabel.getFont().deriveFont(Font.BOLD));
+        for (String part : partsDescription) {
+            contentPanel.add(new CustomLabel(part));
+        }
 
         return contentPanel;
     }

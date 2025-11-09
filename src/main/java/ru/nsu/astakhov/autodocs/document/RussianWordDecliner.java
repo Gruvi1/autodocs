@@ -1,4 +1,4 @@
-package ru.nsu.astakhov.autodocs.documents;
+package ru.nsu.astakhov.autodocs.document;
 
 import com.github.petrovich4j.Case;
 import com.github.petrovich4j.Gender;

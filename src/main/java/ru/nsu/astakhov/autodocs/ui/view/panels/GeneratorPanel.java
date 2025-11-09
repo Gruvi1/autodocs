@@ -1,10 +1,11 @@
 package ru.nsu.astakhov.autodocs.ui.view.panels;
 
 import org.springframework.stereotype.Component;
-import ru.nsu.astakhov.autodocs.model.TemplateType;
+import ru.nsu.astakhov.autodocs.document.DocumentGeneratorRegistry;
+import ru.nsu.astakhov.autodocs.document.GeneratorType;
 import ru.nsu.astakhov.autodocs.model.Course;
 import ru.nsu.astakhov.autodocs.model.Specialization;
-import ru.nsu.astakhov.autodocs.model.TableType;
+import ru.nsu.astakhov.autodocs.model.WorkType;
 import ru.nsu.astakhov.autodocs.ui.controller.ButtonCommand;
 import ru.nsu.astakhov.autodocs.ui.view.GeneratorFilters;
 import ru.nsu.astakhov.autodocs.ui.Listener;
@@ -19,18 +20,18 @@ import ru.nsu.astakhov.autodocs.ui.view.component.FileBox;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 @Component
 public class GeneratorPanel extends Panel implements Listener {
+    private final DocumentGeneratorRegistry documentGeneratorRegistry;
     private JScrollPane documentsScrollPane;
-    private JComboBox<String> typeFilter;
+    private JComboBox<String> workTypeFilter;
     private JComboBox<String> degreeFilter;
     private JComboBox<String> courseFilter;
     private JComboBox<String> specializationFilter;
 
-    public GeneratorPanel(Controller controller) {
+    public GeneratorPanel(Controller controller, DocumentGeneratorRegistry documentGeneratorRegistry) {
+        this.documentGeneratorRegistry = documentGeneratorRegistry;
         controller.addListener(this);
         setEventHandler(new GeneratorPanelEventHandler(controller, this, this::refreshDocumentsPanel));
 
@@ -69,7 +70,7 @@ public class GeneratorPanel extends Panel implements Listener {
         panel.setBorder(BorderFactory.createLineBorder(focusColor, 2 * smallGap));
 
         panel.add(Box.createHorizontalGlue());
-        panel.add(createTypeFilter());
+        panel.add(createWorkTypeFilter());
         panel.add(Box.createHorizontalStrut(mediumGap));
         panel.add(createDegreeFilter());
         panel.add(Box.createHorizontalStrut(mediumGap));
@@ -91,15 +92,15 @@ public class GeneratorPanel extends Panel implements Listener {
         return panel;
     }
 
-    private JPanel createTypeFilter() {
-        String[] parameters = Arrays.stream(TableType.values())
-                .map(TableType::getValue)
+    private JPanel createWorkTypeFilter() {
+        String[] parameters = Arrays.stream(WorkType.values())
+                .map(WorkType::getValue)
                 .toArray(String[]::new);
 
-        String filterName = GeneratorFilters.TYPE.getValue();
-        typeFilter = createComboBox(filterName, parameters);
+        String filterName = GeneratorFilters.WORK_TYPE.getValue();
+        workTypeFilter = createComboBox(filterName, parameters);
 
-        return configureFilter(typeFilter, filterName);
+        return configureFilter(workTypeFilter, filterName);
     }
 
     private JPanel createDegreeFilter() {
@@ -172,48 +173,40 @@ public class GeneratorPanel extends Panel implements Listener {
         constraints.weightx = 1.0;
         constraints.weighty = 0.0;
 
-
         Color backgroundColor = ConfigManager.parseHexColor(ConfigManager.getSetting(ConfigConstants.BACKGROUND_COLOR));
         panel.setBorder(BorderFactory.createLineBorder(backgroundColor, 5));
         panel.setBackground(backgroundColor);
 
-
         // Получаем текущие значения фильтров (null = "любой")
-        String selectedType = getSelectedValue(typeFilter);
-        String selectedDegree = getSelectedValue(degreeFilter);
-        String selectedCourse = getSelectedValue(courseFilter);
-        String selectedSpecialization = getSelectedValue(specializationFilter);
+        String workTypeValue = getSelectedValue(workTypeFilter);
+        WorkType selectedWorkType = workTypeValue == null
+                ? null
+                : WorkType.fromValue(workTypeValue);
 
-        List<TemplateType> types = selectedType == null
-                ? List.of(TemplateType.values())
-                : Collections.singletonList(TemplateType.fromValue(selectedType));
+        String degreeValue = getSelectedValue(degreeFilter);
+        Degree selectedDegree = degreeValue == null
+                ? null
+                : Degree.fromValue(degreeValue);
 
-        List<Degree> degrees = selectedDegree == null
-                ? List.of(Degree.values())
-                : Collections.singletonList(Degree.fromValue(selectedDegree));
+        String courseValue = getSelectedValue(courseFilter);
+        Course selectedCourse = courseValue == null
+                ? null
+                : Course.fromValue(Integer.parseInt(courseValue));
 
-        List<Course> courses = selectedCourse == null
-                ? List.of(Course.values())
-                : Collections.singletonList(Course.fromValue(Integer.parseInt(selectedCourse)));
+        String specializationValue = getSelectedValue(specializationFilter);
+        Specialization selectedSpecialization = specializationValue == null
+                ? null
+                : Specialization.fromValue(specializationValue);
 
-        List<Specialization> specializations = selectedSpecialization == null
-                ? List.of(Specialization.values())
-                : Collections.singletonList(Specialization.fromValue(selectedSpecialization));
+        for (GeneratorType generatorType : documentGeneratorRegistry.getAllDocumentTypes()) {
+            if (generatorType.isSuitable(selectedWorkType, selectedDegree, selectedCourse, selectedSpecialization)) {
+                panel.add(new FileBox(generatorType.getDisplayName()), constraints);
 
-
-        for (TemplateType type : types) {
-            for (Degree degree : degrees) {
-                for (Course course : courses) {
-                    for (Specialization specialization : specializations) {
-                        panel.add(new FileBox(type, degree, course, specialization), constraints);
-
-                        ++constraints.gridx;
-                        if (constraints.gridx % numColumns == 0) {
-                            ++constraints.gridy;
-                        }
-                        constraints.gridx %= numColumns;
-                    }
+                ++constraints.gridx;
+                if (constraints.gridx % numColumns == 0) {
+                    ++constraints.gridy;
                 }
+                constraints.gridx %= numColumns;
             }
         }
 

@@ -1,4 +1,4 @@
-package ru.nsu.astakhov.autodocs.documents;
+package ru.nsu.astakhov.autodocs.document.generator;
 
 import com.github.petrovich4j.Gender;
 import lombok.extern.slf4j.Slf4j;
@@ -7,6 +7,7 @@ import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTText;
 import org.springframework.stereotype.Service;
+import ru.nsu.astakhov.autodocs.document.RussianWordDecliner;
 import ru.nsu.astakhov.autodocs.model.StudentDto;
 
 import java.io.FileOutputStream;
@@ -23,7 +24,7 @@ import static java.util.Map.entry;
 
 @Slf4j
 @Service
-public abstract class AbstractDocumentGenerator {
+public abstract class AbstractDocumentGenerator implements DocumentGenerator {
     protected static final String DOCUMENT_DIRECTORY = "documents";
     private final RussianWordDecliner russianWordDecliner;
 
@@ -114,6 +115,7 @@ public abstract class AbstractDocumentGenerator {
         for (XWPFRun run : paragraph.getRuns()) {
             String text = run.text();
             if (text == null) continue;
+            // TODO: отрефакторить метод
 
             String updatedText = text;
             String replaceable;

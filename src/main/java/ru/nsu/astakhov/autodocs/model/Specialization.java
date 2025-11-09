@@ -21,6 +21,5 @@ public enum Specialization {
             }
         }
         return null;
-//        throw new IllegalArgumentException("Invalid specialization value: " + value);
     }
 }
