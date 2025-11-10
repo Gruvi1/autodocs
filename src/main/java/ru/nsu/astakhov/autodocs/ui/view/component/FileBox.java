@@ -52,10 +52,15 @@ public class FileBox extends JPanel {
         contentPanel.setBackground(focusColor);
         contentPanel.setBorder(BorderFactory.createLineBorder(focusColor, 25));
 
-
-//        templateTypeLabel.setFont(templateTypeLabel.getFont().deriveFont(Font.BOLD));
-        for (String part : partsDescription) {
-            contentPanel.add(new CustomLabel(part));
+        for (int i = 0; i != partsDescription.size(); ++i) {
+            if (i == 0) {
+                JLabel firstPanel = new CustomLabel(partsDescription.get(i));
+                firstPanel.setFont(firstPanel.getFont().deriveFont(Font.BOLD));
+                contentPanel.add(firstPanel);
+            }
+            else {
+                contentPanel.add(new CustomLabel(partsDescription.get(i)));
+            }
         }
 
         return contentPanel;

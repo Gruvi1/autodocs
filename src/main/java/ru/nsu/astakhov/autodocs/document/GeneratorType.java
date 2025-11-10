@@ -108,20 +108,10 @@ public enum GeneratorType {
     );
 
     public boolean isSuitable(WorkType workType, Degree degree, Course course, Specialization specialization) {
-        if (workType != null && workType != this.workType) {
-            return false;
-        }
-        if (degree != null && degree != this.degree) {
-            return false;
-        }
-        if (course != null && course != this.course) {
-            return false;
-        }
-        if (specialization != null && specialization != this.specialization) {
-            return false;
-        }
-
-        return true;
+        return (workType == null || workType == this.workType)
+                && (degree == null || degree == this.degree)
+                && (course == null || course == this.course)
+                && (specialization == null || specialization == this.specialization);
     }
 
     @NotNull

@@ -8,7 +8,6 @@ import ru.nsu.astakhov.autodocs.model.Specialization;
 import ru.nsu.astakhov.autodocs.model.WorkType;
 import ru.nsu.astakhov.autodocs.ui.controller.ButtonCommand;
 import ru.nsu.astakhov.autodocs.ui.view.GeneratorFilters;
-import ru.nsu.astakhov.autodocs.ui.Listener;
 import ru.nsu.astakhov.autodocs.ui.configs.ConfigConstants;
 import ru.nsu.astakhov.autodocs.ui.configs.ConfigManager;
 import ru.nsu.astakhov.autodocs.ui.controller.Controller;
@@ -22,18 +21,26 @@ import java.awt.*;
 import java.util.Arrays;
 
 @Component
-public class GeneratorPanel extends Panel implements Listener {
+public class GeneratorPanel extends Panel {
     private final DocumentGeneratorRegistry documentGeneratorRegistry;
-    private JScrollPane documentsScrollPane;
-    private JComboBox<String> workTypeFilter;
-    private JComboBox<String> degreeFilter;
-    private JComboBox<String> courseFilter;
-    private JComboBox<String> specializationFilter;
+    private final FilterComponent workTypeFilter;
+    private final FilterComponent degreeFilter;
+    private final FilterComponent courseFilter;
+    private final FilterComponent specializationFilter;
+    private final JPanel contentPanel;
 
     public GeneratorPanel(Controller controller, DocumentGeneratorRegistry documentGeneratorRegistry) {
         this.documentGeneratorRegistry = documentGeneratorRegistry;
+
         controller.addListener(this);
         setEventHandler(new GeneratorPanelEventHandler(controller, this, this::refreshDocumentsPanel));
+
+        workTypeFilter = new FilterComponent(GeneratorFilters.WORK_TYPE);
+        degreeFilter = new FilterComponent(GeneratorFilters.DEGREE);
+        courseFilter = new FilterComponent(GeneratorFilters.COURSE);
+        specializationFilter = new FilterComponent(GeneratorFilters.SPECIALIZATION);
+
+        contentPanel = initDocumentsPanel();
 
         configurePanel();
     }
@@ -45,101 +52,37 @@ public class GeneratorPanel extends Panel implements Listener {
         Color backgroundColor = ConfigManager.parseHexColor(ConfigManager.getSetting(ConfigConstants.BACKGROUND_COLOR));
         setBackground(backgroundColor);
 
-
-        // TODO: подумать, как исправить
-        // TODO: сейчас порядок инициализации влияет на работу программы
-        // TODO: если поменять NORTH и CENTER местами, то посыпятся NullPointerException
-        add(createFilterPanel(), BorderLayout.NORTH);
-
-        documentsScrollPane = createDocumentsPanel();
-        add(documentsScrollPane, BorderLayout.CENTER);
-
+        add(createFiltersPanel(), BorderLayout.NORTH);
+        add(createDocumentsPanel(), BorderLayout.CENTER);
         add(generateButton(), BorderLayout.SOUTH);
     }
 
-    private JPanel createFilterPanel() {
+    private JPanel createFiltersPanel() {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
 
         Color focusColor = ConfigManager.parseHexColor(ConfigManager.getSetting(ConfigConstants.FOCUS_COLOR));
         panel.setBackground(focusColor);
 
-        int smallGap = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.GAP_SMALL));
         int mediumGap = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.GAP_MEDIUM));
 
-        panel.setBorder(BorderFactory.createLineBorder(focusColor, 2 * smallGap));
+        panel.setBorder(BorderFactory.createLineBorder(focusColor, mediumGap));
 
         panel.add(Box.createHorizontalGlue());
-        panel.add(createWorkTypeFilter());
+        panel.add(workTypeFilter.filterPanel);
         panel.add(Box.createHorizontalStrut(mediumGap));
-        panel.add(createDegreeFilter());
+        panel.add(degreeFilter.filterPanel);
         panel.add(Box.createHorizontalStrut(mediumGap));
-        panel.add(createCourseFilter());
+        panel.add(courseFilter.filterPanel);
         panel.add(Box.createHorizontalStrut(mediumGap));
-        panel.add(createSpecializationFilter());
+        panel.add(specializationFilter.filterPanel);
         panel.add(Box.createHorizontalGlue());
+
         return panel;
     }
-    private JPanel configureFilter(JComboBox<String> comboBox, String filterName) {
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.setOpaque(false);
-
-        JLabel label = new CustomLabel(filterName);
-        label.setBorder(BorderFactory.createEmptyBorder(0, 5,5, 0));
-
-        panel.add(label, BorderLayout.NORTH);
-        panel.add(comboBox, BorderLayout.CENTER);
-        return panel;
-    }
-
-    private JPanel createWorkTypeFilter() {
-        String[] parameters = Arrays.stream(WorkType.values())
-                .map(WorkType::getValue)
-                .toArray(String[]::new);
-
-        String filterName = GeneratorFilters.WORK_TYPE.getValue();
-        workTypeFilter = createComboBox(filterName, parameters);
-
-        return configureFilter(workTypeFilter, filterName);
-    }
-
-    private JPanel createDegreeFilter() {
-        String[] parameters = Arrays.stream(Degree.values())
-                .map(Degree::getValue)
-                .toArray(String[]::new);
-
-        String filterName = GeneratorFilters.DEGREE.getValue();
-        degreeFilter = createComboBox(filterName, parameters);
-
-        return configureFilter(degreeFilter, filterName);
-    }
-
-    private JPanel createCourseFilter() {
-        String[] parameters = Arrays.stream(Course.values())
-                .map(Course::getValue)
-                .map(Object::toString)
-                .toArray(String[]::new);
-
-        String filterName = GeneratorFilters.COURSE.getValue();
-        courseFilter = createComboBox(filterName, parameters);
-
-        return configureFilter(courseFilter, filterName);
-    }
-
-    private JPanel createSpecializationFilter() {
-        String[] parameters = Arrays.stream(Specialization.values())
-                .map(Specialization::getValue)
-                .toArray(String[]::new);
-
-        String filterName = GeneratorFilters.SPECIALIZATION.getValue();
-        specializationFilter = createComboBox(filterName, parameters);
-
-        return configureFilter(specializationFilter, filterName);
-    }
-
 
     private JScrollPane createDocumentsPanel() {
-        documentsScrollPane = new JScrollPane(buildDocumentsPanel());
+        JScrollPane documentsScrollPane = new JScrollPane(contentPanel);
         documentsScrollPane.setOpaque(false);
         documentsScrollPane.setBorder(BorderFactory.createEmptyBorder());
 
@@ -153,16 +96,25 @@ public class GeneratorPanel extends Panel implements Listener {
     public void onTableUpdate(String updateStatus) {}
 
     private void refreshDocumentsPanel() {
-        documentsScrollPane.setViewportView(new JPanel());
+        contentPanel.removeAll();
+        updateContentPanel();
 
-        JPanel newPanel = buildDocumentsPanel();
-        documentsScrollPane.setViewportView(newPanel);
+        revalidate();
+        repaint();
     }
 
-    private JPanel buildDocumentsPanel() {
-        int numColumns = 2;
-
+    private JPanel initDocumentsPanel() {
         JPanel panel = new JPanel(new GridBagLayout());
+
+        Color backgroundColor = ConfigManager.parseHexColor(ConfigManager.getSetting(ConfigConstants.BACKGROUND_COLOR));
+        panel.setBorder(BorderFactory.createLineBorder(backgroundColor, 5));
+        panel.setBackground(backgroundColor);
+
+        return panel;
+    }
+
+    private void updateContentPanel() {
+        final int NUM_COLUMNS = 2;
 
         GridBagConstraints constraints = new GridBagConstraints();
 
@@ -173,44 +125,37 @@ public class GeneratorPanel extends Panel implements Listener {
         constraints.weightx = 1.0;
         constraints.weighty = 0.0;
 
-        Color backgroundColor = ConfigManager.parseHexColor(ConfigManager.getSetting(ConfigConstants.BACKGROUND_COLOR));
-        panel.setBorder(BorderFactory.createLineBorder(backgroundColor, 5));
-        panel.setBackground(backgroundColor);
-
-        // Получаем текущие значения фильтров (null = "любой")
-        String workTypeValue = getSelectedValue(workTypeFilter);
+        String workTypeValue = getSelectedValue(workTypeFilter.filterComboBox);
         WorkType selectedWorkType = workTypeValue == null
                 ? null
                 : WorkType.fromValue(workTypeValue);
 
-        String degreeValue = getSelectedValue(degreeFilter);
+        String degreeValue = getSelectedValue(degreeFilter.filterComboBox);
         Degree selectedDegree = degreeValue == null
                 ? null
                 : Degree.fromValue(degreeValue);
 
-        String courseValue = getSelectedValue(courseFilter);
+        String courseValue = getSelectedValue(courseFilter.filterComboBox);
         Course selectedCourse = courseValue == null
                 ? null
                 : Course.fromValue(Integer.parseInt(courseValue));
 
-        String specializationValue = getSelectedValue(specializationFilter);
+        String specializationValue = getSelectedValue(specializationFilter.filterComboBox);
         Specialization selectedSpecialization = specializationValue == null
                 ? null
                 : Specialization.fromValue(specializationValue);
 
         for (GeneratorType generatorType : documentGeneratorRegistry.getAllDocumentTypes()) {
             if (generatorType.isSuitable(selectedWorkType, selectedDegree, selectedCourse, selectedSpecialization)) {
-                panel.add(new FileBox(generatorType.getDisplayName()), constraints);
+                contentPanel.add(new FileBox(generatorType.getDisplayName()), constraints);
 
                 ++constraints.gridx;
-                if (constraints.gridx % numColumns == 0) {
+                if (constraints.gridx % NUM_COLUMNS == 0) {
                     ++constraints.gridy;
                 }
-                constraints.gridx %= numColumns;
+                constraints.gridx %= NUM_COLUMNS;
             }
         }
-
-        return panel;
     }
 
     private String getSelectedValue(JComboBox<String> comboBox) {
@@ -234,5 +179,40 @@ public class GeneratorPanel extends Panel implements Listener {
         panel.add(Box.createHorizontalStrut(25));
 
         return panel;
+    }
+
+    private class FilterComponent {
+        private final GeneratorFilters filterType;
+        private final JComboBox<String> filterComboBox;
+        private final JPanel filterPanel;
+
+        public FilterComponent(GeneratorFilters filterType) {
+            this.filterType = filterType;
+
+            filterComboBox = createFilterComboBox();
+            filterPanel = createPanelFromFilter(filterComboBox);
+        }
+
+        private JComboBox<String> createFilterComboBox() {
+            Enum<? extends HasStringValue>[] constants = filterType.getEnumClass().getEnumConstants();
+
+            String[] parameters = Arrays.stream(constants)
+                    .map(constant -> ((HasStringValue)constant).getStringValue())
+                    .toArray(String[]::new);
+
+            return createComboBox(filterType.getValue(), parameters);
+        }
+
+        private JPanel createPanelFromFilter(JComboBox<String> comboBox) {
+            JPanel panel = new JPanel(new BorderLayout());
+            panel.setOpaque(false);
+
+            JLabel label = new CustomLabel(filterType.getValue());
+            label.setBorder(BorderFactory.createEmptyBorder(0, 5,5, 0));
+
+            panel.add(label, BorderLayout.NORTH);
+            panel.add(comboBox, BorderLayout.CENTER);
+            return panel;
+        }
     }
 }

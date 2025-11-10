@@ -1,6 +1,5 @@
 package ru.nsu.astakhov.autodocs.ui.view.panels;
 
-import ru.nsu.astakhov.autodocs.ui.Listener;
 import ru.nsu.astakhov.autodocs.ui.configs.ConfigConstants;
 import ru.nsu.astakhov.autodocs.ui.configs.ConfigManager;
 import ru.nsu.astakhov.autodocs.ui.controller.Controller;
@@ -16,7 +15,7 @@ import java.awt.*;
 import java.util.List;
 
 @org.springframework.stereotype.Component
-public class PlaceholderPanel extends Panel implements Listener {
+public class PlaceholderPanel extends Panel {
     private final Controller controller;
 
     public PlaceholderPanel(Controller controller) {

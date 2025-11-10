@@ -1,7 +1,6 @@
 package ru.nsu.astakhov.autodocs.ui.view.panels;
 
 import org.springframework.stereotype.Component;
-import ru.nsu.astakhov.autodocs.ui.Listener;
 import ru.nsu.astakhov.autodocs.ui.configs.ConfigConstants;
 import ru.nsu.astakhov.autodocs.ui.configs.ConfigManager;
 import ru.nsu.astakhov.autodocs.ui.controller.BottomPanelEventHandler;
@@ -12,7 +11,7 @@ import javax.swing.*;
 import java.awt.*;
 
 @Component
-public class BottomPanel extends Panel implements Listener {
+public class BottomPanel extends Panel {
     private final JLabel statusLabel;
 
     public BottomPanel(Controller controller) {

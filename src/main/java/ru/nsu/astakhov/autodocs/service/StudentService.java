@@ -16,35 +16,37 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-    @Slf4j
-    @RequiredArgsConstructor
-    @Service
-    public class StudentService {
-        private final StudentRepository repository;
-        private final StudentMapper studentMapper;
-        private final GoogleSheetsService googleSheetsService;
-        private final IndAssignmentBach3Generator indAssignmentBach3Generator;
-        private final WarningList warningList;
+@Slf4j
+@RequiredArgsConstructor
+@Service
+public class StudentService {
+    private final StudentRepository repository;
+    private final StudentMapper studentMapper;
+    private final GoogleSheetsService googleSheetsService;
+    private final IndAssignmentBach3Generator indAssignmentBach3Generator;
+    private final WarningList warningList;
 
-        public void scanAllData() {
-            scanInternshipLists();
-            scanThesisLists();
-        }
+    public void scanAllData() {
+        clearAllData();
+        scanInternshipLists();
+        scanThesisLists();
+    }
 
-        @Transactional
-        public void clearAllData() {
-            warningList.clear();
-            repository.deleteAll();
-        }
+    @Transactional
+    public void clearAllData() {
+        System.out.println("EEEEE");
+        warningList.clear();
+        repository.deleteAll();
+    }
 
-        public void createIndWorkDoc() {
-            // TODO: убрать явное имя
-            StudentEntity entity = repository.findByFullName("Зималтынов Кирилл Русланович")
-                    .orElseThrow(() ->new EntityNotFoundException("Нет такого =("));
-            StudentDto dto = studentMapper.toDto(entity);
+    public void createIndWorkDoc() {
+        // TODO: убрать явное имя
+        StudentEntity entity = repository.findByFullName("Зималтынов Кирилл Русланович")
+                .orElseThrow(() ->new EntityNotFoundException("Нет такого =("));
+        StudentDto dto = studentMapper.toDto(entity);
 
-            indAssignmentBach3Generator.generate(dto);
-        }
+        indAssignmentBach3Generator.generate(dto);
+    }
 
     public void scanInternshipLists() {
         List<StudentDto> studentDtos = googleSheetsService.readAllInternshipLists();

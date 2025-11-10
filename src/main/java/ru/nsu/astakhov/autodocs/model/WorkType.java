@@ -3,14 +3,20 @@ package ru.nsu.astakhov.autodocs.model;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import ru.nsu.astakhov.autodocs.ui.view.panels.HasStringValue;
 
 @RequiredArgsConstructor
 @Getter
-public enum WorkType {
+public enum WorkType implements HasStringValue {
     INTERNSHIP("Практика"),
     THESIS("ВКР");
 
     private final String value;
+
+    @Override
+    public String getStringValue() {
+        return value;
+    }
 
     public static WorkType fromValue(String value) {
         for (WorkType workType : WorkType.values()) {

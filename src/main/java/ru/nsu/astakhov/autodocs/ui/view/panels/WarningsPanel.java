@@ -4,7 +4,6 @@ import org.springframework.stereotype.Component;
 import ru.nsu.astakhov.autodocs.model.WorkType;
 import ru.nsu.astakhov.autodocs.model.TableWarning;
 import ru.nsu.astakhov.autodocs.model.WarningList;
-import ru.nsu.astakhov.autodocs.ui.Listener;
 import ru.nsu.astakhov.autodocs.ui.configs.ConfigConstants;
 import ru.nsu.astakhov.autodocs.ui.configs.ConfigManager;
 import ru.nsu.astakhov.autodocs.ui.controller.Controller;
@@ -16,7 +15,7 @@ import java.awt.*;
 import java.util.List;
 
 @Component
-public class WarningsPanel extends Panel implements Listener {
+public class WarningsPanel extends Panel {
     private final WarningList warningList;
     private final JPanel lines;
 

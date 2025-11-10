@@ -39,8 +39,8 @@ public class RussianWordDecliner {
             throw new IllegalArgumentException("Некорректные ФИО");
         }
 
-        String surname = petrovich.say(nameParts[0], NameType.FirstName, gender, correctCase);
-        String name = petrovich.say(nameParts[1], NameType.LastName, gender, correctCase);
+        String surname = petrovich.say(nameParts[0], NameType.LastName, gender, correctCase);
+        String name = petrovich.say(nameParts[1], NameType.FirstName, gender, correctCase);
         String patronymic = petrovich.say(nameParts[2], NameType.PatronymicName, gender, correctCase);
 
         return surname + ' ' + name + ' ' + patronymic;

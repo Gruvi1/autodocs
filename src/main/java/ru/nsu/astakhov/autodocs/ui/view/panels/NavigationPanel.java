@@ -1,12 +1,10 @@
 package ru.nsu.astakhov.autodocs.ui.view.panels;
 
-import ru.nsu.astakhov.autodocs.ui.Listener;
 import ru.nsu.astakhov.autodocs.ui.controller.ButtonCommand;
 import ru.nsu.astakhov.autodocs.ui.configs.ConfigConstants;
 import ru.nsu.astakhov.autodocs.ui.configs.ConfigManager;
 import ru.nsu.astakhov.autodocs.ui.controller.Controller;
 import ru.nsu.astakhov.autodocs.ui.controller.NavigationPanelEventHandler;
-import ru.nsu.astakhov.autodocs.ui.view.component.CustomLabel;
 import ru.nsu.astakhov.autodocs.ui.view.font.FontLoader;
 import ru.nsu.astakhov.autodocs.ui.view.font.FontType;
 import ru.nsu.astakhov.autodocs.ui.view.logo.LogoLoader;
@@ -18,7 +16,7 @@ import javax.swing.*;
 import java.awt.*;
 
 @org.springframework.stereotype.Component
-public class NavigationPanel extends Panel implements Listener {
+public class NavigationPanel extends Panel {
     public NavigationPanel(Controller controller) {
         controller.addListener(this);
         setEventHandler(new NavigationPanelEventHandler(controller,this));

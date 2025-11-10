@@ -1,5 +1,6 @@
 package ru.nsu.astakhov.autodocs.ui.view.panels;
 
+import ru.nsu.astakhov.autodocs.ui.Listener;
 import ru.nsu.astakhov.autodocs.ui.configs.ConfigConstants;
 import ru.nsu.astakhov.autodocs.ui.configs.ConfigManager;
 import ru.nsu.astakhov.autodocs.ui.controller.EventHandler;
@@ -8,7 +9,7 @@ import ru.nsu.astakhov.autodocs.ui.view.component.RoundedButton;
 
 import javax.swing.*;
 
-public abstract class Panel extends JPanel {
+public abstract class Panel extends JPanel implements Listener {
     private EventHandler eventHandler;
 
     public abstract void configurePanel();
