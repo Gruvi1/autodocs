@@ -1,11 +1,11 @@
 package ru.nsu.astakhov.autodocs.service;
 
-import  jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import ru.nsu.astakhov.autodocs.document.generator.IndAssignmentBach3Generator;
+import ru.nsu.astakhov.autodocs.document.DocumentGeneratorRegistry;
+import ru.nsu.astakhov.autodocs.document.GeneratorType;
+import ru.nsu.astakhov.autodocs.document.generator.DocumentGenerator;
 import ru.nsu.astakhov.autodocs.integration.google.GoogleSheetsService;
 import ru.nsu.astakhov.autodocs.model.*;
 import ru.nsu.astakhov.autodocs.repository.StudentRepository;
@@ -23,29 +23,55 @@ public class StudentService {
     private final StudentRepository repository;
     private final StudentMapper studentMapper;
     private final GoogleSheetsService googleSheetsService;
-    private final IndAssignmentBach3Generator indAssignmentBach3Generator;
+    private final DocumentGeneratorRegistry documentGeneratorRegistry;
     private final WarningList warningList;
 
-    public void scanAllData() {
-        clearAllData();
-        scanInternshipLists();
-        scanThesisLists();
+    public List<StudentDto> getAllStudents() {
+        List<StudentEntity> entities = repository.findAll();
+        return entities.stream()
+                .map(studentMapper::toDto)
+                .toList();
     }
 
-    @Transactional
     public void clearAllData() {
-        System.out.println("EEEEE");
         warningList.clear();
         repository.deleteAll();
     }
 
-    public void createIndWorkDoc() {
-        // TODO: убрать явное имя
-        StudentEntity entity = repository.findByFullName("Зималтынов Кирилл Русланович")
-                .orElseThrow(() ->new EntityNotFoundException("Нет такого =("));
-        StudentDto dto = studentMapper.toDto(entity);
+    public List<StudentDto> getStudentsByGenerator(GeneratorType generatorType) {
+        Course course = generatorType.getCourse();
+        Specialization specialization = generatorType.getSpecialization();
 
-        indAssignmentBach3Generator.generate(dto);
+        return getStudentsByCourseAndSpecialization(course, specialization);
+    }
+
+    public void generateAllStudents(List<GeneratorType> generatorTypes) {
+        for (GeneratorType generatorType : generatorTypes) {
+            Course course = generatorType.getCourse();
+            Specialization specialization = generatorType.getSpecialization();
+
+            DocumentGenerator generator = documentGeneratorRegistry.getDocumentGenerator(generatorType);
+            List<StudentDto> dtos = getStudentsByCourseAndSpecialization(course, specialization);
+
+            for (StudentDto dto : dtos) {
+                generator.generate(dto);
+            }
+        }
+    }
+
+    public void generateStudents(List<StudentDto> studentDtos, List<GeneratorType> generatorTypes) {
+        for (GeneratorType generatorType : generatorTypes) {
+            Course course = generatorType.getCourse();
+            Specialization specialization = generatorType.getSpecialization();
+
+            DocumentGenerator generator = documentGeneratorRegistry.getDocumentGenerator(generatorType);
+
+            for (StudentDto dto : studentDtos) {
+                if (dto.course() == course && dto.specialization() == specialization) {
+                    generator.generate(dto);
+                }
+            }
+        }
     }
 
     public void scanInternshipLists() {
@@ -62,6 +88,13 @@ public class StudentService {
         List<StudentEntity> entities = resolvedCollisions.stream().map(FieldCollision::entity).toList();
 
         repository.saveAll(entities);
+    }
+
+    private List<StudentDto> getStudentsByCourseAndSpecialization(Course course, Specialization specialization) {
+        List<StudentEntity> entities = repository.findByCourseAndSpecialization(course, specialization);
+        return entities.stream()
+                .map(studentMapper::toDto)
+                .toList();
     }
 
     private void createStudents(List<StudentDto> studentDtos) {

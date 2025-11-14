@@ -1,6 +1,5 @@
 package ru.nsu.astakhov.autodocs.ui.view.component;
 
-import jakarta.persistence.criteria.CriteriaBuilder;
 import ru.nsu.astakhov.autodocs.ui.configs.ConfigConstants;
 import ru.nsu.astakhov.autodocs.ui.configs.ConfigManager;
 import ru.nsu.astakhov.autodocs.ui.view.font.FontLoader;
@@ -32,15 +31,15 @@ public class RoundedButton extends JButton {
 
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        if (getModel().isPressed()) { // нажал
+        if (getModel().isPressed()) {
             Color focusColor = ConfigManager.parseHexColor(ConfigManager.getSetting(ConfigConstants.FOCUS_COLOR));
             g2.setColor(focusColor);
         }
-        else if (getModel().isRollover()) { // навёлся
+        else if (getModel().isRollover()) {
             Color backgroundColor = ConfigManager.parseHexColor(ConfigManager.getSetting(ConfigConstants.BACKGROUND_COLOR));
             g2.setColor(backgroundColor);
         }
-        else { // просто
+        else {
             Color primaryColor = ConfigManager.parseHexColor(ConfigManager.getSetting(ConfigConstants.PRIMARY_COLOR));
             g2.setColor(primaryColor);
         }

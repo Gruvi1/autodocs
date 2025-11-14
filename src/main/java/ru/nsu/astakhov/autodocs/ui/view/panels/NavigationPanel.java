@@ -103,4 +103,7 @@ public class NavigationPanel extends Panel {
     @Override
     public void onTableUpdate(String updateStatus) {
     }
+
+    @Override
+    public void onDocumentGeneration(String generateStatus) {}
 }

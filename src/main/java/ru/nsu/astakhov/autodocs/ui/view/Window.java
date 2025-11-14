@@ -17,8 +17,10 @@ public class Window extends JFrame {
     public Window(PanelManager panelManager) {
         this.panelManager = panelManager;
         panelManager.setWindow(this);
+
         configureWindow();
         createWindow();
+
         logger.info("Window initialized");
     }
 

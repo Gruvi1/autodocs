@@ -48,4 +48,9 @@ public class BottomPanel extends Panel {
     public void onTableUpdate(String updateStatus) {
         statusLabel.setText(updateStatus);
     }
+
+    @Override
+    public void onDocumentGeneration(String generateStatus) {
+        statusLabel.setText(generateStatus);
+    }
 }

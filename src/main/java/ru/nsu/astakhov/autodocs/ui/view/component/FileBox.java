@@ -1,5 +1,7 @@
 package ru.nsu.astakhov.autodocs.ui.view.component;
 
+import lombok.Getter;
+import ru.nsu.astakhov.autodocs.document.GeneratorType;
 import ru.nsu.astakhov.autodocs.ui.configs.ConfigConstants;
 import ru.nsu.astakhov.autodocs.ui.configs.ConfigManager;
 
@@ -9,16 +11,15 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
 
-
+@Getter
 public class FileBox extends JPanel {
-    private final List<String> partsDescription;
+    private final GeneratorType generatorType;
     private boolean isActive;
 
-
-    public FileBox(String partsDescription) {
+    public FileBox(GeneratorType generatorType) {
+        this.generatorType = generatorType;
         isActive = false;
 
-        this.partsDescription = parseFileDescription(partsDescription);
         configureFileBox();
     }
 
@@ -39,7 +40,9 @@ public class FileBox extends JPanel {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                changeActive();
+                if (isEnabled()) {
+                    changeActive();
+                }
             }
         });
     }
@@ -48,9 +51,12 @@ public class FileBox extends JPanel {
         JPanel contentPanel = new JPanel();
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
 
+        int mediumGap = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.GAP_MEDIUM));
         Color focusColor = ConfigManager.parseHexColor(ConfigManager.getSetting(ConfigConstants.FOCUS_COLOR));
         contentPanel.setBackground(focusColor);
-        contentPanel.setBorder(BorderFactory.createLineBorder(focusColor, 25));
+        contentPanel.setBorder(BorderFactory.createLineBorder(focusColor, mediumGap));
+
+        List<String> partsDescription = parseFileDescription(generatorType.getDisplayName());
 
         for (int i = 0; i != partsDescription.size(); ++i) {
             if (i == 0) {

@@ -1,7 +1,6 @@
 package ru.nsu.astakhov.autodocs.ui.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
 import ru.nsu.astakhov.autodocs.ui.view.panels.GeneratorPanel;
 import ru.nsu.astakhov.autodocs.ui.view.panels.NavigationPanel;
 import ru.nsu.astakhov.autodocs.ui.view.panels.WarningsPanel;
@@ -26,7 +25,6 @@ public class NavigationPanelEventHandler implements EventHandler {
             case APPLICATION_TEMPLATES          -> {}
             case CREATE_APPLICATION_TEMPLATE    -> {}
             case GENERATE_DOCUMENT              -> controller.setPanel(GeneratorPanel.class);
-//            case INDIVIDUAL_ASSIGNMENT -> controller.createIndWorkDoc(); // TODO: как тут было раньше
             default             -> {}
         }
     }

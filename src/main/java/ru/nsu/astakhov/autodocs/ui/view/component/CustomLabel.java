@@ -9,27 +9,27 @@ import javax.swing.*;
 import java.awt.*;
 
 public class CustomLabel extends JLabel {
-    public CustomLabel(String text, int textSize, boolean opaque) {
+    public CustomLabel(String text, boolean opaque, int textSize) {
         super(text);
 
-        configureLabel(textSize, opaque);
+        configureLabel(opaque, textSize);
     }
 
     public CustomLabel(String text, boolean opaque) {
         super(text);
 
         int textSize = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.MENU_SIZE));
-        configureLabel(textSize, opaque);
+        configureLabel(opaque, textSize);
     }
 
     public CustomLabel(String text) {
         super(text);
 
         int textSize = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.MENU_SIZE));
-        configureLabel(textSize,false);
+        configureLabel(false, textSize);
     }
 
-    private void configureLabel(int textSize, boolean opaque) {
+    private void configureLabel(boolean opaque, int textSize) {
         Color textColor = ConfigManager.parseHexColor(ConfigManager.getSetting(ConfigConstants.TEXT_COLOR));
         Color backgroundColor = ConfigManager.parseHexColor(ConfigManager.getSetting(ConfigConstants.BACKGROUND_COLOR));
         int smallGap = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.GAP_SMALL));

@@ -1,4 +1,4 @@
-package ru.nsu.astakhov.autodocs.ui.view.panels;
+package ru.nsu.astakhov.autodocs.model;
 
 public interface HasStringValue {
     String getStringValue();

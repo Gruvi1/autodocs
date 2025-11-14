@@ -9,6 +9,11 @@ import ru.nsu.astakhov.autodocs.model.*;
 @RequiredArgsConstructor
 // TODO: переименовать?
 public enum GeneratorType {
+    // TODO: добавить остальные специальности и курсы
+    APPLICATION_INTERNSHIP_BACH3_SECS(
+            WorkType.INTERNSHIP, DocumentKind.APPLICATION_INTERNSHIP, Degree.BACHELORS, Course.THIRD, Specialization.SOFTWARE_ENGINEERING_AND_CS
+    ),
+
     INDIVIDUAL_ASSIGNMENT_BACH3_SECS(
             WorkType.INTERNSHIP, DocumentKind.INDIVIDUAL_ASSIGNMENT, Degree.BACHELORS, Course.THIRD, Specialization.SOFTWARE_ENGINEERING_AND_CS
     ),

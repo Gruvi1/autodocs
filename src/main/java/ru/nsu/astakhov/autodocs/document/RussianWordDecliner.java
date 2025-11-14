@@ -25,10 +25,17 @@ public class RussianWordDecliner {
     }
 
     public String getStudentFormByGender(Gender gender) {
-        final String maleStudent = "Обучающегося";
-        final String femaleStudent = "Обучающейся";
+        final String maleStudent = "Обучающийся";
+        final String femaleStudent = "Обучающаяся";
 
         return gender == Gender.Male ? maleStudent : femaleStudent;
+    }
+
+    public String getGenitiveStudentFormByGender(Gender gender) {
+        final String maleGenitiveStudent = "Обучающегося";
+        final String femaleGenitiveStudent = "Обучающейся";
+
+        return gender == Gender.Male ? maleGenitiveStudent : femaleGenitiveStudent;
     }
 
     public String getFullNameInGenitiveCase(String fullName, Gender gender) {

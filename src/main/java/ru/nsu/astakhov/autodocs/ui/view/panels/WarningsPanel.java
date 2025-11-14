@@ -33,23 +33,30 @@ public class WarningsPanel extends Panel {
 
     @Override
     public void onTableUpdate(String updateStatus) {
+        int smallGap = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.GAP_SMALL));
+
         List<TableWarning> warnings = warningList.getWarnings();
 
         lines.removeAll();
 
         for (TableWarning warning : warnings) {
             lines.add(createLine(warning));
-            lines.add(Box.createVerticalStrut(10));
+            lines.add(Box.createVerticalStrut(smallGap));
         }
     }
 
     @Override
+    public void onDocumentGeneration(String generateStatus) {}
+
+    @Override
     public void configurePanel() {
+        int smallGap = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.GAP_SMALL));
+
         setLayout(new BorderLayout());
 
         JScrollPane scrollPane = new JScrollPane(lines);
         JScrollBar verticalBar = scrollPane.getVerticalScrollBar();
-        verticalBar.setUnitIncrement(10);
+        verticalBar.setUnitIncrement(smallGap);
 
         Color focusColor = ConfigManager.parseHexColor(ConfigManager.getSetting(ConfigConstants.FOCUS_COLOR));
         setBackground(focusColor);
@@ -57,9 +64,9 @@ public class WarningsPanel extends Panel {
         scrollPane.setBackground(focusColor);
 
         lines.setBackground(focusColor);
-        scrollPane.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        scrollPane.setBorder(BorderFactory.createEmptyBorder(smallGap, smallGap, smallGap, smallGap));
 
-        add(scrollPane);
+        add(scrollPane, BorderLayout.CENTER);
     }
 
     private JPanel createLine(TableWarning warning) {

@@ -3,7 +3,6 @@ package ru.nsu.astakhov.autodocs.model;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import ru.nsu.astakhov.autodocs.ui.view.panels.HasStringValue;
 
 @RequiredArgsConstructor
 @Getter

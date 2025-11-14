@@ -6,6 +6,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import ru.nsu.astakhov.autodocs.service.StudentService;
 import ru.nsu.astakhov.autodocs.ui.configs.ConfigManager;
+import ru.nsu.astakhov.autodocs.ui.controller.Controller;
 import ru.nsu.astakhov.autodocs.ui.view.Window;
 import ru.nsu.astakhov.autodocs.utils.Ini;
 
@@ -14,7 +15,7 @@ import javax.swing.*;
 @RequiredArgsConstructor
 @SpringBootApplication
 public class Application implements CommandLineRunner {
-    private final StudentService studentService;
+    private final Controller controller;
     private final Window window;
 
     public static void main(String[] args) {
@@ -35,6 +36,6 @@ public class Application implements CommandLineRunner {
     @Override
     public void run(String... args)  {
         SwingUtilities.invokeLater(() -> window.setVisible(true));
-//        studentService.scanAllData();
+        controller.updateTable(null);
     }
 }

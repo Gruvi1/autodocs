@@ -40,14 +40,11 @@ public class CollisionDialog extends JDialog {
     private void configureDialog() {
         setResizable(false);
 
-//        int width = 800;
-//        int height = 250;
-//        setSize(width, height);
-
+        int smallGap = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.GAP_SMALL));
         Color focusColor = ConfigManager.parseHexColor(ConfigManager.getSetting(ConfigConstants.FOCUS_COLOR));
 
         JPanel contentPanel = new JPanel(new BorderLayout());
-        contentPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        contentPanel.setBorder(BorderFactory.createEmptyBorder(smallGap, smallGap, smallGap, smallGap));
         contentPanel.setBackground(focusColor);
 
         contentPanel.add(createCentralPanel(), BorderLayout.CENTER);
@@ -61,6 +58,8 @@ public class CollisionDialog extends JDialog {
 
     private JPanel createCentralPanel() {
         String message = "Выберите, что сохранить:";
+        int smallGap = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.GAP_SMALL));
+        int mediumGap = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.GAP_MEDIUM));
 
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
@@ -71,9 +70,9 @@ public class CollisionDialog extends JDialog {
 
         List<Component> components = new ArrayList<>(List.of(
                 createTitleMessage(),
-                Box.createVerticalStrut(25),
+                Box.createVerticalStrut(mediumGap),
                 label,
-                Box.createVerticalStrut(10)
+                Box.createVerticalStrut(smallGap)
         ));
 
         for (Component component : components) {
@@ -90,6 +89,8 @@ public class CollisionDialog extends JDialog {
     }
 
     private JPanel createButtonPanel() {
+        int smallGap = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.GAP_SMALL));
+
         String practiceValue = collision.practiceValue();
         String thesisValue = collision.thesisValue();
 
@@ -99,7 +100,7 @@ public class CollisionDialog extends JDialog {
 
         panel.add(Box.createHorizontalGlue());
         panel.add(createButton(practiceValue));
-        panel.add(Box.createHorizontalStrut(10));
+        panel.add(Box.createHorizontalStrut(smallGap));
         panel.add(createButton(thesisValue));
         panel.add(Box.createHorizontalGlue());
 
@@ -107,6 +108,8 @@ public class CollisionDialog extends JDialog {
     }
 
     private JPanel createTitleMessage() {
+        int smallGap = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.GAP_SMALL));
+
         JPanel firstLine = new JPanel();
         firstLine.setLayout(new BoxLayout(firstLine, BoxLayout.X_AXIS));
         firstLine.setOpaque(false);
@@ -127,7 +130,7 @@ public class CollisionDialog extends JDialog {
         column.setOpaque(false);
 
         column.add(firstLine);
-        column.add(Box.createVerticalStrut(5));
+        column.add(Box.createVerticalStrut(smallGap / 2));
         column.add(secondLine);
 
         return column;

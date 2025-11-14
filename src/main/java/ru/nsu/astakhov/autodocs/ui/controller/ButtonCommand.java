@@ -12,6 +12,9 @@ public enum ButtonCommand {
     CREATE_APPLICATION_TEMPLATE("Создать шаблон заявления"),
     GENERATE_DOCUMENT("Сгенерировать документы"),
     SHORT_GUIDE("Краткое руководство"),
+    SELECT_STUDENTS("Выбрать студентов"),
+    SELECT_ALL("Выбрать всех"),
+    GENERATE_ALL("Сгенерировать для всех"),
     GENERATE("Сгенерировать");
 
     private final String name;

@@ -3,7 +3,9 @@ package ru.nsu.astakhov.autodocs.ui.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import ru.nsu.astakhov.autodocs.document.GeneratorType;
 import ru.nsu.astakhov.autodocs.model.FieldCollision;
+import ru.nsu.astakhov.autodocs.model.StudentDto;
 import ru.nsu.astakhov.autodocs.service.StudentService;
 import ru.nsu.astakhov.autodocs.ui.Listener;
 import ru.nsu.astakhov.autodocs.ui.Observable;
@@ -46,6 +48,45 @@ public class Controller implements Observable {
         }
     }
 
+    @Override
+    public void notifyAllDocumentGeneration(String generateStatus) {
+        for (Listener l : listeners) {
+            l.onDocumentGeneration(generateStatus);
+        }
+    }
+
+    public List<StudentDto> getStudentsByGenerator(GeneratorType generatorType) {
+        return studentService.getStudentsByGenerator(generatorType);
+    }
+
+    public List<StudentDto> getAllStudents() {
+        return studentService.getAllStudents();
+    }
+
+    public void generateAllStudents(List<GeneratorType> generatorTypes) {
+        SwingWorker<Void, String> worker = new SwingWorker<>() {
+            @Override
+            protected Void doInBackground() {
+                publish("Генерация документов...");
+                studentService.generateAllStudents(generatorTypes);
+                return null;
+            }
+
+            @Override
+            protected void process(List<String> chunks) {
+                if (!chunks.isEmpty()) {
+                    notifyAllTableUpdate(chunks.getLast());
+                }
+            }
+
+            @Override
+            protected void done() {
+                notifyAllTableUpdate("Генерация завершена!");
+            }
+        };
+        worker.execute();
+    }
+
     public void updateTable(Frame owner) {
         SwingWorker<List<FieldCollision>, String> worker = new SwingWorker<>() {
             @Override
@@ -65,8 +106,7 @@ public class Controller implements Observable {
             }
 
             @Override
-            protected void process(java.util.List<String> chunks) {
-                // Вызывается в EDT
+            protected void process(List<String> chunks) {
                 if (!chunks.isEmpty()) {
                     notifyAllTableUpdate(chunks.getLast());
                 }
@@ -93,12 +133,12 @@ public class Controller implements Observable {
         worker.execute();
     }
 
-    public void createIndWorkDoc() {
-        studentService.createIndWorkDoc();
-    }
-
     public <P extends Panel> void setPanel(Class<P> requiredType) {
         panelManager.setPanel(requiredType);
+    }
+
+    public <P extends Panel> P getPanel(Class<P> requiredType) {
+        return panelManager.getPanel(requiredType);
     }
 
     private void resolveCollisions(List<FieldCollision> collisions, Frame owner) {

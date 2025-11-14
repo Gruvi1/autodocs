@@ -1,10 +1,8 @@
 package ru.nsu.astakhov.autodocs.document;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.nsu.astakhov.autodocs.document.generator.DocumentGenerator;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;

@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Getter
 public enum DocumentKind {
+    APPLICATION_INTERNSHIP("Заявление на практику"),
     INDIVIDUAL_ASSIGNMENT("Индивидуальное задание"),
     INTERNSHIP_REPORT("Отчёт о практике"),
     INTERNSHIP_SUPERVISOR_REVIEW("Отзыв руководителя практики");

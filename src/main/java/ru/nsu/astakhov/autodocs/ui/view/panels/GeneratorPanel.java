@@ -1,26 +1,24 @@
 package ru.nsu.astakhov.autodocs.ui.view.panels;
 
-import org.springframework.stereotype.Component;
 import ru.nsu.astakhov.autodocs.document.DocumentGeneratorRegistry;
 import ru.nsu.astakhov.autodocs.document.GeneratorType;
-import ru.nsu.astakhov.autodocs.model.Course;
-import ru.nsu.astakhov.autodocs.model.Specialization;
-import ru.nsu.astakhov.autodocs.model.WorkType;
+import ru.nsu.astakhov.autodocs.model.*;
 import ru.nsu.astakhov.autodocs.ui.controller.ButtonCommand;
 import ru.nsu.astakhov.autodocs.ui.view.GeneratorFilters;
 import ru.nsu.astakhov.autodocs.ui.configs.ConfigConstants;
 import ru.nsu.astakhov.autodocs.ui.configs.ConfigManager;
 import ru.nsu.astakhov.autodocs.ui.controller.Controller;
 import ru.nsu.astakhov.autodocs.ui.controller.GeneratorPanelEventHandler;
-import ru.nsu.astakhov.autodocs.model.Degree;
 import ru.nsu.astakhov.autodocs.ui.view.component.CustomLabel;
 import ru.nsu.astakhov.autodocs.ui.view.component.FileBox;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
-@Component
+@org.springframework.stereotype.Component
 public class GeneratorPanel extends Panel {
     private final DocumentGeneratorRegistry documentGeneratorRegistry;
     private final FilterComponent workTypeFilter;
@@ -43,6 +41,7 @@ public class GeneratorPanel extends Panel {
         contentPanel = initDocumentsPanel();
 
         configurePanel();
+        refreshDocumentsPanel();
     }
 
     @Override
@@ -61,10 +60,9 @@ public class GeneratorPanel extends Panel {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
 
+        int mediumGap = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.GAP_MEDIUM));
         Color focusColor = ConfigManager.parseHexColor(ConfigManager.getSetting(ConfigConstants.FOCUS_COLOR));
         panel.setBackground(focusColor);
-
-        int mediumGap = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.GAP_MEDIUM));
 
         panel.setBorder(BorderFactory.createLineBorder(focusColor, mediumGap));
 
@@ -82,18 +80,23 @@ public class GeneratorPanel extends Panel {
     }
 
     private JScrollPane createDocumentsPanel() {
+        int smallGap = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.GAP_SMALL));
+
         JScrollPane documentsScrollPane = new JScrollPane(contentPanel);
         documentsScrollPane.setOpaque(false);
         documentsScrollPane.setBorder(BorderFactory.createEmptyBorder());
 
         JScrollBar verticalBar = documentsScrollPane.getVerticalScrollBar();
-        verticalBar.setUnitIncrement(10);
+        verticalBar.setUnitIncrement(smallGap);
 
         return documentsScrollPane;
     }
 
     @Override
     public void onTableUpdate(String updateStatus) {}
+
+    @Override
+    public void onDocumentGeneration(String generateStatus) {}
 
     private void refreshDocumentsPanel() {
         contentPanel.removeAll();
@@ -107,7 +110,9 @@ public class GeneratorPanel extends Panel {
         JPanel panel = new JPanel(new GridBagLayout());
 
         Color backgroundColor = ConfigManager.parseHexColor(ConfigManager.getSetting(ConfigConstants.BACKGROUND_COLOR));
-        panel.setBorder(BorderFactory.createLineBorder(backgroundColor, 5));
+        int smallGap = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.GAP_SMALL));
+
+        panel.setBorder(BorderFactory.createLineBorder(backgroundColor, smallGap));
         panel.setBackground(backgroundColor);
 
         return panel;
@@ -115,12 +120,13 @@ public class GeneratorPanel extends Panel {
 
     private void updateContentPanel() {
         final int NUM_COLUMNS = 2;
+        int smallGap = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.GAP_SMALL));
 
         GridBagConstraints constraints = new GridBagConstraints();
 
         constraints.gridy = 0;
         constraints.gridx = 0;
-        constraints.insets = new Insets(5, 5, 5, 5);
+        constraints.insets = new Insets(smallGap, smallGap, smallGap, smallGap);
         constraints.fill = GridBagConstraints.BOTH;
         constraints.weightx = 1.0;
         constraints.weighty = 0.0;
@@ -147,7 +153,7 @@ public class GeneratorPanel extends Panel {
 
         for (GeneratorType generatorType : documentGeneratorRegistry.getAllDocumentTypes()) {
             if (generatorType.isSuitable(selectedWorkType, selectedDegree, selectedCourse, selectedSpecialization)) {
-                contentPanel.add(new FileBox(generatorType.getDisplayName()), constraints);
+                contentPanel.add(new FileBox(generatorType), constraints);
 
                 ++constraints.gridx;
                 if (constraints.gridx % NUM_COLUMNS == 0) {
@@ -171,14 +177,29 @@ public class GeneratorPanel extends Panel {
         panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
         panel.setOpaque(false);
 
+        int smallGap = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.GAP_SMALL));
+        int mediumGap = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.GAP_MEDIUM));
         Color backgroundColor = ConfigManager.parseHexColor(ConfigManager.getSetting(ConfigConstants.BACKGROUND_COLOR));
-        panel.setBorder(BorderFactory.createLineBorder(backgroundColor, 5));
+        panel.setBorder(BorderFactory.createLineBorder(backgroundColor, smallGap / 2));
 
         panel.add(Box.createHorizontalGlue());
-        panel.add(createButton(ButtonCommand.GENERATE.getName()));
-        panel.add(Box.createHorizontalStrut(25));
+        panel.add(createButton(ButtonCommand.SELECT_STUDENTS.getName()));
+        panel.add(Box.createHorizontalStrut(mediumGap));
 
         return panel;
+    }
+
+    public List<GeneratorType> getActiveFileBox() {
+        List<GeneratorType> activeFileBox = new ArrayList<>();
+
+        for (Component comp : contentPanel.getComponents()) {
+            if (comp instanceof FileBox fileBox) {
+                if (fileBox.isActive()) {
+                    activeFileBox.add(fileBox.getGeneratorType());
+                }
+            }
+        }
+        return activeFileBox;
     }
 
     private class FilterComponent {

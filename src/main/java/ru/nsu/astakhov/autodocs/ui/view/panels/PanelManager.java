@@ -12,7 +12,8 @@ import java.awt.*;
 @RequiredArgsConstructor
 public class PanelManager {
     private final ApplicationContext applicationContext;
-    @Setter private JFrame window;
+    @Setter
+    private JFrame window;
     private Panel centerPanel;
     private Panel westPanel;
     private Panel southPanel;
@@ -20,7 +21,10 @@ public class PanelManager {
     public <P extends Panel> void setPanel(Class<P> requiredType) {
         Panel panel = applicationContext.getBean(requiredType);
 
-        if (panel instanceof WarningsPanel || panel instanceof PlaceholderPanel || panel instanceof GeneratorPanel) {
+        if (panel instanceof WarningsPanel
+                || panel instanceof PlaceholderPanel
+                || panel instanceof GeneratorPanel
+                || panel instanceof StudentListPanel) {
             setCenterPanel(panel);
         }
         else if (panel instanceof NavigationPanel) {
@@ -32,6 +36,10 @@ public class PanelManager {
 
         window.revalidate();
         window.repaint();
+    }
+
+    public <P extends Panel> P getPanel(Class<P> requiredType) {
+        return applicationContext.getBean(requiredType);
     }
 
     private void setCenterPanel(Panel panel) {

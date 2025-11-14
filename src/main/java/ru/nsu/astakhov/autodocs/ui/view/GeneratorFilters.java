@@ -6,7 +6,7 @@ import ru.nsu.astakhov.autodocs.model.Course;
 import ru.nsu.astakhov.autodocs.model.Degree;
 import ru.nsu.astakhov.autodocs.model.Specialization;
 import ru.nsu.astakhov.autodocs.model.WorkType;
-import ru.nsu.astakhov.autodocs.ui.view.panels.HasStringValue;
+import ru.nsu.astakhov.autodocs.model.HasStringValue;
 
 @RequiredArgsConstructor
 @Getter

@@ -16,11 +16,7 @@ import java.util.List;
 
 @org.springframework.stereotype.Component
 public class PlaceholderPanel extends Panel {
-    private final Controller controller;
-
     public PlaceholderPanel(Controller controller) {
-        this.controller = controller;
-
         controller.addListener(this);
         setEventHandler(new PlaceholderPanelEventHandler(controller, this));
 
@@ -76,4 +72,7 @@ public class PlaceholderPanel extends Panel {
     @Override
     public void onTableUpdate(String updateStatus) {
     }
+
+    @Override
+    public void onDocumentGeneration(String generateStatus) {}
 }

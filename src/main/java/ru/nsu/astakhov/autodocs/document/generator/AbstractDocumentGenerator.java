@@ -13,8 +13,6 @@ import ru.nsu.astakhov.autodocs.model.StudentDto;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
@@ -25,20 +23,10 @@ import static java.util.Map.entry;
 @Slf4j
 @Service
 public abstract class AbstractDocumentGenerator implements DocumentGenerator {
-    protected static final String DOCUMENT_DIRECTORY = "documents";
     private final RussianWordDecliner russianWordDecliner;
 
     protected AbstractDocumentGenerator(RussianWordDecliner russianWordDecliner) {
         this.russianWordDecliner = russianWordDecliner;
-        initDocumentDirectory();
-    }
-
-    private void initDocumentDirectory() {
-        try {
-            Files.createDirectories(Paths.get(DOCUMENT_DIRECTORY));
-        } catch (IOException e) {
-            throw new RuntimeException("Не удалось создать директорию для документов", e);
-        }
     }
 
     protected static final Map<String, Function<StudentDto, String>> RESOLVERS = Map.ofEntries(
@@ -76,9 +64,9 @@ public abstract class AbstractDocumentGenerator implements DocumentGenerator {
     );
 
     protected static final Map<String, BiFunction<StudentDto, RussianWordDecliner, String>> ADDITIONAL_RESOLVERS = Map.ofEntries(
-            entry("$(studentForm)", (student, decliner) -> {
+            entry("$(genitiveStudentForm)", (student, decliner) -> {
                 Gender gender = decliner.getGenderByPatronymic(student.fullName().split(" ")[2]);
-                return decliner.getStudentFormByGender(gender);
+                return decliner.getGenitiveStudentFormByGender(gender);
             }),
             entry("$(genitiveFullName)", (student, decliner) -> {
                 String fullName = student.fullName();
@@ -88,15 +76,23 @@ public abstract class AbstractDocumentGenerator implements DocumentGenerator {
                 }
                 Gender gender = decliner.getGenderByPatronymic(parts[2]);
                 return decliner.getFullNameInGenitiveCase(fullName, gender);
+            }),
+            entry("$(studentForm)", (student, decliner) -> {
+                Gender gender = decliner.getGenderByPatronymic(student.fullName().split(" ")[2]);
+                return decliner.getStudentFormByGender(gender);
             })
     );
 
-    protected void generateDocument(String templatePath, String outputFileName, List<String> placeholders, StudentDto dto) {
-        String newFilePath = DOCUMENT_DIRECTORY + "/" + outputFileName;
+    protected void generateDocument(
+            String templatePath,
+            String outputFilePath,
+            List<String> placeholders,
+            StudentDto dto
+    ) {
 
         try (InputStream in = getClass().getResourceAsStream(templatePath);
              XWPFDocument doc = new XWPFDocument(in);
-             FileOutputStream out = new FileOutputStream(newFilePath)) {
+             FileOutputStream out = new FileOutputStream(outputFilePath)) {
 
             for (XWPFParagraph paragraph : doc.getParagraphs()) {
                 String text = paragraph.getText();
@@ -107,7 +103,7 @@ public abstract class AbstractDocumentGenerator implements DocumentGenerator {
 
             doc.write(out);
         } catch (IOException e) {
-            throw new RuntimeException("Ошибка при генерации документа: " + outputFileName, e);
+            throw new RuntimeException("Ошибка при генерации документа: " + outputFilePath, e);
         }
     }
 
