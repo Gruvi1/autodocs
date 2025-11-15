@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import ru.nsu.astakhov.autodocs.service.StudentService;
 import ru.nsu.astakhov.autodocs.ui.configs.ConfigManager;
 import ru.nsu.astakhov.autodocs.ui.controller.Controller;
 import ru.nsu.astakhov.autodocs.ui.view.Window;
@@ -36,6 +35,6 @@ public class Application implements CommandLineRunner {
     @Override
     public void run(String... args)  {
         SwingUtilities.invokeLater(() -> window.setVisible(true));
-        controller.updateTable(null);
+        controller.updateTable(window);
     }
 }

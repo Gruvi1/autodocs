@@ -13,6 +13,8 @@ import ru.nsu.astakhov.autodocs.model.StudentDto;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
@@ -27,6 +29,7 @@ public abstract class AbstractDocumentGenerator implements DocumentGenerator {
 
     protected AbstractDocumentGenerator(RussianWordDecliner russianWordDecliner) {
         this.russianWordDecliner = russianWordDecliner;
+        initOutputDirectory();
     }
 
     protected static final Map<String, Function<StudentDto, String>> RESOLVERS = Map.ofEntries(
@@ -82,6 +85,28 @@ public abstract class AbstractDocumentGenerator implements DocumentGenerator {
                 return decliner.getStudentFormByGender(gender);
             })
     );
+
+    protected abstract String getTemplatePath();
+    protected abstract String getOutputDirectory();
+    protected abstract String getOutputFileName();
+    protected abstract List<String> getPlaceholders();
+
+    private void initOutputDirectory() {
+        try {
+            Files.createDirectories(Paths.get(getOutputDirectory()));
+        }
+        catch (IOException e) {
+            throw new RuntimeException("Не удалось создать директорию для документов", e);
+        }
+    }
+
+    @Override
+    public void generate(StudentDto dto) {
+        String safeName = dto.fullName().replace(' ', '_');
+        String outputFilePath = getOutputDirectory() + "/" + safeName + '_' + getOutputFileName();
+
+        generateDocument(getTemplatePath(), outputFilePath, getPlaceholders(), dto);
+    }
 
     protected void generateDocument(
             String templatePath,

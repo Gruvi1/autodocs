@@ -35,6 +35,10 @@ public class GeneratorPanelEventHandler implements EventHandler {
                 controller.getPanel(StudentListPanel.class).setGenerators(activeGenerators);
                 controller.setPanel(StudentListPanel.class);
             }
+            else if (buttonCommand == ButtonCommand.GENERATE) {
+                List<GeneratorType> activeGenerators = panel.getActiveFileBox();
+                controller.generateAllStudents(activeGenerators);
+            }
         }
     }
 }

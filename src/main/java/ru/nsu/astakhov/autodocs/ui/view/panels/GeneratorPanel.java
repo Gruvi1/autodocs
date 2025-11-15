@@ -183,7 +183,8 @@ public class GeneratorPanel extends Panel {
         panel.setBorder(BorderFactory.createLineBorder(backgroundColor, smallGap / 2));
 
         panel.add(Box.createHorizontalGlue());
-        panel.add(createButton(ButtonCommand.SELECT_STUDENTS.getName()));
+//        panel.add(createButton(ButtonCommand.SELECT_STUDENTS.getName()));
+        panel.add(createButton(ButtonCommand.GENERATE.getName()));
         panel.add(Box.createHorizontalStrut(mediumGap));
 
         return panel;

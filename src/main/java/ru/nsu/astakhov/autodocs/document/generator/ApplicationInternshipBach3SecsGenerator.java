@@ -3,11 +3,6 @@ package ru.nsu.astakhov.autodocs.document.generator;
 import org.springframework.stereotype.Service;
 import ru.nsu.astakhov.autodocs.document.GeneratorType;
 import ru.nsu.astakhov.autodocs.document.RussianWordDecliner;
-import ru.nsu.astakhov.autodocs.model.StudentDto;
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.List;
 
 @Service
@@ -31,27 +26,30 @@ public class ApplicationInternshipBach3SecsGenerator extends AbstractDocumentGen
 
     public ApplicationInternshipBach3SecsGenerator(RussianWordDecliner decliner) {
         super(decliner);
-        initOutputDirectory();
     }
 
-    private void initOutputDirectory() {
-        try {
-            Files.createDirectories(Paths.get(OUTPUT_DIRECTORY));
-        } catch (IOException e) {
-            throw new RuntimeException("Не удалось создать директорию для документов", e);
-        }
+    @Override
+    protected String getTemplatePath() {
+        return TEMPLATE_PATH;
+    }
+
+    @Override
+    protected String getOutputDirectory() {
+        return OUTPUT_DIRECTORY;
+    }
+
+    @Override
+    protected String getOutputFileName() {
+        return OUTPUT_FILE_NAME;
+    }
+
+    @Override
+    protected List<String> getPlaceholders() {
+        return PLACEHOLDERS;
     }
 
     @Override
     public GeneratorType getType() {
         return GeneratorType.APPLICATION_INTERNSHIP_BACH3_SECS;
-    }
-
-    @Override
-    public void generate(StudentDto dto) {
-        String safeName = dto.fullName().replace(' ', '_');
-        String outputFilePath = OUTPUT_DIRECTORY + "/" + safeName + '_' + OUTPUT_FILE_NAME;
-
-        generateDocument(TEMPLATE_PATH, outputFilePath, PLACEHOLDERS, dto);
     }
 }

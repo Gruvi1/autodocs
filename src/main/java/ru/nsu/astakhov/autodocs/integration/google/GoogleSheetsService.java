@@ -33,6 +33,32 @@ public class GoogleSheetsService {
         this.sheetsTaskExecutor = sheetsTaskExecutor;
     }
 
+    public synchronized List<StudentDto> readAllInternshipLists() {
+        return submitReadTask(this::readInternshipList);
+    }
+
+    public synchronized List<StudentDto> readAllThesisLists() {
+        return submitReadTask(this::readThesisList);
+    }
+
+    private List<StudentDto> readInternshipList(Course course) {
+        int studentCourse = course.getValue();
+        String studentDegree = studentCourse >= 3 ? "бак." : "маг.";
+
+        String range = "Пр " + studentCourse + " к. " + studentDegree;
+
+        return readListFromInternship(range, course);
+    }
+
+    private List<StudentDto> readThesisList(Course course) {
+        int studentCourse = course.getValue();
+        String studentDegree = studentCourse >= 3 ? "б." : "м.";
+
+        String range = studentCourse + " курс " + studentDegree;
+
+        return readListFromThesis(range, course);
+    }
+
     private List<StudentDto> submitReadTask(Function<Course, List<StudentDto>> reader) {
         Future<List<StudentDto>> f1 = sheetsTaskExecutor.submit(() -> reader.apply(Course.FIRST));
         Future<List<StudentDto>> f2 = sheetsTaskExecutor.submit(() -> reader.apply(Course.SECOND));
@@ -56,32 +82,6 @@ public class GoogleSheetsService {
         catch (ExecutionException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    public List<StudentDto> readAllInternshipLists() {
-        return submitReadTask(this::readInternshipList);
-    }
-
-    public List<StudentDto> readAllThesisLists() {
-        return submitReadTask(this::readThesisList);
-    }
-
-    public List<StudentDto> readInternshipList(Course course) {
-        int studentCourse = course.getValue();
-        String studentDegree = studentCourse >= 3 ? "бак." : "маг.";
-
-        String range = "Пр " + studentCourse + " к. " + studentDegree;
-
-        return readListFromInternship(range, course);
-    }
-
-    public List<StudentDto> readThesisList(Course course) {
-        int studentCourse = course.getValue();
-        String studentDegree = studentCourse >= 3 ? "б." : "м.";
-
-        String range = studentCourse + " курс " + studentDegree;
-
-        return readListFromThesis(range, course);
     }
 
     private List<StudentDto> readListFromThesis(String range, Course course) {
@@ -187,7 +187,6 @@ public class GoogleSheetsService {
             );
         }
         catch (IllegalArgumentException e) {
-            logger.info("|||||||||||||||||||||||||||");
             // TODO: тут теряется ошибка, которую кидают ниже
             logger.info(e.getMessage());
             throw new IllegalArgumentException("Ошибка при парсинге строки: " + row, e);
@@ -226,7 +225,6 @@ public class GoogleSheetsService {
                     );
         }
         catch (Exception e) {
-            logger.info("|||||||||||||||||||||||||||");
             // TODO: тут теряется ошибка, которую кидают ниже
             logger.info(e.getMessage());
             throw new IllegalArgumentException("Ошибка при парсинге строки: " + row, e);
@@ -281,7 +279,6 @@ public class GoogleSheetsService {
             );
         }
         catch (Exception e) {
-            logger.info("|||||||||||||||||||||||||||");
             // TODO: тут теряется ошибка, которую кидают ниже
             logger.info(e.getMessage());
             throw new IllegalArgumentException("Ошибка при парсинге строки: " + row, e);
