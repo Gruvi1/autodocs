@@ -23,29 +23,8 @@ public class ApplicationInternshipBach3SecsGenerator extends AbstractDocumentGen
             "$(thesisSupervisor.position)"
     );
 
-
     public ApplicationInternshipBach3SecsGenerator(RussianWordDecliner decliner) {
-        super(decliner);
-    }
-
-    @Override
-    protected String getTemplatePath() {
-        return TEMPLATE_PATH;
-    }
-
-    @Override
-    protected String getOutputDirectory() {
-        return OUTPUT_DIRECTORY;
-    }
-
-    @Override
-    protected String getOutputFileName() {
-        return OUTPUT_FILE_NAME;
-    }
-
-    @Override
-    protected List<String> getPlaceholders() {
-        return PLACEHOLDERS;
+        super(decliner, OUTPUT_FILE_NAME, TEMPLATE_PATH, OUTPUT_DIRECTORY, PLACEHOLDERS);
     }
 
     @Override

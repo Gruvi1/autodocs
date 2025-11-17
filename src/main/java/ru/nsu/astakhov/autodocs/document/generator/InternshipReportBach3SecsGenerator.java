@@ -27,32 +27,12 @@ public class InternshipReportBach3SecsGenerator extends AbstractDocumentGenerato
             "$(thesisSupervisor.position)"
     );
 
-
     public InternshipReportBach3SecsGenerator(RussianWordDecliner decliner) {
-        super(decliner);
+        super(decliner, OUTPUT_FILE_NAME, TEMPLATE_PATH, OUTPUT_DIRECTORY, PLACEHOLDERS);
     }
 
     @Override
     public GeneratorType getType() {
         return GeneratorType.INTERNSHIP_REPORT_BACH3_SECS;
-    }
-    @Override
-    protected String getTemplatePath() {
-        return TEMPLATE_PATH;
-    }
-
-    @Override
-    protected String getOutputDirectory() {
-        return OUTPUT_DIRECTORY;
-    }
-
-    @Override
-    protected String getOutputFileName() {
-        return OUTPUT_FILE_NAME;
-    }
-
-    @Override
-    protected List<String> getPlaceholders() {
-        return PLACEHOLDERS;
     }
 }

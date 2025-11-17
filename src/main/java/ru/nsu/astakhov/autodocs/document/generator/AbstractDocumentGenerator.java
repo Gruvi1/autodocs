@@ -1,12 +1,10 @@
 package ru.nsu.astakhov.autodocs.document.generator;
 
 import com.github.petrovich4j.Gender;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTText;
-import org.springframework.stereotype.Service;
 import ru.nsu.astakhov.autodocs.document.RussianWordDecliner;
 import ru.nsu.astakhov.autodocs.model.StudentDto;
 
@@ -14,6 +12,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
@@ -22,13 +21,22 @@ import java.util.function.Function;
 
 import static java.util.Map.entry;
 
-@Slf4j
-@Service
 public abstract class AbstractDocumentGenerator implements DocumentGenerator {
     private final RussianWordDecliner russianWordDecliner;
+    private final String outputFileName;
+    private final String templatePath;
+    private final String outputDirectory;
+    private final List<String> placeholders;
 
-    protected AbstractDocumentGenerator(RussianWordDecliner russianWordDecliner) {
+    protected AbstractDocumentGenerator(RussianWordDecliner russianWordDecliner,
+                                        String outputFileName, String templatePath,
+                                        String outputDirectory, List<String> placeholders) {
         this.russianWordDecliner = russianWordDecliner;
+        this.outputFileName = outputFileName;
+        this.templatePath = templatePath;
+        this.outputDirectory = outputDirectory;
+        this.placeholders = placeholders;
+
         initOutputDirectory();
     }
 
@@ -86,14 +94,9 @@ public abstract class AbstractDocumentGenerator implements DocumentGenerator {
             })
     );
 
-    protected abstract String getTemplatePath();
-    protected abstract String getOutputDirectory();
-    protected abstract String getOutputFileName();
-    protected abstract List<String> getPlaceholders();
-
     private void initOutputDirectory() {
         try {
-            Files.createDirectories(Paths.get(getOutputDirectory()));
+            Files.createDirectories(Paths.get(outputDirectory));
         }
         catch (IOException e) {
             throw new RuntimeException("Не удалось создать директорию для документов", e);
@@ -102,22 +105,17 @@ public abstract class AbstractDocumentGenerator implements DocumentGenerator {
 
     @Override
     public void generate(StudentDto dto) {
-        String safeName = dto.fullName().replace(' ', '_');
-        String outputFilePath = getOutputDirectory() + "/" + safeName + '_' + getOutputFileName();
+        String safeName = dto.fullName().replace(' ', '_') + '_' + outputFileName;
+        Path outputFilePath = Paths.get(outputDirectory, safeName);
 
-        generateDocument(getTemplatePath(), outputFilePath, getPlaceholders(), dto);
+        generateDocument(templatePath, outputFilePath, placeholders, dto);
     }
 
-    protected void generateDocument(
-            String templatePath,
-            String outputFilePath,
-            List<String> placeholders,
-            StudentDto dto
-    ) {
-
+    protected void generateDocument(String templatePath, Path outputFilePath,
+                                    List<String> placeholders, StudentDto dto) {
         try (InputStream in = getClass().getResourceAsStream(templatePath);
              XWPFDocument doc = new XWPFDocument(in);
-             FileOutputStream out = new FileOutputStream(outputFilePath)) {
+             FileOutputStream out = new FileOutputStream(outputFilePath.toFile())) {
 
             for (XWPFParagraph paragraph : doc.getParagraphs()) {
                 String text = paragraph.getText();
@@ -125,9 +123,9 @@ public abstract class AbstractDocumentGenerator implements DocumentGenerator {
                     processParagraph(paragraph, placeholders, dto);
                 }
             }
-
             doc.write(out);
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             throw new RuntimeException("Ошибка при генерации документа: " + outputFilePath, e);
         }
     }
@@ -135,8 +133,9 @@ public abstract class AbstractDocumentGenerator implements DocumentGenerator {
     private void processParagraph(XWPFParagraph paragraph, List<String> placeholders, StudentDto dto) {
         for (XWPFRun run : paragraph.getRuns()) {
             String text = run.text();
-            if (text == null) continue;
-            // TODO: отрефакторить метод
+            if (text == null) {
+                continue;
+            }
 
             String updatedText = text;
             String replaceable;
