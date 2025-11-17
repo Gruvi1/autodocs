@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ru.nsu.astakhov.autodocs.ui.configs.ConfigConstants;
 import ru.nsu.astakhov.autodocs.ui.configs.ConfigManager;
-import ru.nsu.astakhov.autodocs.ui.view.panels.*;
+import ru.nsu.astakhov.autodocs.ui.view.panel.*;
 
 import javax.swing.*;
 import java.awt.*;

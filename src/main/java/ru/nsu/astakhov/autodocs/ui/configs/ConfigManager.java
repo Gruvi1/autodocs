@@ -19,6 +19,11 @@ public class ConfigManager {
         ConfigManager.ini = ini;
     }
 
+    public static boolean isDarkTheme() {
+        String theme = getSetting(ConfigConstants.THEME);
+        return theme.equals(PrivateConstants.DARK_THEME.getValue());
+    }
+
     public static String getSetting(ConfigConstants configConstants) {
         if (configConstants.getSection().equals(PrivateConstants.TAG_COLOR.getValue())) {
             return getColor(configConstants);

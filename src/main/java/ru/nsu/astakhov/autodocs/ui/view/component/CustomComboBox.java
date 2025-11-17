@@ -12,6 +12,7 @@ import javax.swing.plaf.basic.ComboPopup;
 import java.awt.*;
 
 public class CustomComboBox extends JComboBox<String> {
+    private final int smallGap;
     private final int menuTextSize;
 
     private final Color primaryColor;
@@ -20,6 +21,7 @@ public class CustomComboBox extends JComboBox<String> {
     private final Color textColor;
     
     public CustomComboBox(String[] parameters) {
+        this.smallGap = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.GAP_SMALL));
         this.menuTextSize = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.MENU_SIZE));
 
         this.primaryColor = ConfigManager.parseHexColor(ConfigManager.getSetting(ConfigConstants.PRIMARY_COLOR));
@@ -53,16 +55,13 @@ public class CustomComboBox extends JComboBox<String> {
         g2.drawRect(0, 0, getWidth() - 1, getHeight() - 1);
 
 
-        int padding = 5;
-
         Object selectedItem = getSelectedItem();
         if (selectedItem != null) {
             String text = selectedItem.toString();
             FontMetrics fm = g2.getFontMetrics();
-            int x = 5 + padding;
             int y = (getHeight() + fm.getAscent()) / 2 - fm.getDescent() / 2;
             g2.setColor(getForeground());
-            g2.drawString(text, x, y);
+            g2.drawString(text, smallGap, y);
         }
 
         g2.dispose();
@@ -74,7 +73,7 @@ public class CustomComboBox extends JComboBox<String> {
         setBackground(backgroundColor);
 
         Dimension dimension = getPreferredSize();
-        dimension.setSize(dimension.getWidth(), dimension.getHeight() + 5);
+        dimension.setSize(dimension.getWidth(), dimension.getHeight() + (double) smallGap / 2);
 
         setPreferredSize(dimension);
 
@@ -88,11 +87,11 @@ public class CustomComboBox extends JComboBox<String> {
                 JLabel label = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
                 label.setForeground(textColor);
                 if (isSelected) {
-                    label.setBorder(BorderFactory.createLineBorder(focusColor, 5));
+                    label.setBorder(BorderFactory.createLineBorder(focusColor, smallGap / 2));
                     label.setBackground(focusColor);
                 }
                 else {
-                    label.setBorder(BorderFactory.createLineBorder(backgroundColor, 5));
+                    label.setBorder(BorderFactory.createLineBorder(backgroundColor, smallGap / 2));
                     label.setBackground(backgroundColor);
                 }
                 return label;

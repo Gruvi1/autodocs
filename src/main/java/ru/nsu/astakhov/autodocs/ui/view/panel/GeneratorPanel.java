@@ -1,4 +1,4 @@
-package ru.nsu.astakhov.autodocs.ui.view.panels;
+package ru.nsu.astakhov.autodocs.ui.view.panel;
 
 import ru.nsu.astakhov.autodocs.document.DocumentGeneratorRegistry;
 import ru.nsu.astakhov.autodocs.document.GeneratorType;
@@ -217,7 +217,7 @@ public class GeneratorPanel extends Panel {
             panel.setOpaque(false);
 
             JLabel label = new CustomLabel(filterType.getValue());
-            label.setBorder(BorderFactory.createEmptyBorder(0, 5,5, 0));
+            label.setBorder(BorderFactory.createEmptyBorder(0, smallGap / 2,smallGap / 2, 0));
 
             panel.add(label, BorderLayout.NORTH);
             panel.add(comboBox, BorderLayout.CENTER);

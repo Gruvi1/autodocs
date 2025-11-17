@@ -1,4 +1,4 @@
-package ru.nsu.astakhov.autodocs.ui.view.panels;
+package ru.nsu.astakhov.autodocs.ui.view.panel;
 
 import ru.nsu.astakhov.autodocs.ui.controller.Controller;
 import ru.nsu.astakhov.autodocs.ui.controller.handler.PlaceholderPanelEventHandler;

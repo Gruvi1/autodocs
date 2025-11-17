@@ -1,9 +1,8 @@
 package ru.nsu.astakhov.autodocs.ui.controller.handler;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
 import ru.nsu.astakhov.autodocs.ui.controller.Controller;
-import ru.nsu.astakhov.autodocs.ui.view.panels.PlaceholderPanel;
+import ru.nsu.astakhov.autodocs.ui.view.panel.PlaceholderPanel;
 
 import java.awt.event.ActionEvent;
 

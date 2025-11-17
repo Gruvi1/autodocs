@@ -1,5 +1,8 @@
-package ru.nsu.astakhov.autodocs.ui.view.panels;
+package ru.nsu.astakhov.autodocs.ui.view.panel;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 import ru.nsu.astakhov.autodocs.ui.Listener;
 import ru.nsu.astakhov.autodocs.ui.configs.ConfigConstants;
 import ru.nsu.astakhov.autodocs.ui.configs.ConfigManager;
@@ -23,7 +26,6 @@ public abstract class Panel extends JPanel implements Listener {
     protected final Color focusColor;
     protected final Color textColor;
 
-
     protected Panel() {
         this.smallGap = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.GAP_SMALL));
         this.mediumGap = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.GAP_MEDIUM));
@@ -38,16 +40,14 @@ public abstract class Panel extends JPanel implements Listener {
         this.textColor = ConfigManager.parseHexColor(ConfigManager.getSetting(ConfigConstants.TEXT_COLOR));
     }
 
+    @Setter(value = AccessLevel.PROTECTED)
+    @Getter(value = AccessLevel.PROTECTED)
     private transient EventHandler eventHandler;
 
     protected abstract void configurePanel();
 
-    protected void setEventHandler(EventHandler eventHandler) {
-        this.eventHandler = eventHandler;
-    }
-
     protected JButton createButton(String buttonName) {
-        RoundedButton button = new RoundedButton(buttonName, smallGap);
+        RoundedButton button = new RoundedButton(buttonName);
 
         button.setActionCommand(buttonName);
         button.addActionListener(eventHandler);

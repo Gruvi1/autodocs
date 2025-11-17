@@ -1,4 +1,4 @@
-package ru.nsu.astakhov.autodocs.ui.view.panels;
+package ru.nsu.astakhov.autodocs.ui.view.panel;
 
 import ru.nsu.astakhov.autodocs.ui.controller.ButtonCommand;
 import ru.nsu.astakhov.autodocs.ui.controller.Controller;
@@ -30,7 +30,10 @@ public class NavigationPanel extends Panel {
         setForeground(textColor);
         setFont(FontLoader.loadFont(FontType.ADWAITA_SANS_REGULAR, textSize));
 
-        setBorder(BorderFactory.createLineBorder(primaryColor, smallGap));
+        setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createMatteBorder(0, 0, 0, 2, focusColor),
+                BorderFactory.createLineBorder(primaryColor, smallGap)
+        ));
 
         add(createButtonPanel(), BorderLayout.CENTER);
     }

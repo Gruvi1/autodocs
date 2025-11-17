@@ -1,4 +1,4 @@
-package ru.nsu.astakhov.autodocs.ui.view.panels;
+package ru.nsu.astakhov.autodocs.ui.view.panel;
 
 import org.springframework.stereotype.Component;
 import ru.nsu.astakhov.autodocs.model.WorkType;

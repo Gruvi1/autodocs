@@ -2,7 +2,7 @@ package ru.nsu.astakhov.autodocs.ui.controller.handler;
 
 import lombok.RequiredArgsConstructor;
 import ru.nsu.astakhov.autodocs.ui.controller.Controller;
-import ru.nsu.astakhov.autodocs.ui.view.panels.StudentListPanel;
+import ru.nsu.astakhov.autodocs.ui.view.panel.StudentListPanel;
 
 import java.awt.event.ActionEvent;
 

@@ -10,8 +10,8 @@ import ru.nsu.astakhov.autodocs.service.StudentService;
 import ru.nsu.astakhov.autodocs.ui.Listener;
 import ru.nsu.astakhov.autodocs.ui.Observable;
 import ru.nsu.astakhov.autodocs.ui.view.dialog.CollisionDialog;
-import ru.nsu.astakhov.autodocs.ui.view.panels.PanelManager;
-import ru.nsu.astakhov.autodocs.ui.view.panels.Panel;
+import ru.nsu.astakhov.autodocs.ui.view.panel.PanelManager;
+import ru.nsu.astakhov.autodocs.ui.view.panel.Panel;
 
 import javax.swing.*;
 import java.awt.*;

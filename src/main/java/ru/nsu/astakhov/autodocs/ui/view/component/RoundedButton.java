@@ -19,7 +19,6 @@ public class RoundedButton extends JButton {
 
     public RoundedButton(String text) {
         super(text);
-
         this.rounding = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.GAP_SMALL));
 
         configureButton();
@@ -44,9 +43,7 @@ public class RoundedButton extends JButton {
             g2.setColor(primaryColor);
         }
 
-        int arcWidth = 10;
-        int arcHeight = 10;
-        g2.fillRoundRect(0, 0, getWidth(), getHeight(), arcWidth, arcHeight);
+        g2.fillRoundRect(0, 0, getWidth(), getHeight(), rounding, rounding);
         super.paintComponent(g);
     }
 
@@ -54,7 +51,9 @@ public class RoundedButton extends JButton {
         int textSize = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.TEXT_SIZE));
         Color textColor = ConfigManager.parseHexColor(ConfigManager.getSetting(ConfigConstants.TEXT_COLOR));
 
-        setMargin(new Insets(rounding / 2, rounding, rounding / 2, rounding));
+        int smallGap = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.GAP_SMALL));
+
+        setMargin(new Insets(smallGap / 2, smallGap, smallGap / 2, smallGap));
         setFont(FontLoader.loadFont(FontType.ADWAITA_SANS_REGULAR, textSize));
         setForeground(textColor);
 

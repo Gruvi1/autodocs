@@ -3,9 +3,9 @@ package ru.nsu.astakhov.autodocs.ui.controller.handler;
 import lombok.RequiredArgsConstructor;
 import ru.nsu.astakhov.autodocs.ui.controller.ButtonCommand;
 import ru.nsu.astakhov.autodocs.ui.controller.Controller;
-import ru.nsu.astakhov.autodocs.ui.view.panels.GeneratorPanel;
-import ru.nsu.astakhov.autodocs.ui.view.panels.NavigationPanel;
-import ru.nsu.astakhov.autodocs.ui.view.panels.WarningsPanel;
+import ru.nsu.astakhov.autodocs.ui.view.panel.GeneratorPanel;
+import ru.nsu.astakhov.autodocs.ui.view.panel.NavigationPanel;
+import ru.nsu.astakhov.autodocs.ui.view.panel.WarningsPanel;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
