@@ -16,9 +16,23 @@ public class FileBox extends JPanel {
     private final GeneratorType generatorType;
     private boolean isActive;
 
+    private final int smallGap;
+    private final int mediumGap;
+
+    private final Color primaryColor;
+    private final Color backgroundColor;
+    private final Color focusColor;
+
     public FileBox(GeneratorType generatorType) {
         this.generatorType = generatorType;
         isActive = false;
+
+        this.smallGap = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.GAP_SMALL));
+        this.mediumGap = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.GAP_MEDIUM));
+
+        this.primaryColor = ConfigManager.parseHexColor(ConfigManager.getSetting(ConfigConstants.PRIMARY_COLOR));
+        this.backgroundColor = ConfigManager.parseHexColor(ConfigManager.getSetting(ConfigConstants.BACKGROUND_COLOR));
+        this.focusColor = ConfigManager.parseHexColor(ConfigManager.getSetting(ConfigConstants.FOCUS_COLOR));
 
         configureFileBox();
     }
@@ -30,10 +44,8 @@ public class FileBox extends JPanel {
     private void configureFileBox() {
         setLayout(new BorderLayout());
 
-        Color focusColor = ConfigManager.parseHexColor(ConfigManager.getSetting(ConfigConstants.FOCUS_COLOR));
-        Color backgroundColor = ConfigManager.parseHexColor(ConfigManager.getSetting(ConfigConstants.BACKGROUND_COLOR));
         setBackground(focusColor);
-        setBorder(BorderFactory.createLineBorder(backgroundColor, 10));
+        setBorder(BorderFactory.createLineBorder(backgroundColor, smallGap));
 
         add(createContentPanel(), BorderLayout.CENTER);
 
@@ -51,8 +63,6 @@ public class FileBox extends JPanel {
         JPanel contentPanel = new JPanel();
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
 
-        int mediumGap = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.GAP_MEDIUM));
-        Color focusColor = ConfigManager.parseHexColor(ConfigManager.getSetting(ConfigConstants.FOCUS_COLOR));
         contentPanel.setBackground(focusColor);
         contentPanel.setBorder(BorderFactory.createLineBorder(focusColor, mediumGap));
 
@@ -73,8 +83,6 @@ public class FileBox extends JPanel {
     }
 
     private void changeActive() {
-        Color primaryColor = ConfigManager.parseHexColor(ConfigManager.getSetting(ConfigConstants.PRIMARY_COLOR));
-        Color backgroundColor = ConfigManager.parseHexColor(ConfigManager.getSetting(ConfigConstants.BACKGROUND_COLOR));
         isActive = !isActive;
 
         if (isActive) {

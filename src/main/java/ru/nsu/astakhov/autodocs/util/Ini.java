@@ -1,4 +1,4 @@
-package ru.nsu.astakhov.autodocs.utils;
+package ru.nsu.astakhov.autodocs.util;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -42,7 +42,7 @@ public class Ini {
             }
         }
         catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new IllegalStateException("Error reading INI file: " + filePath, e);
         }
     }
 

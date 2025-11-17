@@ -29,7 +29,7 @@ public class FontLoader {
         String path = type.getPath();
         try (InputStream inputStream = FontLoader.class.getResourceAsStream(path)) {
             if (inputStream == null) {
-                throw new RuntimeException("Couldn't load font: " + path);
+                throw new IllegalStateException("Couldn't load font: " + path);
             }
             Font font = Font.createFont(Font.TRUETYPE_FONT, inputStream);
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();

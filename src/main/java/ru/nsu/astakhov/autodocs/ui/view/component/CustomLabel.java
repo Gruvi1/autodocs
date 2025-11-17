@@ -9,12 +9,6 @@ import javax.swing.*;
 import java.awt.*;
 
 public class CustomLabel extends JLabel {
-    public CustomLabel(String text, boolean opaque, int textSize) {
-        super(text);
-
-        configureLabel(opaque, textSize);
-    }
-
     public CustomLabel(String text, boolean opaque) {
         super(text);
 

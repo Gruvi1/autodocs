@@ -9,17 +9,18 @@ import ru.nsu.astakhov.autodocs.model.StudentDto;
 import ru.nsu.astakhov.autodocs.service.StudentService;
 import ru.nsu.astakhov.autodocs.ui.Listener;
 import ru.nsu.astakhov.autodocs.ui.Observable;
+import ru.nsu.astakhov.autodocs.ui.view.dialog.CollisionDialog;
 import ru.nsu.astakhov.autodocs.ui.view.panels.PanelManager;
-import ru.nsu.astakhov.autodocs.ui.view.panels.CollisionDialog;
 import ru.nsu.astakhov.autodocs.ui.view.panels.Panel;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
-@Component
 @Slf4j
+@Component
 public class Controller implements Observable {
     private final List<Listener> listeners;
     private final StudentService studentService;
@@ -34,11 +35,6 @@ public class Controller implements Observable {
     @Override
     public void addListener(Listener l) {
         listeners.add(l);
-    }
-
-    @Override
-    public void removeListener(Listener l) {
-        listeners.remove(l);
     }
 
     @Override
@@ -75,13 +71,13 @@ public class Controller implements Observable {
             @Override
             protected void process(List<String> chunks) {
                 if (!chunks.isEmpty()) {
-                    notifyAllTableUpdate(chunks.getLast());
+                    notifyAllDocumentGeneration(chunks.getLast());
                 }
             }
 
             @Override
             protected void done() {
-                notifyAllTableUpdate("Генерация завершена!");
+                notifyAllDocumentGeneration("Генерация завершена!");
             }
         };
         worker.execute();
@@ -120,12 +116,15 @@ public class Controller implements Observable {
                         notifyAllTableUpdate(successUpdateMessage);
                     }
                     else {
-                        resolveCollisions(collisions, owner);
+                        resolveCollisions(owner, collisions);
                         notifyAllTableUpdate(successUpdateMessage);
                     }
                 }
-                catch (Exception e) {
-                    // TODO: исправить исключение
+                catch (InterruptedException e) {
+                    notifyAllTableUpdate("Ошибка при обновлении");
+                    Thread.currentThread().interrupt();
+                }
+                catch (ExecutionException e) {
                     notifyAllTableUpdate("Ошибка при обновлении");
                 }
             }
@@ -141,14 +140,15 @@ public class Controller implements Observable {
         return panelManager.getPanel(requiredType);
     }
 
-    private void resolveCollisions(List<FieldCollision> collisions, Frame owner) {
+    private void resolveCollisions(Frame owner, List<FieldCollision> collisions) {
         if (collisions.isEmpty()) {
             return;
         }
 
         for (FieldCollision collision : collisions) {
-            String ans = CollisionDialog.showCollisionDialog(owner, collision);
-            collision.resolve(ans);
+            String answer = new CollisionDialog(owner, collision).showDialog();
+
+            collision.resolve(answer);
         }
 
         studentService.saveResolvedField(collisions);

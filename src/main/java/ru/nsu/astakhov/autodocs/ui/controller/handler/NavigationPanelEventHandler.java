@@ -1,12 +1,13 @@
-package ru.nsu.astakhov.autodocs.ui.controller;
+package ru.nsu.astakhov.autodocs.ui.controller.handler;
 
 import lombok.RequiredArgsConstructor;
+import ru.nsu.astakhov.autodocs.ui.controller.ButtonCommand;
+import ru.nsu.astakhov.autodocs.ui.controller.Controller;
 import ru.nsu.astakhov.autodocs.ui.view.panels.GeneratorPanel;
 import ru.nsu.astakhov.autodocs.ui.view.panels.NavigationPanel;
 import ru.nsu.astakhov.autodocs.ui.view.panels.WarningsPanel;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 
 @RequiredArgsConstructor
@@ -22,10 +23,7 @@ public class NavigationPanelEventHandler implements EventHandler {
         switch (buttonCommand) {
             case UPDATE_TABLE                   -> controller.updateTable(JOptionPane.getFrameForComponent(panel));
             case WARNING_TABLE                  -> controller.setPanel(WarningsPanel.class);
-            case APPLICATION_TEMPLATES          -> {}
-            case CREATE_APPLICATION_TEMPLATE    -> {}
             case GENERATE_DOCUMENT              -> controller.setPanel(GeneratorPanel.class);
-            default             -> {}
         }
     }
 }

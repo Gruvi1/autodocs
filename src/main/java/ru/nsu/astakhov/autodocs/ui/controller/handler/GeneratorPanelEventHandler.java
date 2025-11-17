@@ -1,6 +1,9 @@
-package ru.nsu.astakhov.autodocs.ui.controller;
+package ru.nsu.astakhov.autodocs.ui.controller.handler;
 
+import lombok.RequiredArgsConstructor;
 import ru.nsu.astakhov.autodocs.document.GeneratorType;
+import ru.nsu.astakhov.autodocs.ui.controller.ButtonCommand;
+import ru.nsu.astakhov.autodocs.ui.controller.Controller;
 import ru.nsu.astakhov.autodocs.ui.view.panels.GeneratorPanel;
 import ru.nsu.astakhov.autodocs.ui.view.panels.StudentListPanel;
 
@@ -8,16 +11,11 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.util.List;
 
+@RequiredArgsConstructor
 public class GeneratorPanelEventHandler implements EventHandler {
     private final Controller controller;
     private final GeneratorPanel panel;
     private final Runnable action;
-
-    public GeneratorPanelEventHandler(Controller controller, GeneratorPanel panel, Runnable action) {
-        this.controller = controller;
-        this.panel = panel;
-        this.action = action;
-    }
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -34,10 +32,6 @@ public class GeneratorPanelEventHandler implements EventHandler {
                 List<GeneratorType> activeGenerators = panel.getActiveFileBox();
                 controller.getPanel(StudentListPanel.class).setGenerators(activeGenerators);
                 controller.setPanel(StudentListPanel.class);
-            }
-            else if (buttonCommand == ButtonCommand.GENERATE) {
-                List<GeneratorType> activeGenerators = panel.getActiveFileBox();
-                controller.generateAllStudents(activeGenerators);
             }
         }
     }

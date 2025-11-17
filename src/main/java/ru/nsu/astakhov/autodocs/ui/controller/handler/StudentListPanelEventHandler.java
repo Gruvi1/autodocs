@@ -1,6 +1,7 @@
-package ru.nsu.astakhov.autodocs.ui.controller;
+package ru.nsu.astakhov.autodocs.ui.controller.handler;
 
 import lombok.RequiredArgsConstructor;
+import ru.nsu.astakhov.autodocs.ui.controller.Controller;
 import ru.nsu.astakhov.autodocs.ui.view.panels.StudentListPanel;
 
 import java.awt.event.ActionEvent;
@@ -12,5 +13,6 @@ public class StudentListPanelEventHandler implements EventHandler {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        // no operation
     }
 }

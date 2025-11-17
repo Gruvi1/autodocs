@@ -5,10 +5,8 @@ import ru.nsu.astakhov.autodocs.document.GeneratorType;
 import ru.nsu.astakhov.autodocs.model.*;
 import ru.nsu.astakhov.autodocs.ui.controller.ButtonCommand;
 import ru.nsu.astakhov.autodocs.ui.view.GeneratorFilters;
-import ru.nsu.astakhov.autodocs.ui.configs.ConfigConstants;
-import ru.nsu.astakhov.autodocs.ui.configs.ConfigManager;
 import ru.nsu.astakhov.autodocs.ui.controller.Controller;
-import ru.nsu.astakhov.autodocs.ui.controller.GeneratorPanelEventHandler;
+import ru.nsu.astakhov.autodocs.ui.controller.handler.GeneratorPanelEventHandler;
 import ru.nsu.astakhov.autodocs.ui.view.component.CustomLabel;
 import ru.nsu.astakhov.autodocs.ui.view.component.FileBox;
 
@@ -20,11 +18,11 @@ import java.util.List;
 
 @org.springframework.stereotype.Component
 public class GeneratorPanel extends Panel {
-    private final DocumentGeneratorRegistry documentGeneratorRegistry;
-    private final FilterComponent workTypeFilter;
-    private final FilterComponent degreeFilter;
-    private final FilterComponent courseFilter;
-    private final FilterComponent specializationFilter;
+    private final transient DocumentGeneratorRegistry documentGeneratorRegistry;
+    private final transient FilterComponent workTypeFilter;
+    private final transient FilterComponent degreeFilter;
+    private final transient FilterComponent courseFilter;
+    private final transient FilterComponent specializationFilter;
     private final JPanel contentPanel;
 
     public GeneratorPanel(Controller controller, DocumentGeneratorRegistry documentGeneratorRegistry) {
@@ -45,10 +43,9 @@ public class GeneratorPanel extends Panel {
     }
 
     @Override
-    public void configurePanel() {
+    protected void configurePanel() {
         setLayout(new BorderLayout());
 
-        Color backgroundColor = ConfigManager.parseHexColor(ConfigManager.getSetting(ConfigConstants.BACKGROUND_COLOR));
         setBackground(backgroundColor);
 
         add(createFiltersPanel(), BorderLayout.NORTH);
@@ -60,8 +57,6 @@ public class GeneratorPanel extends Panel {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
 
-        int mediumGap = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.GAP_MEDIUM));
-        Color focusColor = ConfigManager.parseHexColor(ConfigManager.getSetting(ConfigConstants.FOCUS_COLOR));
         panel.setBackground(focusColor);
 
         panel.setBorder(BorderFactory.createLineBorder(focusColor, mediumGap));
@@ -80,8 +75,6 @@ public class GeneratorPanel extends Panel {
     }
 
     private JScrollPane createDocumentsPanel() {
-        int smallGap = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.GAP_SMALL));
-
         JScrollPane documentsScrollPane = new JScrollPane(contentPanel);
         documentsScrollPane.setOpaque(false);
         documentsScrollPane.setBorder(BorderFactory.createEmptyBorder());
@@ -93,10 +86,14 @@ public class GeneratorPanel extends Panel {
     }
 
     @Override
-    public void onTableUpdate(String updateStatus) {}
+    public void onTableUpdate(String updateStatus) {
+        // no operation
+    }
 
     @Override
-    public void onDocumentGeneration(String generateStatus) {}
+    public void onDocumentGeneration(String generateStatus) {
+        // no operation
+    }
 
     private void refreshDocumentsPanel() {
         contentPanel.removeAll();
@@ -109,9 +106,6 @@ public class GeneratorPanel extends Panel {
     private JPanel initDocumentsPanel() {
         JPanel panel = new JPanel(new GridBagLayout());
 
-        Color backgroundColor = ConfigManager.parseHexColor(ConfigManager.getSetting(ConfigConstants.BACKGROUND_COLOR));
-        int smallGap = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.GAP_SMALL));
-
         panel.setBorder(BorderFactory.createLineBorder(backgroundColor, smallGap));
         panel.setBackground(backgroundColor);
 
@@ -120,7 +114,6 @@ public class GeneratorPanel extends Panel {
 
     private void updateContentPanel() {
         final int NUM_COLUMNS = 2;
-        int smallGap = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.GAP_SMALL));
 
         GridBagConstraints constraints = new GridBagConstraints();
 
@@ -177,14 +170,10 @@ public class GeneratorPanel extends Panel {
         panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
         panel.setOpaque(false);
 
-        int smallGap = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.GAP_SMALL));
-        int mediumGap = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.GAP_MEDIUM));
-        Color backgroundColor = ConfigManager.parseHexColor(ConfigManager.getSetting(ConfigConstants.BACKGROUND_COLOR));
         panel.setBorder(BorderFactory.createLineBorder(backgroundColor, smallGap / 2));
 
         panel.add(Box.createHorizontalGlue());
-//        panel.add(createButton(ButtonCommand.SELECT_STUDENTS.getName()));
-        panel.add(createButton(ButtonCommand.GENERATE.getName()));
+        panel.add(createButton(ButtonCommand.SELECT_STUDENTS.getName()));
         panel.add(Box.createHorizontalStrut(mediumGap));
 
         return panel;
@@ -194,11 +183,9 @@ public class GeneratorPanel extends Panel {
         List<GeneratorType> activeFileBox = new ArrayList<>();
 
         for (Component comp : contentPanel.getComponents()) {
-            if (comp instanceof FileBox fileBox) {
-                if (fileBox.isActive()) {
+            if (comp instanceof FileBox fileBox && fileBox.isActive()) {
                     activeFileBox.add(fileBox.getGeneratorType());
                 }
-            }
         }
         return activeFileBox;
     }

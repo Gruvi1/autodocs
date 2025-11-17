@@ -1,10 +1,8 @@
 package ru.nsu.astakhov.autodocs.ui.view.panels;
 
 import ru.nsu.astakhov.autodocs.ui.controller.ButtonCommand;
-import ru.nsu.astakhov.autodocs.ui.configs.ConfigConstants;
-import ru.nsu.astakhov.autodocs.ui.configs.ConfigManager;
 import ru.nsu.astakhov.autodocs.ui.controller.Controller;
-import ru.nsu.astakhov.autodocs.ui.controller.NavigationPanelEventHandler;
+import ru.nsu.astakhov.autodocs.ui.controller.handler.NavigationPanelEventHandler;
 import ru.nsu.astakhov.autodocs.ui.view.font.FontLoader;
 import ru.nsu.astakhov.autodocs.ui.view.font.FontType;
 import ru.nsu.astakhov.autodocs.ui.view.logo.LogoLoader;
@@ -25,18 +23,12 @@ public class NavigationPanel extends Panel {
     }
 
     @Override
-    public void configurePanel() {
+    protected void configurePanel() {
         setLayout(new BorderLayout());
-
-        Color primaryColor = ConfigManager.parseHexColor(ConfigManager.getSetting(ConfigConstants.PRIMARY_COLOR));
-        Color textColor = ConfigManager.parseHexColor(ConfigManager.getSetting(ConfigConstants.TEXT_COLOR));
-        int textSize = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.TEXT_SIZE));
 
         setBackground(primaryColor);
         setForeground(textColor);
         setFont(FontLoader.loadFont(FontType.ADWAITA_SANS_REGULAR, textSize));
-
-        int smallGap = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.GAP_SMALL));
 
         setBorder(BorderFactory.createLineBorder(primaryColor, smallGap));
 
@@ -47,10 +39,7 @@ public class NavigationPanel extends Panel {
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
 
-        Color primaryColor = ConfigManager.parseHexColor(ConfigManager.getSetting(ConfigConstants.PRIMARY_COLOR));
         buttonPanel.setBackground(primaryColor);
-
-        int smallGap = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.GAP_SMALL));
 
         List<Component> components = new ArrayList<>(List.of(
                 createButton(ButtonCommand.UPDATE_TABLE.getName()),
@@ -69,8 +58,6 @@ public class NavigationPanel extends Panel {
             buttonPanel.add(Box.createVerticalStrut(smallGap));
         }
 
-        int menuTextSize = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.MENU_SIZE));
-
         JButton guideButton = createButton(ButtonCommand.SHORT_GUIDE.getName());
         guideButton.setFont(FontLoader.loadFont(FontType.ADWAITA_SANS_REGULAR, menuTextSize));
 
@@ -82,13 +69,11 @@ public class NavigationPanel extends Panel {
     private JSeparator createSeparator() {
         JSeparator separator = new JSeparator();
 
-        Color focusColor = ConfigManager.parseHexColor(ConfigManager.getSetting(ConfigConstants.FOCUS_COLOR));
-        int separatorHeight = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.GAP_SMALL));
 
         separator.setOpaque(true);
         separator.setForeground(focusColor);
         separator.setBackground(focusColor);
-        separator.setMaximumSize(new Dimension(Integer.MAX_VALUE, separatorHeight));
+        separator.setMaximumSize(new Dimension(Integer.MAX_VALUE, smallGap));
 
         return separator;
     }
@@ -102,8 +87,11 @@ public class NavigationPanel extends Panel {
 
     @Override
     public void onTableUpdate(String updateStatus) {
+        // no operation
     }
 
     @Override
-    public void onDocumentGeneration(String generateStatus) {}
+    public void onDocumentGeneration(String generateStatus) {
+        // no operation
+    }
 }

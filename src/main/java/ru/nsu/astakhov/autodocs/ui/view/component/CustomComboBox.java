@@ -12,13 +12,26 @@ import javax.swing.plaf.basic.ComboPopup;
 import java.awt.*;
 
 public class CustomComboBox extends JComboBox<String> {
+    private final int menuTextSize;
+
+    private final Color primaryColor;
+    private final Color backgroundColor;
+    private final Color focusColor;
+    private final Color textColor;
+    
     public CustomComboBox(String[] parameters) {
-        super();
+        this.menuTextSize = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.MENU_SIZE));
+
+        this.primaryColor = ConfigManager.parseHexColor(ConfigManager.getSetting(ConfigConstants.PRIMARY_COLOR));
+        this.backgroundColor = ConfigManager.parseHexColor(ConfigManager.getSetting(ConfigConstants.BACKGROUND_COLOR));
+        this.focusColor = ConfigManager.parseHexColor(ConfigManager.getSetting(ConfigConstants.FOCUS_COLOR));
+        this.textColor = ConfigManager.parseHexColor(ConfigManager.getSetting(ConfigConstants.TEXT_COLOR));
 
         String placeholder = "–";
         String[] items = new String[parameters.length + 1];
         items[0] = placeholder;
         System.arraycopy(parameters, 0, items, 1, parameters.length);
+
 
         setModel(new DefaultComboBoxModel<>(items));
         setSelectedIndex(0); // выбираем placeholder
@@ -35,8 +48,6 @@ public class CustomComboBox extends JComboBox<String> {
         g2.setColor(getBackground());
         g2.fillRect(0, 0, getWidth(), getHeight());
 
-        // TODO: убрать или оставить рамку?
-        Color primaryColor = ConfigManager.parseHexColor(ConfigManager.getSetting(ConfigConstants.PRIMARY_COLOR));
         g2.setColor(primaryColor);
         g2.setStroke(new BasicStroke(2.0f));
         g2.drawRect(0, 0, getWidth() - 1, getHeight() - 1);
@@ -58,12 +69,7 @@ public class CustomComboBox extends JComboBox<String> {
     }
 
     private void configureComboBox() {
-        Color backgroundColor = ConfigManager.parseHexColor(ConfigManager.getSetting(ConfigConstants.BACKGROUND_COLOR));
-        Color focusColor = ConfigManager.parseHexColor(ConfigManager.getSetting(ConfigConstants.FOCUS_COLOR));
-        Color textColor = ConfigManager.parseHexColor(ConfigManager.getSetting(ConfigConstants.TEXT_COLOR));
-        int textSize = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.MENU_SIZE));
-
-        setFont(FontLoader.loadFont(FontType.ADWAITA_SANS_REGULAR, textSize));
+        setFont(FontLoader.loadFont(FontType.ADWAITA_SANS_REGULAR, menuTextSize));
         setForeground(textColor);
         setBackground(backgroundColor);
 

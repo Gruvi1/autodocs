@@ -1,8 +1,6 @@
-package ru.nsu.astakhov.autodocs.ui.view.panels;
+package ru.nsu.astakhov.autodocs.ui.view.dialog;
 
 import ru.nsu.astakhov.autodocs.model.FieldCollision;
-import ru.nsu.astakhov.autodocs.ui.configs.ConfigConstants;
-import ru.nsu.astakhov.autodocs.ui.configs.ConfigManager;
 import ru.nsu.astakhov.autodocs.ui.view.component.CustomLabel;
 import ru.nsu.astakhov.autodocs.ui.view.component.RoundedButton;
 import ru.nsu.astakhov.autodocs.ui.view.font.FontLoader;
@@ -13,35 +11,30 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CollisionDialog extends JDialog {
+public class CollisionDialog extends Dialog {
     private static final String DIALOG_NAME = "Конфликт данных";
-    private final FieldCollision collision;
+    private final transient FieldCollision collision;
     private String selectedOption = null;
-    private Component originalGlassPane;
-    private JPanel overlay;
+    private final Frame owner;
 
-    private CollisionDialog(Frame owner, FieldCollision collision) {
-        super(owner, DIALOG_NAME, true);
+    public CollisionDialog(Frame owner, FieldCollision collision) {
+        super(owner, DIALOG_NAME);
+        this.owner = owner;
         this.collision = collision;
 
         configureDialog();
     }
 
-    public static String showCollisionDialog(Frame owner, FieldCollision collision) {
-        CollisionDialog dialog = new CollisionDialog(owner, collision);
+    public String showDialog() {
+        createOverlay(owner);
+        setVisible(true);
+        removeOverlay(owner);
 
-        dialog.createOverlay(owner);
-        dialog.setVisible(true);
-        dialog.removeOverlay(owner);
-
-        return dialog.selectedOption;
+        return selectedOption;
     }
 
-    private void configureDialog() {
+    protected void configureDialog() {
         setResizable(false);
-
-        int smallGap = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.GAP_SMALL));
-        Color focusColor = ConfigManager.parseHexColor(ConfigManager.getSetting(ConfigConstants.FOCUS_COLOR));
 
         JPanel contentPanel = new JPanel(new BorderLayout());
         contentPanel.setBorder(BorderFactory.createEmptyBorder(smallGap, smallGap, smallGap, smallGap));
@@ -58,8 +51,6 @@ public class CollisionDialog extends JDialog {
 
     private JPanel createCentralPanel() {
         String message = "Выберите, что сохранить:";
-        int smallGap = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.GAP_SMALL));
-        int mediumGap = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.GAP_MEDIUM));
 
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
@@ -89,8 +80,6 @@ public class CollisionDialog extends JDialog {
     }
 
     private JPanel createButtonPanel() {
-        int smallGap = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.GAP_SMALL));
-
         String practiceValue = collision.practiceValue();
         String thesisValue = collision.thesisValue();
 
@@ -108,8 +97,6 @@ public class CollisionDialog extends JDialog {
     }
 
     private JPanel createTitleMessage() {
-        int smallGap = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.GAP_SMALL));
-
         JPanel firstLine = new JPanel();
         firstLine.setLayout(new BoxLayout(firstLine, BoxLayout.X_AXIS));
         firstLine.setOpaque(false);
@@ -139,9 +126,7 @@ public class CollisionDialog extends JDialog {
     private JButton createButton(String buttonName) {
         RoundedButton button = new RoundedButton(buttonName);
 
-        int textSize = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.MENU_SIZE));
-
-        button.setFont(FontLoader.loadFont(FontType.ADWAITA_SANS_REGULAR, textSize));
+        button.setFont(FontLoader.loadFont(FontType.ADWAITA_SANS_REGULAR, menuTextSize));
 
         button.addActionListener(e -> {
             selectedOption = buttonName;
@@ -150,48 +135,5 @@ public class CollisionDialog extends JDialog {
         });
 
         return button;
-    }
-
-    private void createOverlay(Frame owner) {
-        if (owner == null) {
-            return;
-        }
-
-        JRootPane rootPane = SwingUtilities.getRootPane(owner);
-        if (rootPane == null) {
-            return;
-        }
-
-        originalGlassPane = rootPane.getGlassPane();
-
-        overlay = new JPanel() {
-            @Override
-            protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                g.setColor(new Color(0, 0, 0, 64));
-                g.fillRect(0, 0, getWidth(), getHeight());
-            }
-        };
-
-        overlay.setOpaque(false);
-        rootPane.setGlassPane(overlay);
-        overlay.setVisible(true);
-    }
-
-    private void removeOverlay(Frame owner) {
-        if (owner == null || overlay == null) {
-            return;
-        }
-        overlay.setVisible(false);
-
-        JRootPane rootPane = SwingUtilities.getRootPane(owner);
-
-        if (rootPane != null) {
-            rootPane.setGlassPane(originalGlassPane);
-            rootPane.getGlassPane().setVisible(false);
-        }
-
-        overlay = null;
-        originalGlassPane = null;
     }
 }

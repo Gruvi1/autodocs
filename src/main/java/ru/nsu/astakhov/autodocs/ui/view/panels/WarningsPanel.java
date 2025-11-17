@@ -4,10 +4,8 @@ import org.springframework.stereotype.Component;
 import ru.nsu.astakhov.autodocs.model.WorkType;
 import ru.nsu.astakhov.autodocs.model.TableWarning;
 import ru.nsu.astakhov.autodocs.model.WarningList;
-import ru.nsu.astakhov.autodocs.ui.configs.ConfigConstants;
-import ru.nsu.astakhov.autodocs.ui.configs.ConfigManager;
 import ru.nsu.astakhov.autodocs.ui.controller.Controller;
-import ru.nsu.astakhov.autodocs.ui.controller.WarningsPanelEventHandler;
+import ru.nsu.astakhov.autodocs.ui.controller.handler.WarningsPanelEventHandler;
 import ru.nsu.astakhov.autodocs.ui.view.component.CustomLabel;
 
 import javax.swing.*;
@@ -16,7 +14,7 @@ import java.util.List;
 
 @Component
 public class WarningsPanel extends Panel {
-    private final WarningList warningList;
+    private final transient WarningList warningList;
     private final JPanel lines;
 
     public WarningsPanel(WarningList warningList, Controller controller) {
@@ -33,8 +31,6 @@ public class WarningsPanel extends Panel {
 
     @Override
     public void onTableUpdate(String updateStatus) {
-        int smallGap = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.GAP_SMALL));
-
         List<TableWarning> warnings = warningList.getWarnings();
 
         lines.removeAll();
@@ -46,19 +42,18 @@ public class WarningsPanel extends Panel {
     }
 
     @Override
-    public void onDocumentGeneration(String generateStatus) {}
+    public void onDocumentGeneration(String generateStatus) {
+        // no operation
+    }
 
     @Override
-    public void configurePanel() {
-        int smallGap = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.GAP_SMALL));
-
+    protected void configurePanel() {
         setLayout(new BorderLayout());
 
         JScrollPane scrollPane = new JScrollPane(lines);
         JScrollBar verticalBar = scrollPane.getVerticalScrollBar();
         verticalBar.setUnitIncrement(smallGap);
 
-        Color focusColor = ConfigManager.parseHexColor(ConfigManager.getSetting(ConfigConstants.FOCUS_COLOR));
         setBackground(focusColor);
 
         scrollPane.setBackground(focusColor);
@@ -74,7 +69,6 @@ public class WarningsPanel extends Panel {
         line.setLayout(new BoxLayout(line, BoxLayout.X_AXIS));
         line.setOpaque(false);
 
-        // TODO: возможно добавить параметр в перечисление, чтобы не мудохаться каждый раз
         String tableType = warning.workType() == WorkType.INTERNSHIP ? "практики" : "ВКР";
 
         line.add(new CustomLabel("В таблице "));

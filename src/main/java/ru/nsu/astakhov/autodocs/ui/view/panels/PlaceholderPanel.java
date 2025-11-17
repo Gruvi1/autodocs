@@ -1,9 +1,7 @@
 package ru.nsu.astakhov.autodocs.ui.view.panels;
 
-import ru.nsu.astakhov.autodocs.ui.configs.ConfigConstants;
-import ru.nsu.astakhov.autodocs.ui.configs.ConfigManager;
 import ru.nsu.astakhov.autodocs.ui.controller.Controller;
-import ru.nsu.astakhov.autodocs.ui.controller.PlaceholderPanelEventHandler;
+import ru.nsu.astakhov.autodocs.ui.controller.handler.PlaceholderPanelEventHandler;
 import ru.nsu.astakhov.autodocs.ui.view.component.CustomLabel;
 import ru.nsu.astakhov.autodocs.ui.view.font.FontLoader;
 import ru.nsu.astakhov.autodocs.ui.view.font.FontType;
@@ -24,10 +22,9 @@ public class PlaceholderPanel extends Panel {
     }
 
     @Override
-    public void configurePanel() {
+    protected void configurePanel() {
         setLayout(new BorderLayout());
 
-        Color backgroundColor = ConfigManager.parseHexColor(ConfigManager.getSetting(ConfigConstants.BACKGROUND_COLOR));
         setBackground(backgroundColor);
 
         add(createPlaceholder(), BorderLayout.CENTER);
@@ -50,7 +47,7 @@ public class PlaceholderPanel extends Panel {
         JLabel logo = LogoLoader.loadLogo(LogoType.TRANSPARENT_LOGO_IMAGE);
         logo.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        int gap = 4 * Integer.parseInt(ConfigManager.getSetting(ConfigConstants.GAP_MEDIUM));
+        int gap = 4 * mediumGap;
         List.of(Box.createVerticalStrut(gap), logo, textLabel, textLabel2, Box.createVerticalGlue()).
                     forEach(contentPanel::add);
         List.of(Box.createHorizontalGlue(), contentPanel, Box.createHorizontalGlue()).
@@ -62,8 +59,7 @@ public class PlaceholderPanel extends Panel {
     private JLabel createTextLabel(String text) {
         JLabel textLabel = new CustomLabel(text);
 
-        int textSize = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.TITLE_SIZE));
-        textLabel.setFont(FontLoader.loadFont(FontType.ADWAITA_SANS_ITALIC, textSize));
+        textLabel.setFont(FontLoader.loadFont(FontType.ADWAITA_SANS_ITALIC, titleTextSize));
         textLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         return textLabel;
@@ -71,8 +67,11 @@ public class PlaceholderPanel extends Panel {
 
     @Override
     public void onTableUpdate(String updateStatus) {
+        // no operation
     }
 
     @Override
-    public void onDocumentGeneration(String generateStatus) {}
+    public void onDocumentGeneration(String generateStatus) {
+        // no operation
+    }
 }

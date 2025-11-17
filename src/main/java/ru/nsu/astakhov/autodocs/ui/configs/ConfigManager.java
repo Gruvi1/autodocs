@@ -1,9 +1,14 @@
 package ru.nsu.astakhov.autodocs.ui.configs;
 
-import ru.nsu.astakhov.autodocs.utils.Ini;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import ru.nsu.astakhov.autodocs.util.Ini;
 
 import java.awt.*;
 
+@Slf4j
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ConfigManager {
     private static Ini ini = null;
 
@@ -12,12 +17,6 @@ public class ConfigManager {
             throw new IllegalStateException("Ini already initialized");
         }
         ConfigManager.ini = ini;
-    }
-
-    public static boolean isDarkTheme() {
-        ConfigConstants configConstants = ConfigConstants.THEME;
-        String theme = ini.getValue(configConstants.getSection(), configConstants.getSettingName());
-        return theme.equals(ThemeType.DARK.getValue());
     }
 
     public static String getSetting(ConfigConstants configConstants) {
@@ -42,12 +41,12 @@ public class ConfigManager {
             else {
                 typedHexColor = hexColor;
             }
-            int HEX_SYSTEM = 16;
-            int rgb = Integer.parseInt(typedHexColor, HEX_SYSTEM);
+            int hexSystem = 16;
+            int rgb = Integer.parseInt(typedHexColor, hexSystem);
             return new Color(rgb);
         }
         catch (NumberFormatException e) {
-            System.err.println("Некорректный формат цвета: " + hexColor);
+            logger.error("Некорректный формат цвета: {}", hexColor);
             return Color.BLACK;
         }
     }
