@@ -98,9 +98,8 @@ public class GeneratorPanel extends Panel {
     private void refreshDocumentsPanel() {
         contentPanel.removeAll();
         updateContentPanel();
-
-        revalidate();
-        repaint();
+        contentPanel.revalidate();
+        contentPanel.repaint();
     }
 
     private JPanel initDocumentsPanel() {

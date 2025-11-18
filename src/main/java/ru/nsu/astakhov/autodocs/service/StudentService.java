@@ -59,17 +59,15 @@ public class StudentService {
         }
     }
 
-    public void generateStudents(List<StudentDto> studentDtos, List<GeneratorType> generatorTypes) {
-        for (GeneratorType generatorType : generatorTypes) {
-            Course course = generatorType.getCourse();
-            Specialization specialization = generatorType.getSpecialization();
+    public void generateStudents(List<StudentDto> studentDtos, GeneratorType generatorType) {
+        Course course = generatorType.getCourse();
+        Specialization specialization = generatorType.getSpecialization();
 
-            DocumentGenerator generator = documentGeneratorRegistry.getDocumentGenerator(generatorType);
+        DocumentGenerator generator = documentGeneratorRegistry.getDocumentGenerator(generatorType);
 
-            for (StudentDto dto : studentDtos) {
-                if (dto.course() == course && dto.specialization() == specialization) {
-                    generator.generate(dto);
-                }
+        for (StudentDto dto : studentDtos) {
+            if (dto.course() == course && dto.specialization() == specialization) {
+                generator.generate(dto);
             }
         }
     }

@@ -55,16 +55,12 @@ public class Controller implements Observable {
         return studentService.getStudentsByGenerator(generatorType);
     }
 
-    public List<StudentDto> getAllStudents() {
-        return studentService.getAllStudents();
-    }
-
-    public void generateAllStudents(List<GeneratorType> generatorTypes) {
+    public void generateStudents(GeneratorType generatorType, List<StudentDto> studentDtos) {
         SwingWorker<Void, String> worker = new SwingWorker<>() {
             @Override
             protected Void doInBackground() {
                 publish("Генерация документов...");
-                studentService.generateAllStudents(generatorTypes);
+                studentService.generateStudents(studentDtos, generatorType);
                 return null;
             }
 

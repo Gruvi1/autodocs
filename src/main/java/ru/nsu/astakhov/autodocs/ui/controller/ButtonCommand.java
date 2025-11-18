@@ -14,6 +14,7 @@ public enum ButtonCommand {
     SHORT_GUIDE("Краткое руководство"),
     SELECT_STUDENTS("Выбрать студентов"),
     SELECT_ALL("Выбрать всех"),
+    REMOVE_ALL("Убрать всех"),
     GENERATE_ALL("Сгенерировать для всех"),
     GENERATE("Сгенерировать");
 

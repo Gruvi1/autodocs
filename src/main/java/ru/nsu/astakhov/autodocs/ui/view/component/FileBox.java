@@ -11,17 +11,17 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
 
-@Getter
 public class FileBox extends JPanel {
+    @Getter
     private final GeneratorType generatorType;
     private final JLabel indicator;
+    @Getter
     private boolean isActive;
 
     private final int smallGap;
     private final int titleTextSize;
 
     private final Color primaryColor;
-    private final Color backgroundColor;
     private final Color focusColor;
 
     public FileBox(GeneratorType generatorType) {
@@ -31,7 +31,6 @@ public class FileBox extends JPanel {
         this.titleTextSize = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.TITLE_SIZE));
 
         this.primaryColor = ConfigManager.parseHexColor(ConfigManager.getSetting(ConfigConstants.PRIMARY_COLOR));
-        this.backgroundColor = ConfigManager.parseHexColor(ConfigManager.getSetting(ConfigConstants.BACKGROUND_COLOR));
         this.focusColor = ConfigManager.parseHexColor(ConfigManager.getSetting(ConfigConstants.FOCUS_COLOR));
 
         this.indicator = createIndicator();
@@ -132,7 +131,7 @@ public class FileBox extends JPanel {
     }
 
     private Color darkenColor(Color color) {
-        float factor = 0.8f;
+        float factor = 0.85f;
         int r = Math.max(0, (int) (color.getRed()   * factor));
         int g = Math.max(0, (int) (color.getGreen() * factor));
         int b = Math.max(0, (int) (color.getBlue()  * factor));

@@ -6,32 +6,36 @@ import ru.nsu.astakhov.autodocs.ui.configs.ConfigConstants;
 import ru.nsu.astakhov.autodocs.ui.configs.ConfigManager;
 import ru.nsu.astakhov.autodocs.ui.controller.ButtonCommand;
 import ru.nsu.astakhov.autodocs.ui.controller.Controller;
-import ru.nsu.astakhov.autodocs.ui.controller.handler.EventHandler;
 import ru.nsu.astakhov.autodocs.ui.view.font.FontLoader;
 import ru.nsu.astakhov.autodocs.ui.view.font.FontType;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class GeneratorCard extends JPanel {
     private final GeneratorType generator;
     private final Controller controller;
-    private final transient EventHandler eventHandler;
+    private final Map<StudentDto, SelectableLabel> students;
 
     private final int smallGap;
+    private final int mediumGap;
 
     private final int menuTextSize;
 
     private final Color primaryColor;
     private final Color focusColor;
 
-    public GeneratorCard(GeneratorType generator, Controller controller, EventHandler eventHandler) {
+    public GeneratorCard(GeneratorType generator, Controller controller) {
         this.generator = generator;
         this.controller = controller;
-        this.eventHandler = eventHandler;
+        this.students = new HashMap<>();
 
         this.smallGap = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.GAP_SMALL));
+        this.mediumGap = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.GAP_MEDIUM));
 
         this.menuTextSize = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.MENU_SIZE));
 
@@ -39,6 +43,21 @@ public class GeneratorCard extends JPanel {
         this.focusColor = ConfigManager.parseHexColor(ConfigManager.getSetting(ConfigConstants.FOCUS_COLOR));
 
         configureCard();
+    }
+
+    public List<StudentDto> getAllStudents() {
+        return students.keySet().stream().toList();
+    }
+
+    public List<StudentDto> getSelectedStudents() {
+        List<StudentDto> selectedStudents = new ArrayList<>();
+        for (StudentDto student : students.keySet()) {
+            SelectableLabel label = students.get(student);
+            if (label != null && label.isActive()) {
+                selectedStudents.add(student);
+            }
+        }
+        return selectedStudents;
     }
     
     private void configureCard() {
@@ -51,7 +70,7 @@ public class GeneratorCard extends JPanel {
         setMaximumSize(new Dimension(600, Integer.MAX_VALUE));
 
         add(createTitlePanel(), BorderLayout.NORTH);
-        add(createSelectAllButton(), BorderLayout.CENTER);
+        add(createSelectPanel(), BorderLayout.CENTER);
         add(createStudentLinesPanel(generator), BorderLayout.SOUTH);
     }
 
@@ -63,16 +82,39 @@ public class GeneratorCard extends JPanel {
         return fileBox;
     }
 
-    private JButton createSelectAllButton() {
-        String buttonName = ButtonCommand.SELECT_ALL.getName();
+    private JPanel createSelectPanel() {
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+        panel.setOpaque(false);
 
-        RoundedButton generateAllButton = new RoundedButton(buttonName, 0);
-        generateAllButton.setActionCommand(buttonName);
-        generateAllButton.addActionListener(eventHandler);
-        generateAllButton.setFont(FontLoader.loadFont(FontType.ADWAITA_SANS_REGULAR, menuTextSize));
-        generateAllButton.setBorder(BorderFactory.createEmptyBorder(smallGap, smallGap, smallGap, smallGap));
+        String selectAllButtonName = ButtonCommand.SELECT_ALL.getName();
+        RoundedButton selectAllButton = new RoundedButton(selectAllButtonName, 0);
+        selectAllButton.setActionCommand(selectAllButtonName);
+        selectAllButton.addActionListener((e) -> {
+            for (SelectableLabel student : students.values()) {
+                student.setActive(true);
+            }
+        });
+        selectAllButton.setFont(FontLoader.loadFont(FontType.ADWAITA_SANS_REGULAR, menuTextSize));
+        selectAllButton.setBorder(BorderFactory.createEmptyBorder(smallGap, mediumGap * 2, smallGap, mediumGap * 2));
 
-        return generateAllButton;
+        String removeAllButtonName = ButtonCommand.REMOVE_ALL.getName();
+        RoundedButton removeAllButton = new RoundedButton(removeAllButtonName, 0);
+        removeAllButton.setActionCommand(removeAllButtonName);
+        removeAllButton.addActionListener((e) -> {
+            for (SelectableLabel student : students.values()) {
+                student.setActive(false);
+            }
+        });
+        removeAllButton.setFont(FontLoader.loadFont(FontType.ADWAITA_SANS_REGULAR, menuTextSize));
+        removeAllButton.setBorder(BorderFactory.createEmptyBorder(smallGap, mediumGap * 2, smallGap, mediumGap * 2));
+
+        panel.add(Box.createHorizontalStrut(mediumGap));
+        panel.add(selectAllButton);
+        panel.add(Box.createHorizontalGlue());
+        panel.add(removeAllButton);
+        panel.add(Box.createHorizontalStrut(mediumGap));
+        return panel;
     }
 
     private JScrollPane createStudentLinesPanel(GeneratorType generator) {
@@ -107,17 +149,10 @@ public class GeneratorCard extends JPanel {
                 BorderFactory.createEmptyBorder(smallGap / 2, smallGap, smallGap / 2, smallGap)
         ));
 
-        JLabel nameLabel = new CustomLabel(student.fullName());
-        nameLabel.setOpaque(false);
+        SelectableLabel studentLabel = new SelectableLabel(student.fullName());
+        students.put(student, studentLabel);
 
-        JCheckBox checkBox = new JCheckBox();
-        checkBox.setOpaque(false);
-
-//        panel.add(Box.createHorizontalStrut(mediumGap));
-        panel.add(nameLabel);
-        panel.add(Box.createHorizontalGlue());
-        panel.add(checkBox);
-//        panel.add(Box.createHorizontalStrut(mediumGap));
+        panel.add(studentLabel);
 
         return panel;
     }

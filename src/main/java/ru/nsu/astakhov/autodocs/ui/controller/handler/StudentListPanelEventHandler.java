@@ -1,9 +1,12 @@
 package ru.nsu.astakhov.autodocs.ui.controller.handler;
 
 import lombok.RequiredArgsConstructor;
+import ru.nsu.astakhov.autodocs.document.GeneratorType;
+import ru.nsu.astakhov.autodocs.ui.controller.ButtonCommand;
 import ru.nsu.astakhov.autodocs.ui.controller.Controller;
 import ru.nsu.astakhov.autodocs.ui.view.panel.StudentListPanel;
 
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 
 @RequiredArgsConstructor
@@ -13,6 +16,20 @@ public class StudentListPanelEventHandler implements EventHandler {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        // no operation
+        String command = e.getActionCommand();
+        ButtonCommand buttonCommand = ButtonCommand.fromString(command);
+
+        switch (buttonCommand) {
+            case GENERATE_ALL -> {
+                for (GeneratorType generator : panel.getActiveGenerators()) {
+                    controller.generateStudents(generator, panel.getAllStudents(generator));
+                }
+            }
+            case GENERATE -> {
+                for (GeneratorType generator : panel.getActiveGenerators()) {
+                    controller.generateStudents(generator, panel.getSelectedStudents(generator));
+                }
+            }
+        }
     }
 }
