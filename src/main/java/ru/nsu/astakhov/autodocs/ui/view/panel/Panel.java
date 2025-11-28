@@ -26,7 +26,7 @@ public abstract class Panel extends JPanel implements Listener {
     protected final Color focusColor;
     protected final Color textColor;
 
-    protected Panel() {
+    public Panel() {
         this.smallGap = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.GAP_SMALL));
         this.mediumGap = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.GAP_MEDIUM));
 

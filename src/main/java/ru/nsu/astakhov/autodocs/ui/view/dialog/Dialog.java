@@ -36,7 +36,6 @@ public abstract class Dialog extends JDialog {
         this.textColor = ConfigManager.parseHexColor(ConfigManager.getSetting(ConfigConstants.TEXT_COLOR));
     }
 
-    public abstract String showDialog();
     protected abstract void configureDialog();
 
     protected void createOverlay(Frame owner) {

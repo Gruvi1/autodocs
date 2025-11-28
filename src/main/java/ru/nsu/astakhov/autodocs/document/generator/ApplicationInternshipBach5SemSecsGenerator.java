@@ -6,33 +6,30 @@ import ru.nsu.astakhov.autodocs.document.RussianWordDecliner;
 import java.util.List;
 
 @Service
-public class InternshipReportBach3SecsGenerator extends AbstractDocumentGenerator {
-    private static final String OUTPUT_FILE_NAME = "Отчёт_о_практике_Бакалавриат_3курс.docx";
-    private static final String TEMPLATE_PATH = "/template/internship/bachelors/3rd_course/" + OUTPUT_FILE_NAME;
+public class ApplicationInternshipBach5SemSecsGenerator extends AbstractDocumentGenerator {
+    private static final String OUTPUT_FILE_NAME = "Заявление_на_практику_Бакалавриат_5сем.docx";
+    private static final String TEMPLATE_PATH = "/template/internship/common/Заявление_на_практику_учеб_науч.docx";
     private static final String OUTPUT_DIRECTORY = "document/internship/bachelors/3rd_course";
 
     private static final List<String> PLACEHOLDERS = List.of(
+            "$(genitiveStudentForm)",
+            "$(course)",
+            "$(groupName)",
             "$(eduProgram)",
             "$(specialization)",
-            "$(internshipType)",
-            "$(genitiveStudentForm)",
             "$(genitiveFullName)",
-            "$(groupName)",
+            "$(internshipType)",
             "$(fullPlaceOfInternship)",
-            "$(organizationSupervisor.name)",
-            "$(organizationSupervisor.position)",
-            "$(NSUSupervisor.name)",
-            "$(NSUSupervisor.position)",
             "$(thesisSupervisor.name)",
             "$(thesisSupervisor.position)"
     );
 
-    public InternshipReportBach3SecsGenerator(RussianWordDecliner decliner) {
+    public ApplicationInternshipBach5SemSecsGenerator(RussianWordDecliner decliner) {
         super(decliner, OUTPUT_FILE_NAME, TEMPLATE_PATH, OUTPUT_DIRECTORY, PLACEHOLDERS);
     }
 
     @Override
     public GeneratorType getType() {
-        return GeneratorType.INTERNSHIP_REPORT_BACH3_SECS;
+        return GeneratorType.APPLICATION_INTERNSHIP_BACH_5SEM_SECS;
     }
 }

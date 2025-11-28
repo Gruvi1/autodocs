@@ -76,12 +76,25 @@ public abstract class AbstractDocumentGenerator implements DocumentGenerator {
 
     protected static final Map<String, BiFunction<StudentDto, RussianWordDecliner, String>> ADDITIONAL_RESOLVERS = Map.ofEntries(
             entry("$(genitiveStudentForm)", (student, decliner) -> {
-                Gender gender = decliner.getGenderByPatronymic(student.fullName().split(" ")[2]);
+                Gender gender;
+                try {
+                    gender = decliner.getGenderByPatronymic(student.fullName().split(" ")[2]);
+                }
+                catch (Exception e) {
+                    // TODO: подумать, что делать, если только два слова ФИ
+                    // TODO: если кидать исключение, то будет весь Swing-поток падать
+                    // TODO: если возвращать кал, то выше нужна проверка
+                    // TODO: можно просить юзера определить пол, но тогда сюда контроллер нужен, что кринж
+                    e.printStackTrace();
+                    // TODO: почему мальчик, а как же равноправие? :D
+                    gender = Gender.Male;
+                }
                 return decliner.getGenitiveStudentFormByGender(gender);
             }),
             entry("$(genitiveFullName)", (student, decliner) -> {
                 String fullName = student.fullName();
                 String[] parts = fullName.split(" ");
+                // TODO: выше сделать, как тут - кидать исключение???
                 if (parts.length != 3) {
                     throw new IllegalArgumentException("Ожидаются ФИО");
                 }
@@ -107,7 +120,6 @@ public abstract class AbstractDocumentGenerator implements DocumentGenerator {
     public void generate(StudentDto dto) {
         String safeName = dto.fullName().replace(' ', '_') + '_' + outputFileName;
         Path outputFilePath = Paths.get(outputDirectory, safeName);
-
         generateDocument(templatePath, outputFilePath, placeholders, dto);
     }
 
@@ -116,7 +128,6 @@ public abstract class AbstractDocumentGenerator implements DocumentGenerator {
         try (InputStream in = getClass().getResourceAsStream(templatePath);
              XWPFDocument doc = new XWPFDocument(in);
              FileOutputStream out = new FileOutputStream(outputFilePath.toFile())) {
-
             for (XWPFParagraph paragraph : doc.getParagraphs()) {
                 String text = paragraph.getText();
                 if (text != null && containsAny(text, placeholders)) {

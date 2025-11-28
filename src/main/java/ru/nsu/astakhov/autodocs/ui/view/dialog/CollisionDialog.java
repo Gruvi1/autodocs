@@ -74,7 +74,8 @@ public class CollisionDialog extends Dialog {
     }
 
     private JLabel createIconLabel() {
-        Icon questionIcon = UIManager.getIcon("OptionPane.questionIcon");
+        String questionIconKey = "OptionPane.questionIcon";
+        Icon questionIcon = UIManager.getIcon(questionIconKey);
 
         return new JLabel(questionIcon);
     }
@@ -125,9 +126,7 @@ public class CollisionDialog extends Dialog {
 
     private JButton createButton(String buttonName) {
         RoundedButton button = new RoundedButton(buttonName);
-
         button.setFont(FontLoader.loadFont(FontType.ADWAITA_SANS_REGULAR, menuTextSize));
-
         button.addActionListener(e -> {
             selectedOption = buttonName;
             setVisible(false);

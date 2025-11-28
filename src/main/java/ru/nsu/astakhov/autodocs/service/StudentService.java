@@ -25,17 +25,46 @@ public class StudentService {
     private final GoogleSheetsService googleSheetsService;
     private final DocumentGeneratorRegistry documentGeneratorRegistry;
     private final WarningList warningList;
+    private volatile boolean updateInProgress = false;
+    private final Object updateLock = new Object();
 
-    public List<StudentDto> getAllStudents() {
-        List<StudentEntity> entities = repository.findAll();
-        return entities.stream()
-                .map(studentMapper::toDto)
-                .toList();
+    public List<FieldCollision> startUpdate() {
+        synchronized (updateLock) {
+            logger.info("Starting student data update");
+            if (updateInProgress) {
+                logger.error("Already updating student data");
+                throw new IllegalStateException("Обновление уже выполняется");
+            }
+            updateInProgress = true;
+
+            try {
+                logger.info("Clearing existing student data");
+                clearAllData();
+                logger.info("Scanning internship lists");
+                scanInternshipLists();
+                logger.info("Scanning thesis lists");
+                return scanThesisLists();
+            }
+            catch (Exception e) {
+                logger.error("Error during student data update: {}", e.getMessage());
+                updateInProgress = false;
+                throw e;
+            }
+        }
     }
 
-    public void clearAllData() {
-        warningList.clear();
-        repository.deleteAll();
+    public void finishUpdate(List<FieldCollision> resolvedCollisions) {
+        synchronized (updateLock) {
+        logger.info("Finishing student data update");
+        if (resolvedCollisions == null || resolvedCollisions.isEmpty()) {
+            updateInProgress = false;
+            return;
+        }
+
+        List<StudentEntity> entities = resolvedCollisions.stream().map(FieldCollision::entity).toList();
+        repository.saveAll(entities);
+        updateInProgress = false;
+        }
     }
 
     public List<StudentDto> getStudentsByGenerator(GeneratorType generatorType) {
@@ -43,20 +72,6 @@ public class StudentService {
         Specialization specialization = generatorType.getSpecialization();
 
         return getStudentsByCourseAndSpecialization(course, specialization);
-    }
-
-    public void generateAllStudents(List<GeneratorType> generatorTypes) {
-        for (GeneratorType generatorType : generatorTypes) {
-            Course course = generatorType.getCourse();
-            Specialization specialization = generatorType.getSpecialization();
-
-            DocumentGenerator generator = documentGeneratorRegistry.getDocumentGenerator(generatorType);
-            List<StudentDto> dtos = getStudentsByCourseAndSpecialization(course, specialization);
-
-            for (StudentDto dto : dtos) {
-                generator.generate(dto);
-            }
-        }
     }
 
     public void generateStudents(List<StudentDto> studentDtos, GeneratorType generatorType) {
@@ -72,20 +87,19 @@ public class StudentService {
         }
     }
 
-    public void scanInternshipLists() {
+    private void clearAllData() {
+        warningList.clear();
+        repository.deleteAll();
+    }
+
+    private void scanInternshipLists() {
         List<StudentDto> studentDtos = googleSheetsService.readAllInternshipLists();
         createStudents(studentDtos);
     }
 
-    public List<FieldCollision> scanThesisLists() {
+    private List<FieldCollision> scanThesisLists() {
         List<StudentDto> studentDtos = googleSheetsService.readAllThesisLists();
         return updateStudents(studentDtos);
-    }
-
-    public void saveResolvedField(List<FieldCollision> resolvedCollisions) {
-        List<StudentEntity> entities = resolvedCollisions.stream().map(FieldCollision::entity).toList();
-
-        repository.saveAll(entities);
     }
 
     private List<StudentDto> getStudentsByCourseAndSpecialization(Course course, Specialization specialization) {

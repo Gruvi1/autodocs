@@ -6,30 +6,34 @@ import ru.nsu.astakhov.autodocs.document.RussianWordDecliner;
 import java.util.List;
 
 @Service
-public class InternshipSupervisorReviewBach3Generator extends AbstractDocumentGenerator{
-    private static final String OUTPUT_FILE_NAME = "Отзыв_руководителя_практики_Бакалавриат_3курс.docx";
+public class IndAssignmentBach3CourseSecsGenerator extends AbstractDocumentGenerator {
+    private static final String OUTPUT_FILE_NAME = "ИЗ_Бакалавриат_3курс.docx";
     private static final String TEMPLATE_PATH = "/template/internship/bachelors/3rd_course/" + OUTPUT_FILE_NAME;
     private static final String OUTPUT_DIRECTORY = "document/internship/bachelors/3rd_course";
 
     private static final List<String> PLACEHOLDERS = List.of(
-            "$(internshipType)",
-            "$(studentForm)",
-            "$(fullName)",
-            "$(groupName)",
+            "$(genitiveStudentForm)",
+            "$(genitiveFullName)",
             "$(eduProgram)",
             "$(specialization)",
-            "$(fullOrganizationName)",
-            "$(organizationName)",
-            "$(organizationSupervisor.position)",
-            "$(organizationSupervisor.name)"
+            "$(internshipType)",
+            "$(fullName)",
+            "$(groupName)",
+            "$(fullPlaceOfInternship)",
+            "$(NSUSupervisor.name)",
+            "$(NSUSupervisor.position)",
+            "$(thesisSupervisor.name)",
+            "$(thesisSupervisor.position)",
+            "$(organizationSupervisor.name)",
+            "$(organizationSupervisor.position)"
     );
 
-    public InternshipSupervisorReviewBach3Generator(RussianWordDecliner decliner) {
+    public IndAssignmentBach3CourseSecsGenerator(RussianWordDecliner decliner) {
         super(decliner, OUTPUT_FILE_NAME, TEMPLATE_PATH, OUTPUT_DIRECTORY, PLACEHOLDERS);
     }
 
     @Override
     public GeneratorType getType() {
-        return GeneratorType.INTERNSHIP_SUPERVISOR_REVIEW_BACH3_SECS;
+        return GeneratorType.INDIVIDUAL_ASSIGNMENT_BACH_3COURSE_SECS;
     }
 }

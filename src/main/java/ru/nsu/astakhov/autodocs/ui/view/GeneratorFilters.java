@@ -2,18 +2,14 @@ package ru.nsu.astakhov.autodocs.ui.view;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import ru.nsu.astakhov.autodocs.model.Course;
-import ru.nsu.astakhov.autodocs.model.Degree;
-import ru.nsu.astakhov.autodocs.model.Specialization;
-import ru.nsu.astakhov.autodocs.model.WorkType;
-import ru.nsu.astakhov.autodocs.model.HasStringValue;
+import ru.nsu.astakhov.autodocs.model.*;
 
 @RequiredArgsConstructor
 @Getter
 public enum GeneratorFilters {
     WORK_TYPE("Тип работы", WorkType.class),
     DEGREE("Степень", Degree.class),
-    COURSE("Курс", Course.class),
+    ACADEMIC_PERIOD("Период обучения", AcademicPeriod.class),
     SPECIALIZATION("Направление", Specialization.class);
 
     private final String value;

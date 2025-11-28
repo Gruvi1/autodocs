@@ -73,7 +73,15 @@ public class Controller implements Observable {
 
             @Override
             protected void done() {
-                notifyAllDocumentGeneration("Генерация завершена!");
+                try {
+                    get();
+                    notifyAllDocumentGeneration("Генерация завершена!");
+                }
+                catch (Exception e) {
+                    // TODO: исправить исключение и метод в целом
+                    e.printStackTrace();
+                    notifyAllDocumentGeneration("Ошибка при генерации");
+                }
             }
         };
         worker.execute();
@@ -83,17 +91,11 @@ public class Controller implements Observable {
         SwingWorker<List<FieldCollision>, String> worker = new SwingWorker<>() {
             @Override
             protected List<FieldCollision> doInBackground() {
-                publish("Удаление старых данных...");
-                studentService.clearAllData();
-
-                publish("Получение данных из таблиц практики...");
-                studentService.scanInternshipLists();
-
-                publish("Получение данных из таблиц ВКР...");
-                List<FieldCollision> collisions = studentService.scanThesisLists();
+                publish("Обновление данных студентов...");
+                logger.info("Starting data update");
+                List<FieldCollision> collisions = studentService.startUpdate();
 
                 publish("Разрешение конфликта данных...");
-
                 return collisions;
             }
 
@@ -108,21 +110,34 @@ public class Controller implements Observable {
                 String successUpdateMessage = "Обновление завершено!";
                 try {
                     List<FieldCollision> collisions = get();
-                    if (collisions.isEmpty()) {
-                        notifyAllTableUpdate(successUpdateMessage);
-                    }
-                    else {
+                    if (!collisions.isEmpty()) {
+                        logger.info("Resolving {} collisions", collisions.size());
                         resolveCollisions(owner, collisions);
-                        notifyAllTableUpdate(successUpdateMessage);
                     }
+                    logger.info("Finishing data update");
+                    studentService.finishUpdate(collisions);
+                    notifyAllTableUpdate(successUpdateMessage);
                 }
                 catch (InterruptedException e) {
-                    notifyAllTableUpdate("Ошибка при обновлении");
+                    logger.error("Update interrupted", e);
                     Thread.currentThread().interrupt();
+                    handleError();
                 }
                 catch (ExecutionException e) {
-                    notifyAllTableUpdate("Ошибка при обновлении");
+                    logger.error("Error during update", e);
+                    handleError();
                 }
+            }
+
+            private void handleError() {
+                try {
+                    studentService.finishUpdate(List.of());
+                }
+                catch (Exception e) {
+                    System.out.println(e.getMessage());
+                    logger.error("Failed to unlock after error", e);
+                }
+                notifyAllTableUpdate("Ошибка при обновлении");
             }
         };
         worker.execute();
@@ -137,16 +152,13 @@ public class Controller implements Observable {
     }
 
     private void resolveCollisions(Frame owner, List<FieldCollision> collisions) {
-        if (collisions.isEmpty()) {
+        if (collisions == null || collisions.isEmpty()) {
             return;
         }
 
         for (FieldCollision collision : collisions) {
             String answer = new CollisionDialog(owner, collision).showDialog();
-
             collision.resolve(answer);
         }
-
-        studentService.saveResolvedField(collisions);
     }
 }

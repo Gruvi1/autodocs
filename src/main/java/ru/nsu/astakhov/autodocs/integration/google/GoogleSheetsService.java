@@ -33,11 +33,11 @@ public class GoogleSheetsService {
         this.sheetsTaskExecutor = sheetsTaskExecutor;
     }
 
-    public synchronized List<StudentDto> readAllInternshipLists() {
+    public List<StudentDto> readAllInternshipLists() {
         return submitReadTask(this::readInternshipList);
     }
 
-    public synchronized List<StudentDto> readAllThesisLists() {
+    public List<StudentDto> readAllThesisLists() {
         return submitReadTask(this::readThesisList);
     }
 
@@ -47,7 +47,9 @@ public class GoogleSheetsService {
 
         String range = "Пр " + studentCourse + " к. " + studentDegree;
 
-        return readListFromInternship(range, course);
+        List<StudentDto> studentDtos = readListFromInternship(range, course);
+        logger.info("Получено {} записей по практике для {} курса {}", studentDtos.size(), studentCourse, studentDegree);
+        return studentDtos;
     }
 
     private List<StudentDto> readThesisList(Course course) {
@@ -56,7 +58,9 @@ public class GoogleSheetsService {
 
         String range = studentCourse + " курс " + studentDegree;
 
-        return readListFromThesis(range, course);
+        List<StudentDto> studentDtos = readListFromThesis(range, course);
+        logger.info("Получено {} записей по ВКР для {} курса {}", studentDtos.size(), studentCourse, studentDegree);
+        return studentDtos;
     }
 
     private List<StudentDto> submitReadTask(Function<Course, List<StudentDto>> reader) {
@@ -94,20 +98,20 @@ public class GoogleSheetsService {
         }
 
         int startIndex = 1;
+        int finalIndex = getFinalIndex(rows);
 
         if (course == Course.THIRD) {
-            return rows.subList(startIndex, rows.size()).stream()
+            return rows.subList(startIndex, finalIndex).stream()
                     .map(this::parseRowOnlyThirdCourseThesis)
                     .filter(Objects::nonNull)
                     .toList();
 
         }
 
-        return rows.subList(startIndex, rows.size()).stream()
+        return rows.subList(startIndex, finalIndex).stream()
                 .map((row) -> parseRowThesis(row, course))
                 .filter(Objects::nonNull)
                 .toList();
-
     }
 
     private List<StudentDto> readListFromInternship(String range, Course course) {

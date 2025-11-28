@@ -21,7 +21,7 @@ public class GeneratorPanel extends Panel {
     private final transient DocumentGeneratorRegistry documentGeneratorRegistry;
     private final transient FilterComponent workTypeFilter;
     private final transient FilterComponent degreeFilter;
-    private final transient FilterComponent courseFilter;
+    private final transient FilterComponent academicPeriodFilter;
     private final transient FilterComponent specializationFilter;
     private final JPanel contentPanel;
 
@@ -33,7 +33,7 @@ public class GeneratorPanel extends Panel {
 
         workTypeFilter = new FilterComponent(GeneratorFilters.WORK_TYPE);
         degreeFilter = new FilterComponent(GeneratorFilters.DEGREE);
-        courseFilter = new FilterComponent(GeneratorFilters.COURSE);
+        academicPeriodFilter = new FilterComponent(GeneratorFilters.ACADEMIC_PERIOD);
         specializationFilter = new FilterComponent(GeneratorFilters.SPECIALIZATION);
 
         contentPanel = initDocumentsPanel();
@@ -66,7 +66,7 @@ public class GeneratorPanel extends Panel {
         panel.add(Box.createHorizontalStrut(mediumGap));
         panel.add(degreeFilter.filterPanel);
         panel.add(Box.createHorizontalStrut(mediumGap));
-        panel.add(courseFilter.filterPanel);
+        panel.add(academicPeriodFilter.filterPanel);
         panel.add(Box.createHorizontalStrut(mediumGap));
         panel.add(specializationFilter.filterPanel);
         panel.add(Box.createHorizontalGlue());
@@ -123,6 +123,7 @@ public class GeneratorPanel extends Panel {
         constraints.weightx = 1.0;
         constraints.weighty = 0.0;
 
+        // TODO: объединить в один метод
         String workTypeValue = getSelectedValue(workTypeFilter.filterComboBox);
         WorkType selectedWorkType = workTypeValue == null
                 ? null
@@ -133,10 +134,10 @@ public class GeneratorPanel extends Panel {
                 ? null
                 : Degree.fromValue(degreeValue);
 
-        String courseValue = getSelectedValue(courseFilter.filterComboBox);
-        Course selectedCourse = courseValue == null
+        String academicPeriodValue = getSelectedValue(academicPeriodFilter.filterComboBox);
+        AcademicPeriod selectedAcademicPeriod = academicPeriodValue == null
                 ? null
-                : Course.fromValue(Integer.parseInt(courseValue));
+                : AcademicPeriod.fromValue(academicPeriodValue);
 
         String specializationValue = getSelectedValue(specializationFilter.filterComboBox);
         Specialization selectedSpecialization = specializationValue == null
@@ -144,7 +145,7 @@ public class GeneratorPanel extends Panel {
                 : Specialization.fromValue(specializationValue);
 
         for (GeneratorType generatorType : documentGeneratorRegistry.getAllDocumentTypes()) {
-            if (generatorType.isSuitable(selectedWorkType, selectedDegree, selectedCourse, selectedSpecialization)) {
+            if (generatorType.isSuitable(selectedWorkType, selectedDegree, selectedAcademicPeriod, selectedSpecialization)) {
                 contentPanel.add(new FileBox(generatorType), constraints);
 
                 ++constraints.gridx;

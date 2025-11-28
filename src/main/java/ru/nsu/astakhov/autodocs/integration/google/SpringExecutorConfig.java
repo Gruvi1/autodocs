@@ -9,6 +9,7 @@ public class SpringExecutorConfig {
 
     @Bean("sheetsTaskExecutor")
     public ThreadPoolTaskExecutor sheetsTaskExecutor() {
+        // TODO: исправить конфигурацию пула потоков
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(4);
         executor.setMaxPoolSize(8);
