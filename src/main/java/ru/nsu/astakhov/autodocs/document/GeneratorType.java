@@ -3,6 +3,7 @@ package ru.nsu.astakhov.autodocs.document;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
+import ru.nsu.astakhov.autodocs.mapper.AcademicPeriodMapper;
 import ru.nsu.astakhov.autodocs.model.*;
 
 @Getter
@@ -159,22 +160,24 @@ public enum GeneratorType {
 //            WorkType.INTERNSHIP, DocumentKind.INTERNSHIP_SUPERVISOR_REVIEW, Degree.MASTERS, AcademicPeriod.SECOND, Specialization.INTERNET_OF_THINGS
 //    );
 
+
+    private final WorkType workType;
+    private final DocumentKind documentKind;
+    private final Degree degree;
+    private final AcademicPeriod academicPeriod;
+    private final Specialization specialization;
+
     public boolean isSuitable(
             WorkType workType, Degree degree,AcademicPeriod academicPeriod, Specialization specialization
     ) {
         return (workType == null || workType == this.workType)
                 && (degree == null || degree == this.degree)
-                && (academicPeriod == null || academicPeriod == this.academicPeriod)
+                && isSuitableAcademicPeriod(academicPeriod)
                 && (specialization == null || specialization == this.specialization);
     }
 
     public Course getCourse() {
-        return switch (academicPeriod) {
-            case FIRST_COURSE, FIRST_SEMESTER, SECOND_SEMESTER -> Course.FIRST;
-            case SECOND_COURSE, THIRD_SEMESTER, FOURTH_SEMESTER -> Course.SECOND;
-            case THIRD_COURSE, FIFTH_SEMESTER, SIXTH_SEMESTER -> Course.THIRD;
-            case FOURTH_COURSE, SEVENTH_SEMESTER, EIGHTH_SEMESTER -> Course.FOURTH;
-        };
+        return AcademicPeriodMapper.getCourseFromAcademicPeriod(academicPeriod);
     }
 
     @NotNull
@@ -184,9 +187,16 @@ public enum GeneratorType {
                 + specialization.getValue();
     }
 
-    private final WorkType workType;
-    private final DocumentKind documentKind;
-    private final Degree degree;
-    private final AcademicPeriod academicPeriod;
-    private final Specialization specialization;
+    private boolean isSuitableAcademicPeriod(AcademicPeriod academicPeriod) {
+        if (academicPeriod == null) {
+            return true;
+        }
+
+        if (academicPeriod == AcademicPeriod.FIRST_COURSE || academicPeriod == AcademicPeriod.SECOND_COURSE
+        || academicPeriod == AcademicPeriod.THIRD_COURSE || academicPeriod == AcademicPeriod.FOURTH_COURSE) {
+            return this.getCourse() == AcademicPeriodMapper.getCourseFromAcademicPeriod(academicPeriod);
+        }
+
+        return academicPeriod == this.academicPeriod;
+    }
 }

@@ -6,7 +6,6 @@ import ru.nsu.astakhov.autodocs.ui.controller.ButtonCommand;
 import ru.nsu.astakhov.autodocs.ui.controller.Controller;
 import ru.nsu.astakhov.autodocs.ui.view.panel.StudentListPanel;
 
-import javax.swing.*;
 import java.awt.event.ActionEvent;
 
 @RequiredArgsConstructor
@@ -25,7 +24,7 @@ public class StudentListPanelEventHandler implements EventHandler {
                     controller.generateStudents(generator, panel.getAllStudents(generator));
                 }
             }
-            case GENERATE -> {
+            case GENERATE_SELECTED -> {
                 for (GeneratorType generator : panel.getActiveGenerators()) {
                     controller.generateStudents(generator, panel.getSelectedStudents(generator));
                 }

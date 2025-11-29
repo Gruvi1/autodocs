@@ -61,7 +61,8 @@ public class GeneratorCard extends JPanel {
     }
     
     private void configureCard() {
-        setLayout(new BorderLayout());
+//        setLayout(new BorderLayout());
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBackground(focusColor);
         setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(primaryColor),
@@ -69,9 +70,15 @@ public class GeneratorCard extends JPanel {
         ));
         setMaximumSize(new Dimension(600, Integer.MAX_VALUE));
 
-        add(createTitlePanel(), BorderLayout.NORTH);
-        add(createSelectPanel(), BorderLayout.CENTER);
-        add(createStudentLinesPanel(generator), BorderLayout.SOUTH);
+//        add(createTitlePanel(), BorderLayout.NORTH);
+//        add(createSelectPanel(), BorderLayout.CENTER);
+//        add(createStudentLinesPanel(generator), BorderLayout.SOUTH);
+//
+        add(createTitlePanel());
+        add(createSelectPanel());
+        add(createStudentLinesPanel(generator));
+        add(Box.createVerticalGlue());
+//        setAlignmentY(TOP_ALIGNMENT);
     }
 
     private JPanel createTitlePanel() {
@@ -123,6 +130,9 @@ public class GeneratorCard extends JPanel {
         lines.setBackground(focusColor);
         lines.setBorder(BorderFactory.createEmptyBorder(smallGap, smallGap, smallGap, smallGap));
 
+//        lines.setAlignmentY(TOP_ALIGNMENT);
+
+
         List<StudentDto> students = controller.getStudentsByGenerator(generator);
         for (StudentDto student : students) {
             JPanel studentLine = createStudentLine(student);
@@ -133,6 +143,9 @@ public class GeneratorCard extends JPanel {
         JScrollPane scrollPane = new JScrollPane(lines);
         scrollPane.setOpaque(false);
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
+
+//        scrollPane.setAlignmentY(TOP_ALIGNMENT);
+
 
         JScrollBar verticalBar = scrollPane.getVerticalScrollBar();
         verticalBar.setUnitIncrement(smallGap);

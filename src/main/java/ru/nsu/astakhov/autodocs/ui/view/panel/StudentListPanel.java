@@ -16,7 +16,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 @Component
 public class StudentListPanel extends Panel {
     private final transient Controller controller;
@@ -28,7 +27,7 @@ public class StudentListPanel extends Panel {
         this.controller = controller;
 
         controller.addListener(this);
-        setEventHandler(new StudentListPanelEventHandler(controller,this));
+        setEventHandler(new StudentListPanelEventHandler(controller, this));
 
         this.activeGeneratorCardMap = new HashMap<>();
         this.contentPanel = initContentPanel();
@@ -42,7 +41,7 @@ public class StudentListPanel extends Panel {
 
         setBackground(backgroundColor);
 
-        add(createStudentListsPanel(), BorderLayout.CENTER);
+        add(contentPanel, BorderLayout.CENTER);
         add(createButtonsPanel(), BorderLayout.SOUTH);
     }
 
@@ -62,7 +61,7 @@ public class StudentListPanel extends Panel {
 
     private JPanel initContentPanel() {
         JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+        panel.setLayout(new GridLayout(0, 2, smallGap, smallGap));
         panel.setBackground(backgroundColor);
         panel.setBorder(BorderFactory.createEmptyBorder(smallGap, smallGap, smallGap, smallGap));
 
@@ -94,14 +93,11 @@ public class StudentListPanel extends Panel {
     private void updateStudentList() {
         contentPanel.removeAll();
 
-        contentPanel.add(Box.createHorizontalGlue());
         for (GeneratorType generator : activeGeneratorCardMap.keySet()) {
             GeneratorCard generatorCard = new GeneratorCard(generator, controller);
             activeGeneratorCardMap.put(generator, generatorCard);
             contentPanel.add(generatorCard);
-            contentPanel.add(Box.createHorizontalStrut(smallGap));
         }
-        contentPanel.add(Box.createHorizontalGlue());
 
         contentPanel.revalidate();
         contentPanel.repaint();
@@ -116,7 +112,7 @@ public class StudentListPanel extends Panel {
         panel.add(Box.createHorizontalGlue());
         panel.add(createButton(ButtonCommand.GENERATE_ALL.getName()));
         panel.add(Box.createHorizontalStrut(mediumGap));
-        panel.add(createButton(ButtonCommand.GENERATE.getName()));
+        panel.add(createButton(ButtonCommand.GENERATE_SELECTED.getName()));
         panel.add(Box.createHorizontalStrut(mediumGap));
 
         return panel;
