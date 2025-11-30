@@ -6,10 +6,14 @@ import org.springframework.stereotype.Service;
 import ru.nsu.astakhov.autodocs.document.DocumentGeneratorRegistry;
 import ru.nsu.astakhov.autodocs.document.GeneratorType;
 import ru.nsu.astakhov.autodocs.document.generator.DocumentGenerator;
+import ru.nsu.astakhov.autodocs.exceptions.GenderResolutionException;
 import ru.nsu.astakhov.autodocs.integration.google.GoogleSheetsService;
 import ru.nsu.astakhov.autodocs.model.*;
 import ru.nsu.astakhov.autodocs.repository.StudentRepository;
 import ru.nsu.astakhov.autodocs.mapper.StudentMapper;
+import ru.nsu.astakhov.autodocs.ui.controller.Conflict;
+import ru.nsu.astakhov.autodocs.ui.controller.FieldConflict;
+import ru.nsu.astakhov.autodocs.ui.controller.GenderConflict;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -21,14 +25,13 @@ import java.util.stream.Collectors;
 @Service
 public class StudentService {
     private final StudentRepository repository;
-    private final StudentMapper studentMapper;
     private final GoogleSheetsService googleSheetsService;
     private final DocumentGeneratorRegistry documentGeneratorRegistry;
     private final WarningList warningList;
     private volatile boolean updateInProgress = false;
     private final Object updateLock = new Object();
 
-    public List<FieldCollision> startUpdate() {
+    public List<FieldConflict> startUpdate() {
         synchronized (updateLock) {
             logger.info("Starting student data update");
             if (updateInProgress) {
@@ -53,7 +56,12 @@ public class StudentService {
         }
     }
 
-    public void finishUpdate(List<FieldCollision> resolvedCollisions) {
+    public List<StudentEntity> saveConflictingEntities(List<? extends Conflict> conflicts) {
+        List<StudentEntity> entities = conflicts.stream().map(Conflict::getEntity).toList();
+        return repository.saveAll(entities);
+    }
+
+    public void finishUpdate(List<FieldConflict> resolvedCollisions) {
         synchronized (updateLock) {
         logger.info("Finishing student data update");
         if (resolvedCollisions == null || resolvedCollisions.isEmpty()) {
@@ -61,8 +69,7 @@ public class StudentService {
             return;
         }
 
-        List<StudentEntity> entities = resolvedCollisions.stream().map(FieldCollision::entity).toList();
-        repository.saveAll(entities);
+        saveConflictingEntities(resolvedCollisions);
         updateInProgress = false;
         }
     }
@@ -74,17 +81,25 @@ public class StudentService {
         return getStudentsByCourseAndSpecialization(course, specialization);
     }
 
-    public void generateStudents(List<StudentDto> studentDtos, GeneratorType generatorType) {
+    public List<GenderConflict> generateStudents(List<StudentDto> studentDtos, GeneratorType generatorType) {
         Course course = generatorType.getCourse();
         Specialization specialization = generatorType.getSpecialization();
 
         DocumentGenerator generator = documentGeneratorRegistry.getDocumentGenerator(generatorType);
 
+        List<GenderConflict> conflicts = new ArrayList<>();
+
         for (StudentDto dto : studentDtos) {
             if (dto.course() == course && dto.specialization() == specialization) {
-                generator.generate(dto);
+                try {
+                    generator.generate(dto);
+                }
+                catch (GenderResolutionException e) {
+                    conflicts.add(new GenderConflict(StudentMapper.toEntity(dto)));
+                }
             }
         }
+        return conflicts;
     }
 
     private void clearAllData() {
@@ -97,16 +112,14 @@ public class StudentService {
         createStudents(studentDtos);
     }
 
-    private List<FieldCollision> scanThesisLists() {
+    private List<FieldConflict> scanThesisLists() {
         List<StudentDto> studentDtos = googleSheetsService.readAllThesisLists();
         return updateStudents(studentDtos);
     }
 
     private List<StudentDto> getStudentsByCourseAndSpecialization(Course course, Specialization specialization) {
         List<StudentEntity> entities = repository.findByCourseAndSpecialization(course, specialization);
-        return entities.stream()
-                .map(studentMapper::toDto)
-                .toList();
+        return StudentMapper.listToDto(entities);
     }
 
     private void createStudents(List<StudentDto> studentDtos) {
@@ -127,9 +140,7 @@ public class StudentService {
             validDtos.add(dto);
         }
 
-        List<StudentEntity> entities = validDtos.stream()
-                .map(studentMapper::toEntity)
-                .toList();
+        List<StudentEntity> entities = StudentMapper.listToEntity(validDtos);
 
         List<StudentEntity> savedEntities = repository.saveAll(entities);
         logger.info("Students created successfully with length: {}", savedEntities.size());
@@ -176,7 +187,7 @@ public class StudentService {
         notifyIfStringFieldMissing(WorkType.INTERNSHIP, studentName, supervisor.title(), "учёное звание руководителя");
     }
 
-    private List<FieldCollision> updateStudents(List<StudentDto> studentDtos) {
+    private List<FieldConflict> updateStudents(List<StudentDto> studentDtos) {
         logger.info("Updating students with length: {}", studentDtos.size());
 
         List<StudentDto> validDtos = new ArrayList<>();
@@ -200,13 +211,13 @@ public class StudentService {
 
         List<StudentEntity> entitiesToSave = new ArrayList<>();
 
-        List<FieldCollision> collisions = new ArrayList<>();
+        List<FieldConflict> collisions = new ArrayList<>();
 
         for (StudentDto dto : validDtos) {
             StudentEntity entity = existingByFullName.get(dto.fullName());
 
             if (entity == null) {
-                entity = studentMapper.toEntity(dto);
+                entity = StudentMapper.toEntity(dto);
             }
             else {
                 checkCollision(entity, dto, collisions);
@@ -221,7 +232,7 @@ public class StudentService {
         return collisions;
     }
 
-    private void checkCollision(StudentEntity entity, StudentDto dto, List<FieldCollision> collisions) {
+    private void checkCollision(StudentEntity entity, StudentDto dto, List<FieldConflict> collisions) {
         checkFieldCollision(entity.getEmail(), dto.email(), entity::setEmail, entity, "почта", collisions);
         checkFieldCollision(entity.getEduProgram().getValue(), dto.eduProgram().getValue(), entity::setEduProgram, entity, "образовательная программа", collisions);
         checkFieldCollision(entity.getGroupName(), dto.groupName(), entity::setGroupName, entity, "группа", collisions);
@@ -235,18 +246,17 @@ public class StudentService {
             Consumer<String> entitySetter,
             StudentEntity entity,
             String fieldName,
-            List<FieldCollision> collisions
+            List<FieldConflict> collisions
     ) {
-       if (!Objects.equals(entityValue, dtoValue)) {
-           collisions.add(new FieldCollision(
-                   entity,
-                   entity.getFullName(),
-                   fieldName,
-                   entitySetter,
-                   entityValue,
-                   dtoValue
-           ));
-       }
+        if (!Objects.equals(entityValue, dtoValue)) {
+            collisions.add(new FieldConflict(
+                    entitySetter,
+                    entity,
+                    fieldName,
+                    entityValue,
+                    dtoValue
+            ));
+        }
     }
 
     private void checkThesisDto(StudentDto dto) {

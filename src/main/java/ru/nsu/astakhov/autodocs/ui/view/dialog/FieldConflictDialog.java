@@ -1,6 +1,6 @@
 package ru.nsu.astakhov.autodocs.ui.view.dialog;
 
-import ru.nsu.astakhov.autodocs.model.FieldCollision;
+import ru.nsu.astakhov.autodocs.ui.controller.FieldConflict;
 import ru.nsu.astakhov.autodocs.ui.view.component.CustomLabel;
 import ru.nsu.astakhov.autodocs.ui.view.component.RoundedButton;
 import ru.nsu.astakhov.autodocs.ui.view.font.FontLoader;
@@ -11,28 +11,21 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CollisionDialog extends Dialog {
+public class FieldConflictDialog extends Dialog {
     private static final String DIALOG_NAME = "Конфликт данных";
-    private final transient FieldCollision collision;
-    private String selectedOption = null;
+    private final transient FieldConflict conflict;
     private final Frame owner;
+    private String selectedOption = null;
 
-    public CollisionDialog(Frame owner, FieldCollision collision) {
+    public FieldConflictDialog(Frame owner, FieldConflict conflict) {
         super(owner, DIALOG_NAME);
         this.owner = owner;
-        this.collision = collision;
+        this.conflict = conflict;
 
         configureDialog();
     }
 
-    public String showDialog() {
-        createOverlay(owner);
-        setVisible(true);
-        removeOverlay(owner);
-
-        return selectedOption;
-    }
-
+    @Override
     protected void configureDialog() {
         setResizable(false);
 
@@ -47,6 +40,14 @@ public class CollisionDialog extends Dialog {
         add(contentPanel);
         pack();
         setLocationRelativeTo(getOwner());
+    }
+
+    public String showDialog() {
+        createOverlay(owner);
+        setVisible(true);
+        removeOverlay(owner);
+
+        return selectedOption;
     }
 
     private JPanel createCentralPanel() {
@@ -81,8 +82,8 @@ public class CollisionDialog extends Dialog {
     }
 
     private JPanel createButtonPanel() {
-        String practiceValue = collision.practiceValue();
-        String thesisValue = collision.thesisValue();
+        String practiceValue = conflict.getPracticeValue();
+        String thesisValue = conflict.getThesisValue();
 
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
@@ -101,22 +102,19 @@ public class CollisionDialog extends Dialog {
         JPanel firstLine = new JPanel();
         firstLine.setLayout(new BoxLayout(firstLine, BoxLayout.X_AXIS));
         firstLine.setOpaque(false);
-
         firstLine.add(new CustomLabel("Студент "));
-        firstLine.add(new CustomLabel(collision.studentName(), true));
+        firstLine.add(new CustomLabel(conflict.getStudentName(), true));
         firstLine.add(new CustomLabel(" имеет разные значения поля "));
 
         JPanel secondLine = new JPanel();
         secondLine.setLayout(new BoxLayout(secondLine, BoxLayout.X_AXIS));
         secondLine.setOpaque(false);
-
-        secondLine.add(new CustomLabel(collision.fieldName(), true));
+        secondLine.add(new CustomLabel(conflict.getFieldName(), true));
         secondLine.add(new CustomLabel(" на листах практики и ВКР"));
 
         JPanel column = new JPanel();
         column.setLayout(new BoxLayout(column, BoxLayout.Y_AXIS));
         column.setOpaque(false);
-
         column.add(firstLine);
         column.add(Box.createVerticalStrut(smallGap / 2));
         column.add(secondLine);

@@ -4,12 +4,12 @@ package ru.nsu.astakhov.autodocs.ui.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ru.nsu.astakhov.autodocs.document.GeneratorType;
-import ru.nsu.astakhov.autodocs.model.FieldCollision;
+import ru.nsu.astakhov.autodocs.mapper.StudentMapper;
 import ru.nsu.astakhov.autodocs.model.StudentDto;
+import ru.nsu.astakhov.autodocs.model.StudentEntity;
 import ru.nsu.astakhov.autodocs.service.StudentService;
 import ru.nsu.astakhov.autodocs.ui.Listener;
 import ru.nsu.astakhov.autodocs.ui.Observable;
-import ru.nsu.astakhov.autodocs.ui.view.dialog.CollisionDialog;
 import ru.nsu.astakhov.autodocs.ui.view.panel.PanelManager;
 import ru.nsu.astakhov.autodocs.ui.view.panel.Panel;
 
@@ -21,6 +21,8 @@ import java.util.concurrent.ExecutionException;
 
 @Slf4j
 @Component
+// TODO: глобальная проблема
+// TODO: контроллер содержит бизнес-логику, что неправильно с точки зрения архитектуры
 public class Controller implements Observable {
     private final List<Listener> listeners;
     private final StudentService studentService;
@@ -51,17 +53,21 @@ public class Controller implements Observable {
         }
     }
 
+//    public Gender resolveGenderProblem(Frame owner, )
+
     public List<StudentDto> getStudentsByGenerator(GeneratorType generatorType) {
         return studentService.getStudentsByGenerator(generatorType);
     }
 
-    public void generateStudents(GeneratorType generatorType, List<StudentDto> studentDtos) {
-        SwingWorker<Void, String> worker = new SwingWorker<>() {
+    public void generateStudents(Frame owner, GeneratorType generatorType, List<StudentDto> studentDtos) {
+        SwingWorker<List<GenderConflict>, String> worker = new SwingWorker<>() {
             @Override
-            protected Void doInBackground() {
+            protected List<GenderConflict> doInBackground() {
                 publish("Генерация документов...");
-                studentService.generateStudents(studentDtos, generatorType);
-                return null;
+                List<GenderConflict> conflicts = studentService.generateStudents(studentDtos, generatorType);
+
+                publish("Разрешение ошибок при генерации...");
+                return conflicts;
             }
 
             @Override
@@ -73,14 +79,29 @@ public class Controller implements Observable {
 
             @Override
             protected void done() {
+                String successGenerateMessage = "Генерация завершена!";
+                String failedGenerateMessage = "Ошибка при генерации!";
                 try {
-                    get();
-                    notifyAllDocumentGeneration("Генерация завершена!");
+                    List<GenderConflict> conflicts = get();
+                    if (!conflicts.isEmpty()) {
+                        logger.info("Resolving {} conflicts", conflicts.size());
+                        resolveConflicts(owner, conflicts);
+                    }
+                    logger.info("Finishing generate");
+                    List<StudentEntity> savedEntities = studentService.saveConflictingEntities(conflicts);
+                    notifyAllDocumentGeneration("Обновленные данные сохранены");
+                    List<StudentDto> savedDtos = StudentMapper.listToDto(savedEntities);
+                    studentService.generateStudents(savedDtos, generatorType);
+                    notifyAllDocumentGeneration(successGenerateMessage);
                 }
-                catch (Exception e) {
-                    // TODO: исправить исключение и метод в целом
-                    e.printStackTrace();
-                    notifyAllDocumentGeneration("Ошибка при генерации");
+                catch (InterruptedException e) {
+                    logger.error("Generate interrupted", e);
+                    Thread.currentThread().interrupt();
+                    notifyAllDocumentGeneration(failedGenerateMessage);
+                }
+                catch (ExecutionException e) {
+                    logger.error("Error during generate", e);
+                    notifyAllDocumentGeneration(failedGenerateMessage);
                 }
             }
         };
@@ -88,12 +109,12 @@ public class Controller implements Observable {
     }
 
     public void updateTable(Frame owner) {
-        SwingWorker<List<FieldCollision>, String> worker = new SwingWorker<>() {
+        SwingWorker<List<FieldConflict>, String> worker = new SwingWorker<>() {
             @Override
-            protected List<FieldCollision> doInBackground() {
+            protected List<FieldConflict> doInBackground() {
                 publish("Обновление данных студентов...");
                 logger.info("Starting data update");
-                List<FieldCollision> collisions = studentService.startUpdate();
+                List<FieldConflict> collisions = studentService.startUpdate();
 
                 publish("Разрешение конфликта данных...");
                 return collisions;
@@ -109,10 +130,10 @@ public class Controller implements Observable {
             protected void done() {
                 String successUpdateMessage = "Обновление завершено!";
                 try {
-                    List<FieldCollision> collisions = get();
+                    List<FieldConflict> collisions = get();
                     if (!collisions.isEmpty()) {
                         logger.info("Resolving {} collisions", collisions.size());
-                        resolveCollisions(owner, collisions);
+                        resolveConflicts(owner, collisions);
                     }
                     logger.info("Finishing data update");
                     studentService.finishUpdate(collisions);
@@ -128,17 +149,6 @@ public class Controller implements Observable {
                     handleError();
                 }
             }
-
-            private void handleError() {
-                try {
-                    studentService.finishUpdate(List.of());
-                }
-                catch (Exception e) {
-                    System.out.println(e.getMessage());
-                    logger.error("Failed to unlock after error", e);
-                }
-                notifyAllTableUpdate("Ошибка при обновлении");
-            }
         };
         worker.execute();
     }
@@ -151,14 +161,26 @@ public class Controller implements Observable {
         return panelManager.getPanel(requiredType);
     }
 
-    private void resolveCollisions(Frame owner, List<FieldCollision> collisions) {
-        if (collisions == null || collisions.isEmpty()) {
+    private void resolveConflicts(Frame owner, List<? extends Conflict> conflicts) {
+        if (conflicts == null || conflicts.isEmpty()) {
             return;
         }
 
-        for (FieldCollision collision : collisions) {
-            String answer = new CollisionDialog(owner, collision).showDialog();
-            collision.resolve(answer);
+        for (Conflict conflict : conflicts) {
+            conflict.resolveViaDialog(owner);
         }
+    }
+
+
+    // TODO: хуйня какая-то, переделать
+    private void handleError() {
+        try {
+            studentService.finishUpdate(List.of());
+        }
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            logger.error("Failed to unlock after error", e);
+        }
+        notifyAllTableUpdate("Ошибка при обновлении");
     }
 }

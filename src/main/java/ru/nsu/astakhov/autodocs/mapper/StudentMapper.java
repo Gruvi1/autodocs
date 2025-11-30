@@ -1,15 +1,26 @@
 package ru.nsu.astakhov.autodocs.mapper;
 
-import org.springframework.stereotype.Component;
 import ru.nsu.astakhov.autodocs.model.StudentEntity;
 import ru.nsu.astakhov.autodocs.model.StudentDto;
 
-@Component
-public class StudentMapper {
-    public StudentDto toDto(StudentEntity entity) {
+import java.util.List;
+
+public final class StudentMapper {
+    private StudentMapper() {
+        throw new UnsupportedOperationException("Utility class");
+    }
+
+    public static List<StudentDto> listToDto(List<StudentEntity> entities) {
+        return entities.stream()
+                .map(StudentMapper::toDto)
+                .toList();
+    }
+
+    public static StudentDto toDto(StudentEntity entity) {
         return new StudentDto(
                 entity.getId(),
                 entity.getFullName(),
+                entity.getGender(),
                 entity.getCourse(),
                 entity.getEmail(),
                 entity.getPhoneNumber(),
@@ -34,10 +45,17 @@ public class StudentMapper {
         );
     }
 
-    public StudentEntity toEntity(StudentDto dto) {
+    public static List<StudentEntity> listToEntity(List<StudentDto> dtos) {
+        return dtos.stream()
+                .map(StudentMapper::toEntity)
+                .toList();
+    }
+
+    public static StudentEntity toEntity(StudentDto dto) {
         return new StudentEntity(
                 dto.id(),
                 dto.fullName(),
+                dto.gender(),
                 dto.course(),
                 dto.email(),
                 dto.phoneNumber(),

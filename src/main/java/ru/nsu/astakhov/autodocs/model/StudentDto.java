@@ -1,8 +1,11 @@
 package ru.nsu.astakhov.autodocs.model;
 
+import com.github.petrovich4j.Gender;
+
 public record StudentDto(
         Long id,
         String fullName,
+        Gender gender,
         Course course,
         String email,
         String phoneNumber,

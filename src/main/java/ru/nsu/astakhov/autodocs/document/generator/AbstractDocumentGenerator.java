@@ -6,6 +6,7 @@ import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTText;
 import ru.nsu.astakhov.autodocs.document.RussianWordDecliner;
+import ru.nsu.astakhov.autodocs.exceptions.GenderResolutionException;
 import ru.nsu.astakhov.autodocs.model.StudentDto;
 
 import java.io.FileOutputStream;
@@ -76,33 +77,37 @@ public abstract class AbstractDocumentGenerator implements DocumentGenerator {
 
     protected static final Map<String, BiFunction<StudentDto, RussianWordDecliner, String>> ADDITIONAL_RESOLVERS = Map.ofEntries(
             entry("$(genitiveStudentForm)", (student, decliner) -> {
-                Gender gender;
-                try {
-                    gender = decliner.getGenderByPatronymic(student.fullName().split(" ")[2]);
+                Gender gender = student.gender();
+                if (gender != null) {
+                    return decliner.getGenitiveStudentFormByGender(gender);
                 }
-                catch (Exception e) {
-                    // TODO: подумать, что делать, если только два слова ФИ
-                    // TODO: если кидать исключение, то будет весь Swing-поток падать
-                    // TODO: если возвращать кал, то выше нужна проверка
-                    // TODO: можно просить юзера определить пол, но тогда сюда контроллер нужен, что кринж
-                    e.printStackTrace();
-                    // TODO: почему мальчик, а как же равноправие? :D
-                    gender = Gender.Male;
+                String[] nameParts = student.fullName().split(" ");
+                if (nameParts.length != 3 || (gender = decliner.getGenderByPatronymic(nameParts[2])) == Gender.Both) {
+                    throw new GenderResolutionException(student);
                 }
                 return decliner.getGenitiveStudentFormByGender(gender);
             }),
             entry("$(genitiveFullName)", (student, decliner) -> {
                 String fullName = student.fullName();
-                String[] parts = fullName.split(" ");
-                // TODO: выше сделать, как тут - кидать исключение???
-                if (parts.length != 3) {
-                    throw new IllegalArgumentException("Ожидаются ФИО");
+                Gender gender = student.gender();
+                if (gender != null) {
+                    return decliner.getFullNameInGenitiveCase(fullName, gender);
                 }
-                Gender gender = decliner.getGenderByPatronymic(parts[2]);
+                String[] nameParts = fullName.split(" ");
+                if (nameParts.length != 3 || (gender = decliner.getGenderByPatronymic(nameParts[2])) == Gender.Both) {
+                    throw new GenderResolutionException(student);
+                }
                 return decliner.getFullNameInGenitiveCase(fullName, gender);
             }),
             entry("$(studentForm)", (student, decliner) -> {
-                Gender gender = decliner.getGenderByPatronymic(student.fullName().split(" ")[2]);
+                Gender gender = student.gender();
+                if (gender != null) {
+                    return decliner.getStudentFormByGender(gender);
+                }
+                String[] nameParts = student.fullName().split(" ");
+                if (nameParts.length != 3 || (gender = decliner.getGenderByPatronymic(nameParts[2])) == Gender.Both) {
+                    throw new GenderResolutionException(student);
+                }
                 return decliner.getStudentFormByGender(gender);
             })
     );
@@ -120,11 +125,10 @@ public abstract class AbstractDocumentGenerator implements DocumentGenerator {
     public void generate(StudentDto dto) {
         String safeName = dto.fullName().replace(' ', '_') + '_' + outputFileName;
         Path outputFilePath = Paths.get(outputDirectory, safeName);
-        generateDocument(templatePath, outputFilePath, placeholders, dto);
+        generateDocument(outputFilePath, dto);
     }
 
-    protected void generateDocument(String templatePath, Path outputFilePath,
-                                    List<String> placeholders, StudentDto dto) {
+    protected void generateDocument(Path outputFilePath, StudentDto dto) {
         try (InputStream in = getClass().getResourceAsStream(templatePath);
              XWPFDocument doc = new XWPFDocument(in);
              FileOutputStream out = new FileOutputStream(outputFilePath.toFile())) {

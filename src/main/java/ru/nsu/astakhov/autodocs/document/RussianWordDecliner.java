@@ -15,13 +15,7 @@ public class RussianWordDecliner {
     }
 
     public Gender getGenderByPatronymic(String patronymic) {
-        Gender gender = petrovich.gender(patronymic, Gender.Both);
-        if (gender == Gender.Both) {
-            // TODO: тут можно попросить пользователя вручную определить пол по ФИО
-            throw new IllegalArgumentException("Не удалось определить пол");
-        }
-
-        return gender;
+        return petrovich.gender(patronymic, Gender.Both);
     }
 
     public String getStudentFormByGender(Gender gender) {
@@ -42,14 +36,25 @@ public class RussianWordDecliner {
         Case correctCase = Case.Genitive;
 
         String[] nameParts = fullName.split(" ");
-        if (nameParts.length != 3) {
-            throw new IllegalArgumentException("Некорректные ФИО");
+
+        if (nameParts.length == 3) {
+            String surname = petrovich.say(nameParts[0], NameType.LastName, gender, correctCase);
+            String name = petrovich.say(nameParts[1], NameType.FirstName, gender, correctCase);
+            String patronymic = petrovich.say(nameParts[2], NameType.PatronymicName, gender, correctCase);
+
+            return surname + ' ' + name + ' ' + patronymic;
         }
+        else if (nameParts.length == 2) {
+            String surname = petrovich.say(nameParts[0], NameType.LastName, gender, correctCase);
+            String name = petrovich.say(nameParts[1], NameType.FirstName, gender, correctCase);
 
-        String surname = petrovich.say(nameParts[0], NameType.LastName, gender, correctCase);
-        String name = petrovich.say(nameParts[1], NameType.FirstName, gender, correctCase);
-        String patronymic = petrovich.say(nameParts[2], NameType.PatronymicName, gender, correctCase);
-
-        return surname + ' ' + name + ' ' + patronymic;
+            return surname + ' ' + name;
+        }
+        else if (nameParts.length == 1) {
+            return petrovich.say(nameParts[0], NameType.LastName, gender, correctCase);
+        }
+        else {
+            return "";
+        }
     }
 }

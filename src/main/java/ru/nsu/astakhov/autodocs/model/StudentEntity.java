@@ -1,11 +1,9 @@
 package ru.nsu.astakhov.autodocs.model;
 
+import com.github.petrovich4j.Gender;
 import jakarta.persistence.*;
 import lombok.*;
-import ru.nsu.astakhov.autodocs.model.converters.CourseConverter;
-import ru.nsu.astakhov.autodocs.model.converters.EduProgramConverter;
-import ru.nsu.astakhov.autodocs.model.converters.InternshipTypeConverter;
-import ru.nsu.astakhov.autodocs.model.converters.SpecializationConverter;
+import ru.nsu.astakhov.autodocs.model.converters.*;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,13 +13,16 @@ import ru.nsu.astakhov.autodocs.model.converters.SpecializationConverter;
 @Table(name = "students")
 public class StudentEntity {
     // TODO: поменять порядок полей
-    // TODO: привязать ли к таблице, либо отдельно отсортировать по логике
+    // TODO: привязать либо к таблице, либо отдельно отсортировать по логике
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
     private String fullName; // фио
+
+    @Convert(converter = GenderConverter.class)
+    private Gender gender; // пол
 
     @Convert(converter = CourseConverter.class)
     @Column(nullable = false)
@@ -105,6 +106,15 @@ public class StudentEntity {
         InternshipType newInternshipType = InternshipType.fromValue(value);
         if (newInternshipType != null) {
             this.internshipType = newInternshipType;
+        }
+    }
+
+    public void setGender(String value) {
+        if (Gender.Male.name().equals(value)) {
+            this.gender = Gender.Male;
+        }
+        else if (Gender.Female.name().equals(value)) {
+            this.gender = Gender.Female;
         }
     }
 }

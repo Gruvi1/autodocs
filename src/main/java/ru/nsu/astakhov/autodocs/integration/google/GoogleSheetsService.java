@@ -167,6 +167,7 @@ public class GoogleSheetsService {
             return new StudentDto(
                     null,
                     getString(row, 0),
+                    null,
                     course,
                     getString(row, 1),
                     getString(row, 2),
@@ -205,6 +206,7 @@ public class GoogleSheetsService {
             return new StudentDto(
                     null,
                     getString(row, 0),
+                    null,
                     Course.THIRD,
                     getString(row, 1),
                     getString(row, 2),
@@ -244,6 +246,7 @@ public class GoogleSheetsService {
             return new StudentDto(
                     null,
                     getString(row, 0),
+                    null,
                     course,
                     getString(row, 20),
                     null,

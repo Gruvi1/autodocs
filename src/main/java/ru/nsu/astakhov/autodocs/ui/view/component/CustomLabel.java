@@ -33,7 +33,7 @@ public class CustomLabel extends JLabel {
         setFont(FontLoader.loadFont(FontType.ADWAITA_SANS_REGULAR, textSize));
         setOpaque(opaque);
         if (opaque) {
-            setBorder(BorderFactory.createLineBorder(backgroundColor, smallGap));
+            setBorder(BorderFactory.createLineBorder(backgroundColor, smallGap / 2));
         }
     }
 }
