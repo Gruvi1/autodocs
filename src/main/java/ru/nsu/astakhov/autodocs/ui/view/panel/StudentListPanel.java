@@ -45,20 +45,6 @@ public class StudentListPanel extends Panel {
         add(createButtonsPanel(), BorderLayout.SOUTH);
     }
 
-    private JScrollPane createStudentListsPanel() {
-        JScrollPane scrollPane = new JScrollPane(contentPanel);
-
-        scrollPane.setOpaque(false);
-        scrollPane.setBorder(BorderFactory.createEmptyBorder());
-
-        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-
-        JScrollBar verticalBar = scrollPane.getVerticalScrollBar();
-        verticalBar.setUnitIncrement(smallGap);
-
-        return scrollPane;
-    }
-
     private JPanel initContentPanel() {
         JPanel panel = new JPanel();
         panel.setLayout(new GridLayout(0, 2, smallGap, smallGap));
