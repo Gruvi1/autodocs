@@ -69,10 +69,10 @@ public class WarningsPanel extends Panel {
         line.setLayout(new BoxLayout(line, BoxLayout.X_AXIS));
         line.setOpaque(false);
 
-        String tableType = warning.workType() == WorkType.INTERNSHIP ? "практики" : "ВКР";
+        String workType = warning.workType() == WorkType.INTERNSHIP ? "практики" : "ВКР";
 
         line.add(new CustomLabel("В таблице "));
-        line.add(new CustomLabel(tableType, true));
+        line.add(new CustomLabel(workType, true));
         line.add(new CustomLabel(" у студента "));
         line.add(new CustomLabel(warning.studentName(), true));
         line.add(new CustomLabel(" не определено поле: "));

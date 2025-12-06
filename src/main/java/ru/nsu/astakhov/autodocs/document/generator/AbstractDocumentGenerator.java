@@ -129,16 +129,21 @@ public abstract class AbstractDocumentGenerator implements DocumentGenerator {
     }
 
     protected void generateDocument(Path outputFilePath, StudentDto dto) {
-        try (InputStream in = getClass().getResourceAsStream(templatePath);
-             XWPFDocument doc = new XWPFDocument(in);
-             FileOutputStream out = new FileOutputStream(outputFilePath.toFile())) {
-            for (XWPFParagraph paragraph : doc.getParagraphs()) {
-                String text = paragraph.getText();
-                if (text != null && containsAny(text, placeholders)) {
-                    processParagraph(paragraph, placeholders, dto);
-                }
+        try (InputStream in = getClass().getResourceAsStream(templatePath)) {
+            if (in == null) {
+                throw new IllegalArgumentException("Шаблон документа не найден по пути: " + templatePath);
             }
-            doc.write(out);
+            try (XWPFDocument doc = new XWPFDocument(in);
+                 FileOutputStream out = new FileOutputStream(outputFilePath.toFile())) {
+                for (XWPFParagraph paragraph : doc.getParagraphs()) {
+                    String text = paragraph.getText();
+                    if (text != null && containsAny(text, placeholders)) {
+                        processParagraph(paragraph, placeholders, dto);
+                    }
+                }
+                doc.write(out);
+            }
+
         }
         catch (IOException e) {
             throw new RuntimeException("Ошибка при генерации документа: " + outputFilePath, e);
