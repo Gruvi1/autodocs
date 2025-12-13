@@ -156,16 +156,17 @@ public class StudentService {
         notifyIfStringFieldMissing(WorkType.INTERNSHIP, studentName, dto.actualSupervisor(), "фактический руководитель");
         notifyIfObjectFieldMissing(WorkType.INTERNSHIP, studentName, dto.internshipType(), "вид практики");
 
-        checkInternshipSupervisor(dto.thesisSupervisor(), dto.fullName());
-
         notifyIfStringFieldMissing(WorkType.INTERNSHIP, studentName, dto.fullOrganizationName(), "название организации");
-
-        checkInternshipSupervisor(dto.NSUSupervisor(), dto.fullName());
-        checkInternshipSupervisor(dto.organizationSupervisor(), dto.fullName());
 
         notifyIfStringFieldMissing(WorkType.INTERNSHIP, studentName, dto.administrativeActFromOrganization(), "распорядительный акт");
         notifyIfStringFieldMissing(WorkType.INTERNSHIP, studentName, dto.fullPlaceOfInternship(), "место практики");
         notifyIfStringFieldMissing(WorkType.INTERNSHIP, studentName, dto.organizationName(), "наименование организации");
+
+        if (dto.course().getValue() <= 2) {
+            checkInternshipSupervisor(dto.thesisSupervisor(), dto.fullName());
+            checkInternshipSupervisor(dto.NSUSupervisor(), dto.fullName());
+            checkInternshipSupervisor(dto.organizationSupervisor(), dto.fullName());
+        }
     }
 
     private void notifyIfStringFieldMissing(WorkType type, String student, String value, String fieldName) {

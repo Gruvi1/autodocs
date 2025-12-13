@@ -160,7 +160,9 @@ public abstract class AbstractDocumentGenerator implements DocumentGenerator {
             String updatedText = text;
             String replaceable;
 
+            int count = 0;
             while ((replaceable = findFirstPlaceholder(updatedText, placeholders)) != null) {
+                ++count;
                 Function<StudentDto, String> resolver = RESOLVERS.get(replaceable);
                 String value;
                 if (resolver != null) {
@@ -170,7 +172,19 @@ public abstract class AbstractDocumentGenerator implements DocumentGenerator {
                     BiFunction<StudentDto, RussianWordDecliner, String> additionalResolver = ADDITIONAL_RESOLVERS.get(replaceable);
                     value = additionalResolver.apply(dto, russianWordDecliner);
                 }
-                updatedText = updatedText.replace(replaceable, value);
+                // TODO: пометить плейсхолдеры в документах "заявление на практику" жёлтым
+                // TODO: исправить уведомление "разрешение конфликтов" при генерации. Оно не исчезает
+                if (!value.isEmpty()) {
+                    updatedText = updatedText.replace(replaceable, value);
+                    run.setTextHighlightColor("white");
+                }
+                else {
+                    value = "ЗАПОЛНИТЬ";
+                    updatedText = updatedText.replace(replaceable, value);
+                }
+            }
+            if (count > 1) {
+                System.out.println(count);
             }
 
             run.getCTR().setTArray(new CTText[0]);
