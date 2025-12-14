@@ -175,13 +175,18 @@ public abstract class AbstractDocumentGenerator implements DocumentGenerator {
                 // TODO: пометить плейсхолдеры в документах "заявление на практику" жёлтым
                 // TODO: исправить уведомление "разрешение конфликтов" при генерации. Оно не исчезает
                 if (!value.isEmpty()) {
-                    updatedText = updatedText.replace(replaceable, value);
                     run.setTextHighlightColor("white");
                 }
-                else {
-                    value = "ЗАПОЛНИТЬ";
-                    updatedText = updatedText.replace(replaceable, value);
+                else if (replaceable.equals("$(administrativeActFromOrganization)")) {
+                    value = "\"__\" __________ 2025 г. №______";
                 }
+                else if (replaceable.equals("$(thesisSupervisor.name)") ||
+                replaceable.equals("$(thesisSupervisor.position)") ||
+                replaceable.equals("$(thesisSupervisor.degree)")) {
+                    value = "_____________";
+                    run.setTextHighlightColor("white");
+                }
+                updatedText = updatedText.replace(replaceable, value);
             }
             if (count > 1) {
                 System.out.println(count);
