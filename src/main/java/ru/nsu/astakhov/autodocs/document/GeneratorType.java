@@ -50,6 +50,9 @@ public enum GeneratorType {
 //
 
     // TODO: одинаковые шаблоны при отображении в GUI
+    APPLICATION_INTERNSHIP_BACH_7SEM_CSSE_ORIENT(
+            WorkType.INTERNSHIP, DocumentKind.APPLICATION_INTERNSHIP, Degree.BACHELORS, AcademicPeriod.SEVENTH_SEMESTER, Specialization.CS_AND_SYSTEMS_ENGINEERING
+    ),
     APPLICATION_INTERNSHIP_BACH_8SEM_CSSE_TECH(
             WorkType.INTERNSHIP, DocumentKind.APPLICATION_INTERNSHIP, Degree.BACHELORS, AcademicPeriod.EIGHTH_SEMESTER, Specialization.CS_AND_SYSTEMS_ENGINEERING
     ),
@@ -168,7 +171,7 @@ public enum GeneratorType {
     private final Specialization specialization;
 
     public boolean isSuitable(
-            WorkType workType, Degree degree,AcademicPeriod academicPeriod, Specialization specialization
+            WorkType workType, Degree degree, AcademicPeriod academicPeriod, Specialization specialization
     ) {
         return (workType == null || workType == this.workType)
                 && (degree == null || degree == this.degree)

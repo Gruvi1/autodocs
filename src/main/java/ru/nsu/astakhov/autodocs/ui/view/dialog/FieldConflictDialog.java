@@ -51,7 +51,7 @@ public class FieldConflictDialog extends Dialog {
     }
 
     private JPanel createCentralPanel() {
-        String message = "Выберите, что сохранить:";
+        String message = "Выберите, что сохранить (выбор не повлияет на таблицу):";
 
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
