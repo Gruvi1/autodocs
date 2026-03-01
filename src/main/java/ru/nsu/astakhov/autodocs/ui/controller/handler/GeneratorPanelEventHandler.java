@@ -1,7 +1,7 @@
 package ru.nsu.astakhov.autodocs.ui.controller.handler;
 
 import lombok.RequiredArgsConstructor;
-import ru.nsu.astakhov.autodocs.document.GeneratorType;
+import ru.nsu.astakhov.autodocs.document.TemplateInfo;
 import ru.nsu.astakhov.autodocs.ui.controller.ButtonCommand;
 import ru.nsu.astakhov.autodocs.ui.controller.Controller;
 import ru.nsu.astakhov.autodocs.ui.view.panel.GeneratorPanel;
@@ -29,7 +29,7 @@ public class GeneratorPanelEventHandler implements EventHandler {
             ButtonCommand buttonCommand = ButtonCommand.fromString(command);
 
             if (buttonCommand == ButtonCommand.SELECT_STUDENTS) {
-                List<GeneratorType> activeGenerators = panel.getActiveFileBox();
+                List<TemplateInfo> activeGenerators = panel.getActiveFileBox();
                 controller.getPanel(StudentListPanel.class).setGenerators(activeGenerators);
                 controller.setPanel(StudentListPanel.class);
             }

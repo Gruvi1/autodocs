@@ -1,7 +1,7 @@
 package ru.nsu.astakhov.autodocs.ui.view.panel;
 
-import ru.nsu.astakhov.autodocs.document.DocumentGeneratorRegistry;
-import ru.nsu.astakhov.autodocs.document.GeneratorType;
+import ru.nsu.astakhov.autodocs.document.TemplateInfo;
+import ru.nsu.astakhov.autodocs.document.TemplateRegistry;
 import ru.nsu.astakhov.autodocs.model.*;
 import ru.nsu.astakhov.autodocs.ui.controller.ButtonCommand;
 import ru.nsu.astakhov.autodocs.ui.view.GeneratorFilters;
@@ -18,15 +18,15 @@ import java.util.List;
 
 @org.springframework.stereotype.Component
 public class GeneratorPanel extends Panel {
-    private final transient DocumentGeneratorRegistry documentGeneratorRegistry;
+    private final transient TemplateRegistry templateRegistry;
     private final transient FilterComponent workTypeFilter;
     private final transient FilterComponent degreeFilter;
     private final transient FilterComponent academicPeriodFilter;
     private final transient FilterComponent specializationFilter;
     private final JPanel contentPanel;
 
-    public GeneratorPanel(Controller controller, DocumentGeneratorRegistry documentGeneratorRegistry) {
-        this.documentGeneratorRegistry = documentGeneratorRegistry;
+    public GeneratorPanel(Controller controller, TemplateRegistry templateRegistry) {
+        this.templateRegistry = templateRegistry;
 
         controller.addListener(this);
         setEventHandler(new GeneratorPanelEventHandler(controller, this, this::refreshDocumentsPanel));
@@ -144,9 +144,9 @@ public class GeneratorPanel extends Panel {
                 ? null
                 : Specialization.fromValue(specializationValue);
 
-        for (GeneratorType generatorType : documentGeneratorRegistry.getAllDocumentTypes()) {
-            if (generatorType.isSuitable(selectedWorkType, selectedDegree, selectedAcademicPeriod, selectedSpecialization)) {
-                contentPanel.add(new FileBox(generatorType), constraints);
+        for (TemplateInfo templateInfo : templateRegistry.getTemplates()) {
+            if (templateInfo.isSuitable(selectedWorkType, selectedDegree, selectedAcademicPeriod, selectedSpecialization)) {
+                contentPanel.add(new FileBox(templateInfo), constraints);
 
                 ++constraints.gridx;
                 if (constraints.gridx % NUM_COLUMNS == 0) {
@@ -179,12 +179,12 @@ public class GeneratorPanel extends Panel {
         return panel;
     }
 
-    public List<GeneratorType> getActiveFileBox() {
-        List<GeneratorType> activeFileBox = new ArrayList<>();
+    public List<TemplateInfo> getActiveFileBox() {
+        List<TemplateInfo> activeFileBox = new ArrayList<>();
 
         for (Component comp : contentPanel.getComponents()) {
             if (comp instanceof FileBox fileBox && fileBox.isActive()) {
-                    activeFileBox.add(fileBox.getGeneratorType());
+                    activeFileBox.add(fileBox.getTemplateInfo());
                 }
         }
         return activeFileBox;

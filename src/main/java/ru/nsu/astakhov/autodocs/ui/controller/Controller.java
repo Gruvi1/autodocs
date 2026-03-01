@@ -3,7 +3,7 @@ package ru.nsu.astakhov.autodocs.ui.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import ru.nsu.astakhov.autodocs.document.GeneratorType;
+import ru.nsu.astakhov.autodocs.document.TemplateInfo;
 import ru.nsu.astakhov.autodocs.mapper.StudentMapper;
 import ru.nsu.astakhov.autodocs.model.StudentDto;
 import ru.nsu.astakhov.autodocs.model.StudentEntity;
@@ -55,16 +55,16 @@ public class Controller implements Observable {
 
 //    public Gender resolveGenderProblem(Frame owner, )
 
-    public List<StudentDto> getStudentsByGenerator(GeneratorType generatorType) {
-        return studentService.getStudentsByGenerator(generatorType);
+    public List<StudentDto> getStudentsByGenerator(TemplateInfo templateInfo) {
+        return studentService.getStudentsByGenerator(templateInfo);
     }
 
-    public void generateStudents(Frame owner, GeneratorType generatorType, List<StudentDto> studentDtos) {
+    public void generateStudents(Frame owner, TemplateInfo templateInfo, List<StudentDto> studentDtos) {
         SwingWorker<List<GenderConflict>, String> worker = new SwingWorker<>() {
             @Override
             protected List<GenderConflict> doInBackground() {
                 publish("Генерация документов...");
-                List<GenderConflict> conflicts = studentService.generateStudents(studentDtos, generatorType);
+                List<GenderConflict> conflicts = studentService.generateStudents(studentDtos, templateInfo);
 
                 publish("Разрешение ошибок при генерации...");
                 return conflicts;
@@ -91,7 +91,7 @@ public class Controller implements Observable {
                     List<StudentEntity> savedEntities = studentService.saveConflictingEntities(conflicts);
                     notifyAllDocumentGeneration("Обновленные данные сохранены");
                     List<StudentDto> savedDtos = StudentMapper.listToDto(savedEntities);
-                    studentService.generateStudents(savedDtos, generatorType);
+                    studentService.generateStudents(savedDtos, templateInfo);
                     notifyAllDocumentGeneration(successGenerateMessage);
                 }
                 catch (InterruptedException e) {
@@ -178,7 +178,6 @@ public class Controller implements Observable {
             studentService.finishUpdate(List.of());
         }
         catch (Exception e) {
-            System.out.println(e.getMessage());
             logger.error("Failed to unlock after error", e);
         }
         notifyAllTableUpdate("Ошибка при обновлении");

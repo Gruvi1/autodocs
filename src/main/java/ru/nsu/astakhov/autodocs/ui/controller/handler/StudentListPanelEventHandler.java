@@ -1,7 +1,7 @@
 package ru.nsu.astakhov.autodocs.ui.controller.handler;
 
 import lombok.RequiredArgsConstructor;
-import ru.nsu.astakhov.autodocs.document.GeneratorType;
+import ru.nsu.astakhov.autodocs.document.TemplateInfo;
 import ru.nsu.astakhov.autodocs.ui.controller.ButtonCommand;
 import ru.nsu.astakhov.autodocs.ui.controller.Controller;
 import ru.nsu.astakhov.autodocs.ui.view.panel.StudentListPanel;
@@ -21,16 +21,16 @@ public class StudentListPanelEventHandler implements EventHandler {
 
         switch (buttonCommand) {
             case GENERATE_ALL -> {
-                for (GeneratorType generator : panel.getActiveGenerators()) {
+                for (TemplateInfo templateInfo : panel.getActiveGenerators()) {
                     controller.generateStudents(
-                            JOptionPane.getFrameForComponent(panel), generator, panel.getAllStudents(generator)
+                            JOptionPane.getFrameForComponent(panel), templateInfo, panel.getAllStudents(templateInfo)
                     );
                 }
             }
             case GENERATE_SELECTED -> {
-                for (GeneratorType generator : panel.getActiveGenerators()) {
+                for (TemplateInfo templateInfo : panel.getActiveGenerators()) {
                     controller.generateStudents(
-                            JOptionPane.getFrameForComponent(panel), generator, panel.getSelectedStudents(generator)
+                            JOptionPane.getFrameForComponent(panel), templateInfo, panel.getSelectedStudents(templateInfo)
                     );
                 }
             }

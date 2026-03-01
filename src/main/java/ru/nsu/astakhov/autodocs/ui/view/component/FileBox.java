@@ -1,7 +1,7 @@
 package ru.nsu.astakhov.autodocs.ui.view.component;
 
 import lombok.Getter;
-import ru.nsu.astakhov.autodocs.document.GeneratorType;
+import ru.nsu.astakhov.autodocs.document.TemplateInfo;
 import ru.nsu.astakhov.autodocs.ui.configs.ConfigConstants;
 import ru.nsu.astakhov.autodocs.ui.configs.ConfigManager;
 
@@ -13,7 +13,7 @@ import java.util.List;
 
 public class FileBox extends JPanel {
     @Getter
-    private final GeneratorType generatorType;
+    private final TemplateInfo templateInfo;
     private final JLabel indicator;
     @Getter
     private boolean isActive;
@@ -24,8 +24,8 @@ public class FileBox extends JPanel {
     private final Color primaryColor;
     private final Color focusColor;
 
-    public FileBox(GeneratorType generatorType) {
-        this.generatorType = generatorType;
+    public FileBox(TemplateInfo templateInfo) {
+        this.templateInfo = templateInfo;
 
         this.smallGap = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.GAP_SMALL));
         this.titleTextSize = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.TITLE_SIZE));
@@ -81,7 +81,7 @@ public class FileBox extends JPanel {
         contentPanel.setOpaque(false);
         contentPanel.setBorder(BorderFactory.createEmptyBorder(borderSize, borderSize, borderSize, borderSize));
 
-        List<String> partsDescription = parseFileDescription(generatorType.getDisplayName());
+        List<String> partsDescription = parseFileDescription(templateInfo.getDisplayName());
 
         for (int i = 0; i != partsDescription.size(); ++i) {
             if (i == 0) {

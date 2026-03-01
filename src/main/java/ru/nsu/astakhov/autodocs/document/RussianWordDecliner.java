@@ -4,9 +4,7 @@ import com.github.petrovich4j.Case;
 import com.github.petrovich4j.Gender;
 import com.github.petrovich4j.NameType;
 import com.github.petrovich4j.Petrovich;
-import org.springframework.stereotype.Service;
 
-@Service
 public class RussianWordDecliner {
     private final Petrovich petrovich;
 

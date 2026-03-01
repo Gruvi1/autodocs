@@ -6,6 +6,7 @@ import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTText;
 import ru.nsu.astakhov.autodocs.document.RussianWordDecliner;
+import ru.nsu.astakhov.autodocs.document.TemplateInfo;
 import ru.nsu.astakhov.autodocs.exceptions.GenderResolutionException;
 import ru.nsu.astakhov.autodocs.model.StudentDto;
 
@@ -15,33 +16,27 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static java.util.Map.entry;
 
-public abstract class AbstractDocumentGenerator implements DocumentGenerator {
+public class AbstractDocumentGenerator implements DocumentGenerator {
     private final RussianWordDecliner russianWordDecliner;
-    private final String outputFileName;
-    private final String templatePath;
-    private final String outputDirectory;
-    private final List<String> placeholders;
+    private final TemplateInfo templateInfo;
 
-    protected AbstractDocumentGenerator(RussianWordDecliner russianWordDecliner,
-                                        String outputFileName, String templatePath,
-                                        String outputDirectory, List<String> placeholders) {
-        this.russianWordDecliner = russianWordDecliner;
-        this.outputFileName = outputFileName;
-        this.templatePath = templatePath;
-        this.outputDirectory = outputDirectory;
-        this.placeholders = placeholders;
+    public AbstractDocumentGenerator(TemplateInfo templateInfo) {
+        this.russianWordDecliner = new RussianWordDecliner();
+        this.templateInfo = templateInfo;
 
         initOutputDirectory();
     }
 
-    protected static final Map<String, Function<StudentDto, String>> RESOLVERS = Map.ofEntries(
+    private static final Map<String, Function<StudentDto, String>> RESOLVERS = Map.ofEntries(
             entry("$(fullName)", StudentDto::fullName),
             entry("$(course)", tempDto -> String.valueOf(tempDto.course().getValue())),
             entry("$(email)", StudentDto::email),
@@ -75,7 +70,7 @@ public abstract class AbstractDocumentGenerator implements DocumentGenerator {
             entry("$(organizationName)", StudentDto::organizationName)
     );
 
-    protected static final Map<String, BiFunction<StudentDto, RussianWordDecliner, String>> ADDITIONAL_RESOLVERS = Map.ofEntries(
+    private static final Map<String, BiFunction<StudentDto, RussianWordDecliner, String>> ADDITIONAL_RESOLVERS = Map.ofEntries(
             entry("$(genitiveStudentForm)", (student, decliner) -> {
                 Gender gender = student.gender();
                 if (gender != null) {
@@ -112,9 +107,15 @@ public abstract class AbstractDocumentGenerator implements DocumentGenerator {
             })
     );
 
+    private static final Set<String> PLACEHOLDERS = Stream
+            .concat(RESOLVERS.keySet().stream(), ADDITIONAL_RESOLVERS.keySet().stream())
+            .collect(Collectors.toSet());
+
+
+
     private void initOutputDirectory() {
         try {
-            Files.createDirectories(Paths.get(outputDirectory));
+            Files.createDirectories(Paths.get(templateInfo.documentDir()));
         }
         catch (IOException e) {
             throw new RuntimeException("Не удалось создать директорию для документов", e);
@@ -123,22 +124,23 @@ public abstract class AbstractDocumentGenerator implements DocumentGenerator {
 
     @Override
     public void generate(StudentDto dto) {
-        String safeName = dto.fullName().replace(' ', '_') + '_' + outputFileName;
-        Path outputFilePath = Paths.get(outputDirectory, safeName);
-        generateDocument(outputFilePath, dto);
+        String safeName = dto.fullName().replace(' ', '_') + '_' + templateInfo.fileName();
+        Path outputFilePath = Paths.get(templateInfo.documentDir(), safeName);
+        generateDocument(templateInfo, outputFilePath, dto);
     }
 
-    protected void generateDocument(Path outputFilePath, StudentDto dto) {
-        try (InputStream in = getClass().getResourceAsStream(templatePath)) {
+    private void generateDocument(TemplateInfo templateInfo, Path outputFilePath, StudentDto dto) {
+        try (InputStream in = getClass().getResourceAsStream(templateInfo.templateDir())) {
             if (in == null) {
-                throw new IllegalArgumentException("Шаблон документа не найден по пути: " + templatePath);
+                throw new IllegalArgumentException("Шаблон документа не найден по пути: " + templateInfo.templateDir());
             }
+
             try (XWPFDocument doc = new XWPFDocument(in);
                  FileOutputStream out = new FileOutputStream(outputFilePath.toFile())) {
                 for (XWPFParagraph paragraph : doc.getParagraphs()) {
                     String text = paragraph.getText();
-                    if (text != null && containsAny(text, placeholders)) {
-                        processParagraph(paragraph, placeholders, dto);
+                    if (text != null && containsAny(text)) {
+                        processParagraph(paragraph, dto);
                     }
                 }
                 doc.write(out);
@@ -150,7 +152,7 @@ public abstract class AbstractDocumentGenerator implements DocumentGenerator {
         }
     }
 
-    private void processParagraph(XWPFParagraph paragraph, List<String> placeholders, StudentDto dto) {
+    private void processParagraph(XWPFParagraph paragraph, StudentDto dto) {
         for (XWPFRun run : paragraph.getRuns()) {
             String text = run.text();
             if (text == null) {
@@ -160,9 +162,7 @@ public abstract class AbstractDocumentGenerator implements DocumentGenerator {
             String updatedText = text;
             String replaceable;
 
-            int count = 0;
-            while ((replaceable = findFirstPlaceholder(updatedText, placeholders)) != null) {
-                ++count;
+            while ((replaceable = findFirstPlaceholder(updatedText)) != null) {
                 Function<StudentDto, String> resolver = RESOLVERS.get(replaceable);
                 String value;
                 if (resolver != null) {
@@ -188,17 +188,14 @@ public abstract class AbstractDocumentGenerator implements DocumentGenerator {
                 }
                 updatedText = updatedText.replace(replaceable, value);
             }
-            if (count > 1) {
-                System.out.println(count);
-            }
 
             run.getCTR().setTArray(new CTText[0]);
             run.setText(updatedText);
         }
     }
 
-    private boolean containsAny(String text, List<String> placeholders) {
-        for (String placeholder : placeholders) {
+    private boolean containsAny(String text) {
+        for (String placeholder : PLACEHOLDERS) {
             if (text.contains(placeholder)) {
                 return true;
             }
@@ -206,8 +203,8 @@ public abstract class AbstractDocumentGenerator implements DocumentGenerator {
         return false;
     }
 
-    private String findFirstPlaceholder(String text, List<String> placeholders) {
-        for (String placeholder : placeholders) {
+    private String findFirstPlaceholder(String text) {
+        for (String placeholder : PLACEHOLDERS) {
             if (text.contains(placeholder)) {
                 return placeholder;
             }
