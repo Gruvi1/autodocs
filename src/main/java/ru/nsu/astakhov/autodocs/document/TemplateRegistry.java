@@ -33,7 +33,6 @@ public class TemplateRegistry {
             stream.filter(Files::isRegularFile)
                     .filter(p -> p.toString().endsWith(".docx"))
                     .forEach(path -> {
-
                         String relativePath = BASE_PATH + "/" +
                                 rootPath.relativize(path).toString().replace('\\', '/');
 

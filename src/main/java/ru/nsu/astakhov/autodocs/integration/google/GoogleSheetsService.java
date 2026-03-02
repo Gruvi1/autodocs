@@ -164,32 +164,22 @@ public class GoogleSheetsService {
         }
 
         try {
-            return new StudentDto(
-                    null,
-                    getString(row, 0),
-                    null,
-                    course,
-                    getString(row, 1),
-                    getString(row, 2),
-                    EduProgram.fromValue(getString(row, 4)),
-                    getString(row, 3),
-                    Specialization.fromValue(getString(row, 5)),
-                    getString(row, 6),
-                    getString(row, 7),
-                    getString(row, 12),
-                    getString(row, 9),
-                    getString(row, 10),
-                    getString(row, 11),
-                    course.getValue() == 4 ? null : getString(row, 13),
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null
-            );
+            return StudentDto.builder()
+                    .fullName(getString(row, 0))
+                    .course(course)
+                    .email(getString(row, 1))
+                    .phoneNumber(getString(row, 2))
+                    .eduProgram(EduProgram.fromValue(getString(row, 4)))
+                    .groupName(getString(row, 3))
+                    .specialization(Specialization.fromValue(getString(row, 5)))
+                    .orderOnApprovalTopic(getString(row, 6))
+                    .orderOnCorrectionTopic(getString(row, 7))
+                    .actualSupervisor(getString(row, 12))
+                    .thesisCoSupervisor(getString(row, 9))
+                    .thesisConsultant(getString(row, 10))
+                    .thesisTopic(getString(row, 11))
+                    .reviewer(course.getValue() == 4 ? null : getString(row, 13))
+                    .build();
         }
         catch (IllegalArgumentException e) {
             // TODO: тут теряется ошибка, которую кидают ниже
@@ -203,32 +193,16 @@ public class GoogleSheetsService {
             return null;
         }
         try {
-            return new StudentDto(
-                    null,
-                    getString(row, 0),
-                    null,
-                    Course.THIRD,
-                    getString(row, 1),
-                    getString(row, 2),
-                    EduProgram.fromValue(getString(row, 4)),
-                    getString(row, 3),
-                    Specialization.fromValue(getString(row, 5)),
-                    null,
-                    null,
-                    getString(row, 7),
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null
-                    );
+            return StudentDto.builder()
+                    .fullName(getString(row, 0))
+                    .course(Course.THIRD)
+                    .email(getString(row, 1))
+                    .phoneNumber(getString(row, 2))
+                    .eduProgram(EduProgram.fromValue(getString(row, 4)))
+                    .groupName(getString(row, 3))
+                    .specialization(Specialization.fromValue(getString(row, 5)))
+                    .actualSupervisor(getString(row, 7))
+                    .build();
         }
         catch (Exception e) {
             // TODO: тут теряется ошибка, которую кидают ниже
@@ -243,47 +217,38 @@ public class GoogleSheetsService {
         }
 
         try {
-            return new StudentDto(
-                    null,
-                    getString(row, 0),
-                    null,
-                    course,
-                    getString(row, 20),
-                    null,
-                    EduProgram.fromValue(getString(row, 21)),
-                    getString(row, 2),
-                    Specialization.fromValue(getString(row, 1)),
-                    null,
-                    null,
-                    getString(row, 22),
-                    null,
-                    null,
-                    null,
-                    null,
-                    InternshipType.fromValue(getString(row, 3)),
-                    new Supervisor(
+            return StudentDto.builder()
+                    .fullName(getString(row, 0))
+                    .course(course)
+                    .email(getString(row, 20))
+                    .eduProgram(EduProgram.fromValue(getString(row, 21)))
+                    .groupName(getString(row, 2))
+                    .specialization(Specialization.fromValue(getString(row, 1)))
+                    .actualSupervisor(getString(row, 22))
+                    .internshipType(InternshipType.fromValue(getString(row, 3)))
+                    .thesisSupervisor(new Supervisor(
                             getString(row, 4),
                             getString(row, 5),
                             getString(row, 6),
                             getString(row, 7)
-                    ),
-                    getString(row, 8),
-                    new Supervisor(
+                    ))
+                    .fullOrganizationName(getString(row, 8))
+                    .NSUSupervisor(new Supervisor(
                             getString(row, 9),
                             getString(row, 10),
                             getString(row, 11),
                             getString(row, 12)
-                    ),
-                    new Supervisor(
+                    ))
+                    .organizationSupervisor(new Supervisor(
                             getString(row, 13),
                             getString(row, 14),
                             getString(row, 15),
                             getString(row, 16)
-                    ),
-                    getString(row, 17),
-                    getString(row, 18),
-                    getString(row, 19)
-            );
+                    ))
+                    .administrativeActFromOrganization(getString(row, 17))
+                    .fullPlaceOfInternship(getString(row, 18))
+                    .organizationName(getString(row, 19))
+                    .build();
         }
         catch (Exception e) {
             // TODO: тут теряется ошибка, которую кидают ниже

@@ -1,7 +1,9 @@
 package ru.nsu.astakhov.autodocs.model;
 
 import com.github.petrovich4j.Gender;
+import lombok.Builder;
 
+@Builder
 public record StudentDto(
         Long id,
         String fullName,

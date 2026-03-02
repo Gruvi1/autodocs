@@ -17,32 +17,32 @@ public final class StudentMapper {
     }
 
     public static StudentDto toDto(StudentEntity entity) {
-        return new StudentDto(
-                entity.getId(),
-                entity.getFullName(),
-                entity.getGender(),
-                entity.getCourse(),
-                entity.getEmail(),
-                entity.getPhoneNumber(),
-                entity.getEduProgram(),
-                entity.getGroupName(),
-                entity.getSpecialization(),
-                entity.getOrderOnApprovalTopic(),
-                entity.getOrderOnCorrectionTopic(),
-                entity.getActualSupervisor(),
-                entity.getThesisCoSupervisor(),
-                entity.getThesisConsultant(),
-                entity.getThesisTopic(),
-                entity.getReviewer(),
-                entity.getInternshipType(),
-                entity.getThesisSupervisor(),
-                entity.getFullOrganizationName(),
-                entity.getNSUSupervisor(),
-                entity.getOrganizationSupervisor(),
-                entity.getAdministrativeActFromOrganization(),
-                entity.getFullPlaceOfInternship(),
-                entity.getOrganizationName()
-        );
+        return StudentDto.builder()
+                .id(entity.getId())
+                .fullName(entity.getFullName())
+                .gender(entity.getGender())
+                .course(entity.getCourse())
+                .email(entity.getEmail())
+                .phoneNumber(entity.getPhoneNumber())
+                .eduProgram(entity.getEduProgram())
+                .groupName(entity.getGroupName())
+                .specialization(entity.getSpecialization())
+                .orderOnApprovalTopic(entity.getOrderOnApprovalTopic())
+                .orderOnCorrectionTopic(entity.getOrderOnCorrectionTopic())
+                .actualSupervisor(entity.getActualSupervisor())
+                .thesisCoSupervisor(entity.getThesisCoSupervisor())
+                .thesisConsultant(entity.getThesisConsultant())
+                .thesisTopic(entity.getThesisTopic())
+                .reviewer(entity.getReviewer())
+                .internshipType(entity.getInternshipType())
+                .thesisSupervisor(entity.getThesisSupervisor())
+                .fullOrganizationName(entity.getFullOrganizationName())
+                .NSUSupervisor(entity.getNSUSupervisor())
+                .organizationSupervisor(entity.getOrganizationSupervisor())
+                .administrativeActFromOrganization(entity.getAdministrativeActFromOrganization())
+                .fullPlaceOfInternship(entity.getFullPlaceOfInternship())
+                .organizationName(entity.getOrganizationName())
+                .build();
     }
 
     public static List<StudentEntity> listToEntity(List<StudentDto> dtos) {
@@ -52,31 +52,31 @@ public final class StudentMapper {
     }
 
     public static StudentEntity toEntity(StudentDto dto) {
-        return new StudentEntity(
-                dto.id(),
-                dto.fullName(),
-                dto.gender(),
-                dto.course(),
-                dto.email(),
-                dto.phoneNumber(),
-                dto.eduProgram(),
-                dto.groupName(),
-                dto.specialization(),
-                dto.orderOnApprovalTopic(),
-                dto.orderOnCorrectionTopic(),
-                dto.actualSupervisor(),
-                dto.thesisCoSupervisor(),
-                dto.thesisConsultant(),
-                dto.thesisTopic(),
-                dto.reviewer(),
-                dto.internshipType(),
-                dto.thesisSupervisor(),
-                dto.fullOrganizationName(),
-                dto.NSUSupervisor(),
-                dto.organizationSupervisor(),
-                dto.administrativeActFromOrganization(),
-                dto.fullPlaceOfInternship(),
-                dto.organizationName()
-        );
+        return StudentEntity.builder()
+                .id(dto.id())
+                .fullName(dto.fullName())
+                .gender(dto.gender())
+                .course(dto.course())
+                .email(dto.email())
+                .phoneNumber(dto.phoneNumber())
+                .eduProgram(dto.eduProgram())
+                .groupName(dto.groupName())
+                .specialization(dto.specialization())
+                .orderOnApprovalTopic(dto.orderOnApprovalTopic())
+                .orderOnCorrectionTopic(dto.orderOnCorrectionTopic())
+                .actualSupervisor(dto.actualSupervisor())
+                .thesisCoSupervisor(dto.thesisCoSupervisor())
+                .thesisConsultant(dto.thesisConsultant())
+                .thesisTopic(dto.thesisTopic())
+                .reviewer(dto.reviewer())
+                .internshipType(dto.internshipType())
+                .thesisSupervisor(dto.thesisSupervisor())
+                .fullOrganizationName(dto.fullOrganizationName())
+                .NSUSupervisor(dto.NSUSupervisor())
+                .organizationSupervisor(dto.organizationSupervisor())
+                .administrativeActFromOrganization(dto.administrativeActFromOrganization())
+                .fullPlaceOfInternship(dto.fullPlaceOfInternship())
+                .organizationName(dto.organizationName())
+                .build();
     }
 }

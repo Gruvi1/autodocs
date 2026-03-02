@@ -11,6 +11,7 @@ import ru.nsu.astakhov.autodocs.model.converters.*;
 @Setter
 @Entity
 @Table(name = "students")
+@Builder
 public class StudentEntity {
     // TODO: поменять порядок полей
     // TODO: привязать либо к таблице, либо отдельно отсортировать по логике
@@ -99,13 +100,6 @@ public class StudentEntity {
         Specialization newSpecialization = Specialization.fromValue(value);
         if (newSpecialization != null) {
             this.specialization = newSpecialization;
-        }
-    }
-
-    public void setInternshipType(String value) {
-        InternshipType newInternshipType = InternshipType.fromValue(value);
-        if (newInternshipType != null) {
-            this.internshipType = newInternshipType;
         }
     }
 

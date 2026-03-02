@@ -70,6 +70,40 @@ public class AbstractDocumentGenerator implements DocumentGenerator {
             entry("$(organizationName)", StudentDto::organizationName)
     );
 
+    private static final Map<String, Function<StudentDto, String>> RESOLVERS_RUS = Map.ofEntries(
+            entry("$(полноеИмя)", StudentDto::fullName),
+            entry("$(курс)", tempDto -> String.valueOf(tempDto.course().getValue())),
+            entry("$(почта)", StudentDto::email),
+            entry("$(телефон)", StudentDto::phoneNumber),
+            entry("$(образПрограмма)", tempDto -> tempDto.eduProgram().getValue()),
+            entry("$(группа)", StudentDto::groupName),
+            entry("$(специализация)", tempDto -> tempDto.specialization().getValue()),
+            entry("$(утверждениеТемы)", StudentDto::orderOnApprovalTopic),
+            entry("$(корректировкаТемы)", StudentDto::orderOnCorrectionTopic),
+            entry("$(фактический)", StudentDto::actualSupervisor),
+            entry("$(соруководительВКР)", StudentDto::thesisCoSupervisor),
+            entry("$(консультантВКР)", StudentDto::thesisConsultant),
+            entry("$(темаВКР)", StudentDto::thesisTopic),
+            entry("$(рецензент)", StudentDto::reviewer),
+            entry("$(видПрактики)", tempDto -> tempDto.internshipType().getValue()),
+            entry("$(руководительВКР.имя)", tempDto -> tempDto.thesisSupervisor().name()),
+            entry("$(руководительВКР.должность)", tempDto -> tempDto.thesisSupervisor().position()),
+            entry("$(руководительВКР.степень)", tempDto -> tempDto.thesisSupervisor().degree()),
+            entry("$(руководительВКР.звание)", tempDto -> tempDto.thesisSupervisor().title()),
+            entry("$(полноеИмяОрганизации)", StudentDto::fullOrganizationName),
+            entry("$(руководительНГУ.имя)", tempDto -> tempDto.NSUSupervisor().name()),
+            entry("$(руководительНГУ.должность)", tempDto -> tempDto.NSUSupervisor().position()),
+            entry("$(руководительНГУ.степень)", tempDto -> tempDto.NSUSupervisor().degree()),
+            entry("$(руководительНГУ.звание)", tempDto -> tempDto.NSUSupervisor().title()),
+            entry("$(руководительОрганизации.имя)", tempDto -> tempDto.organizationSupervisor().name()),
+            entry("$(руководительОрганизации.должность)", tempDto -> tempDto.organizationSupervisor().position()),
+            entry("$(руководительОрганизации.степень)", tempDto -> tempDto.organizationSupervisor().degree()),
+            entry("$(руководительОрганизации.звание)", tempDto -> tempDto.organizationSupervisor().title()),
+            entry("$(актОтОрганизации)", StudentDto::administrativeActFromOrganization),
+            entry("$(местоПрактикиПолностью)", StudentDto::fullPlaceOfInternship),
+            entry("$(наименованиеОрганизации)", StudentDto::organizationName)
+    );
+
     private static final Map<String, BiFunction<StudentDto, RussianWordDecliner, String>> ADDITIONAL_RESOLVERS = Map.ofEntries(
             entry("$(genitiveStudentForm)", (student, decliner) -> {
                 Gender gender = student.gender();
@@ -107,8 +141,50 @@ public class AbstractDocumentGenerator implements DocumentGenerator {
             })
     );
 
-    private static final Set<String> PLACEHOLDERS = Stream
-            .concat(RESOLVERS.keySet().stream(), ADDITIONAL_RESOLVERS.keySet().stream())
+    private static final Map<String, BiFunction<StudentDto, RussianWordDecliner, String>> ADDITIONAL_RESOLVERS_RUS = Map.ofEntries(
+            entry("$(полОбучающегося)", (student, decliner) -> {
+                Gender gender = student.gender();
+                if (gender != null) {
+                    return decliner.getGenitiveStudentFormByGender(gender);
+                }
+                String[] nameParts = student.fullName().split(" ");
+                if (nameParts.length != 3 || (gender = decliner.getGenderByPatronymic(nameParts[2])) == Gender.Both) {
+                    throw new GenderResolutionException(student);
+                }
+                return decliner.getGenitiveStudentFormByGender(gender);
+            }),
+            entry("$(полноеИмяРодительный)", (student, decliner) -> {
+                String fullName = student.fullName();
+                Gender gender = student.gender();
+                if (gender != null) {
+                    return decliner.getFullNameInGenitiveCase(fullName, gender);
+                }
+                String[] nameParts = fullName.split(" ");
+                if (nameParts.length != 3 || (gender = decliner.getGenderByPatronymic(nameParts[2])) == Gender.Both) {
+                    throw new GenderResolutionException(student);
+                }
+                return decliner.getFullNameInGenitiveCase(fullName, gender);
+            }),
+            entry("$(полОбучающийся)", (student, decliner) -> {
+                Gender gender = student.gender();
+                if (gender != null) {
+                    return decliner.getStudentFormByGender(gender);
+                }
+                String[] nameParts = student.fullName().split(" ");
+                if (nameParts.length != 3 || (gender = decliner.getGenderByPatronymic(nameParts[2])) == Gender.Both) {
+                    throw new GenderResolutionException(student);
+                }
+                return decliner.getStudentFormByGender(gender);
+            })
+    );
+
+    private static final Set<String> PLACEHOLDERS = Stream.of(
+                    RESOLVERS.keySet(),
+                    RESOLVERS_RUS.keySet(),
+                    ADDITIONAL_RESOLVERS.keySet(),
+                    ADDITIONAL_RESOLVERS_RUS.keySet()
+            )
+            .flatMap(Set::stream)
             .collect(Collectors.toSet());
 
 
@@ -165,11 +241,18 @@ public class AbstractDocumentGenerator implements DocumentGenerator {
             while ((replaceable = findFirstPlaceholder(updatedText)) != null) {
                 Function<StudentDto, String> resolver = RESOLVERS.get(replaceable);
                 String value;
+                if (resolver == null) {
+                    resolver = RESOLVERS_RUS.get(replaceable);
+                }
+
                 if (resolver != null) {
                     value = resolver.apply(dto);
                 }
                 else {
                     BiFunction<StudentDto, RussianWordDecliner, String> additionalResolver = ADDITIONAL_RESOLVERS.get(replaceable);
+                    if (additionalResolver == null) {
+                        additionalResolver = ADDITIONAL_RESOLVERS_RUS.get(replaceable);
+                    }
                     value = additionalResolver.apply(dto, russianWordDecliner);
                 }
                 // TODO: пометить плейсхолдеры в документах "заявление на практику" жёлтым
