@@ -200,15 +200,15 @@ public class AbstractDocumentGenerator implements DocumentGenerator {
 
     @Override
     public void generate(StudentDto dto) {
-        String safeName = dto.fullName().replace(' ', '_') + '_' + templateInfo.fileName();
+        String safeName = dto.fullName().replace(' ', '_') + '_' + templateInfo.fileName() + ".docx";
         Path outputFilePath = Paths.get(templateInfo.documentDir(), safeName);
         generateDocument(templateInfo, outputFilePath, dto);
     }
 
     private void generateDocument(TemplateInfo templateInfo, Path outputFilePath, StudentDto dto) {
-        try (InputStream in = getClass().getResourceAsStream(templateInfo.templateDir())) {
+        try (InputStream in = getClass().getResourceAsStream(templateInfo.templatePath())) {
             if (in == null) {
-                throw new IllegalArgumentException("Шаблон документа не найден по пути: " + templateInfo.templateDir());
+                throw new IllegalArgumentException("Шаблон документа не найден по пути: " + templateInfo.templatePath());
             }
 
             try (XWPFDocument doc = new XWPFDocument(in);

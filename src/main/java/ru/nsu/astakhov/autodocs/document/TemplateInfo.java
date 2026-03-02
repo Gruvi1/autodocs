@@ -16,7 +16,7 @@ public record TemplateInfo(
         AcademicPeriod academicPeriod,
         Specialization specialization,
         String fileName,
-        String templateDir,
+        String templatePath,
         String documentDir
 
 ) {
@@ -25,17 +25,17 @@ public record TemplateInfo(
         if (templatePath == null || !templatePath.startsWith("/template")) {
             throw new IllegalArgumentException("Template path must start with /template");
         }
-//        String[] parts = templatePath.replaceAll("^/", "").split("/");
         String[] parts = templatePath.split("/");
+        int lastSeparatorIndex = templatePath.lastIndexOf("/");
+        String templateDir = templatePath.substring(0, lastSeparatorIndex == -1 ? templatePath.length() : lastSeparatorIndex);
         return TemplateInfo.builder()
                 .workType(WorkType.fromValue(parts[2]))
                 .degree(Degree.fromValue(parts[3]))
                 .academicPeriod(AcademicPeriod.fromValue(parts[4]))
                 .specialization(Specialization.fromValue(parts[5]))
-//                .fileName(parts[6].substring(0, parts[6].length() - 5))
-                .fileName(parts[6])
-                .templateDir(templatePath)
-                .documentDir(templatePath.replace("/template", "document"))
+                .fileName(parts[6].substring(0, parts[6].length() - 5).replace("_", " "))
+                .templatePath(templatePath)
+                .documentDir(templateDir.replace("/template", "document"))
                 .build();
 
     }
