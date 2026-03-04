@@ -13,8 +13,8 @@ import ru.nsu.astakhov.autodocs.model.WorkType;
 public record TemplateInfo(
         WorkType workType,
         Degree degree,
-        AcademicPeriod academicPeriod,
         Specialization specialization,
+        AcademicPeriod academicPeriod,
         String fileName,
         String templatePath,
         String documentDir
@@ -31,8 +31,8 @@ public record TemplateInfo(
         return TemplateInfo.builder()
                 .workType(WorkType.fromValue(parts[2]))
                 .degree(Degree.fromValue(parts[3]))
-                .academicPeriod(AcademicPeriod.fromValue(parts[4]))
-                .specialization(Specialization.fromValue(parts[5]))
+                .specialization(Specialization.fromValue(parts[4]))
+                .academicPeriod(AcademicPeriod.fromValue(parts[5]))
                 .fileName(parts[6].substring(0, parts[6].length() - 5).replace("_", " "))
                 .templatePath(templatePath)
                 .documentDir(templateDir.replace("/template", "document"))
