@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import ru.nsu.astakhov.autodocs.ui.controller.ButtonCommand;
 import ru.nsu.astakhov.autodocs.ui.controller.Controller;
 import ru.nsu.astakhov.autodocs.ui.view.panel.GeneratorPanel;
+import ru.nsu.astakhov.autodocs.ui.view.panel.HelpPanel;
 import ru.nsu.astakhov.autodocs.ui.view.panel.NavigationPanel;
 import ru.nsu.astakhov.autodocs.ui.view.panel.WarningsPanel;
 
@@ -24,6 +25,7 @@ public class NavigationPanelEventHandler implements EventHandler {
             case UPDATE_TABLE                   -> controller.updateTable(JOptionPane.getFrameForComponent(panel));
             case WARNING_TABLE                  -> controller.setPanel(WarningsPanel.class);
             case GENERATE_DOCUMENT              -> controller.setPanel(GeneratorPanel.class);
+            case SHORT_GUIDE                    -> controller.setPanel(HelpPanel.class);
         }
     }
 }

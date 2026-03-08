@@ -33,7 +33,7 @@ public record TemplateInfo(
                 .degree(Degree.fromValue(parts[3]))
                 .specialization(Specialization.fromValue(parts[4]))
                 .academicPeriod(AcademicPeriod.fromValue(parts[5]))
-                .fileName(parts[6].substring(0, parts[6].length() - 5).replace("_", " "))
+                .fileName(parts[6].substring(0, parts[6].length() - 5))
                 .templatePath(templatePath)
                 .documentDir(templateDir.replace("/template", "document"))
                 .build();
@@ -55,7 +55,7 @@ public record TemplateInfo(
 
     @NotNull
     public String getDisplayName() {
-        return workType.getValue() + ": " + fileName + "\n"
+        return workType.getValue() + ": " + fileName.replace('_', ' ') + "\n"
                 + degree.getValue() + ", " + academicPeriod.getValue() + "\n"
                 + specialization.getValue();
     }

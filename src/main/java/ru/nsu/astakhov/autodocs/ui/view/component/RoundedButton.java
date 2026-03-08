@@ -7,6 +7,7 @@ import ru.nsu.astakhov.autodocs.ui.view.font.FontType;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.datatransfer.StringSelection;
 
 public class RoundedButton extends JButton {
     private final int rounding;
@@ -22,6 +23,17 @@ public class RoundedButton extends JButton {
         this.rounding = Integer.parseInt(ConfigManager.getSetting(ConfigConstants.GAP_SMALL));
 
         configureButton();
+    }
+
+    public void setCopyButton() {
+        setCursor(new Cursor(Cursor.HAND_CURSOR));
+        addActionListener(e -> copyToClipboard(super.getText()));
+
+    }
+
+    private void copyToClipboard(String text) {
+        StringSelection selection = new StringSelection(text);
+        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(selection, null);
     }
 
     @Override
