@@ -24,6 +24,6 @@ public enum Degree implements HasStringValue {
                 return degree;
             }
         }
-        return null;
+        throw new IllegalArgumentException("Unknown degree: " + value);
     }
 }

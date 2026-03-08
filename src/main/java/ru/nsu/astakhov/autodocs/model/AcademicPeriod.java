@@ -32,6 +32,6 @@ public enum AcademicPeriod implements HasStringValue {
                 return academicPeriod;
             }
         }
-        return null;
+        throw new IllegalArgumentException("Unknown academic period: " + value);
     }
 }

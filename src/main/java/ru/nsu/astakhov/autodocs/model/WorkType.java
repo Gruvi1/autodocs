@@ -23,6 +23,6 @@ public enum WorkType implements HasStringValue {
                 return workType;
             }
         }
-        return null;
+        throw new IllegalArgumentException("Unknown work type: " + value);
     }
 }

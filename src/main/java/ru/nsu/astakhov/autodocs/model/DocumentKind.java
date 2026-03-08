@@ -19,6 +19,6 @@ public enum DocumentKind {
                 return documentKind;
             }
         }
-        return null;
+        throw new IllegalArgumentException("Unknown document kind: " + value);
     }
 }

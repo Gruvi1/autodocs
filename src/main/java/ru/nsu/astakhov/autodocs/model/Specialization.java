@@ -26,6 +26,6 @@ public enum Specialization implements HasStringValue {
                 return s;
             }
         }
-        return null;
+        throw new IllegalArgumentException("Unknown specialization: " + value);
     }
 }

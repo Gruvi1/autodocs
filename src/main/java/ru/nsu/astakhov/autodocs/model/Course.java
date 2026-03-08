@@ -25,6 +25,6 @@ public enum Course implements HasStringValue {
                 return course;
             }
         }
-        return null;
+        throw new IllegalArgumentException("Unknown course: " + value);
     }
 }
