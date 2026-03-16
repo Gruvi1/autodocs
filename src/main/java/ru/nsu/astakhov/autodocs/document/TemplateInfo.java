@@ -22,20 +22,20 @@ public record TemplateInfo(
 ) {
     // TODO: добавить защиту от неверных файлов !!!!
     public static TemplateInfo createFromPath(String templatePath) {
-        if (templatePath == null || !templatePath.startsWith("/template")) {
-            throw new IllegalArgumentException("Template path must start with /template");
+        if (templatePath == null || !templatePath.startsWith("template")) {
+            throw new IllegalArgumentException("Template path must start with template");
         }
         String[] parts = templatePath.split("/");
         int lastSeparatorIndex = templatePath.lastIndexOf("/");
         String templateDir = templatePath.substring(0, lastSeparatorIndex == -1 ? templatePath.length() : lastSeparatorIndex);
         return TemplateInfo.builder()
-                .workType(WorkType.fromValue(parts[2]))
-                .degree(Degree.fromValue(parts[3]))
-                .specialization(Specialization.fromValue(parts[4]))
-                .academicPeriod(AcademicPeriod.fromValue(parts[5]))
-                .fileName(parts[6].substring(0, parts[6].length() - 5))
+                .workType(WorkType.fromValue(parts[1]))
+                .degree(Degree.fromValue(parts[2]))
+                .specialization(Specialization.fromValue(parts[3]))
+                .academicPeriod(AcademicPeriod.fromValue(parts[4]))
+                .fileName(parts[5].substring(0, parts[5].length() - 5))
                 .templatePath(templatePath)
-                .documentDir(templateDir.replace("/template", "document"))
+                .documentDir(templateDir.replace("template", "document"))
                 .build();
 
     }

@@ -30,7 +30,7 @@ public class Application implements CommandLineRunner {
     }
 
     @Override
-    public void run(String... args)  {
+    public void run(String... args) {
         SwingUtilities.invokeLater(() -> window.setVisible(true));
         controller.updateTable(window);
     }

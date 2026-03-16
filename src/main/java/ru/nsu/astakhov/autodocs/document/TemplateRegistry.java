@@ -2,7 +2,7 @@ package ru.nsu.astakhov.autodocs.document;
 
 import jakarta.annotation.PostConstruct;
 import lombok.Getter;
-import org.springframework.core.io.ClassPathResource;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -15,28 +15,48 @@ import java.util.stream.Stream;
 
 @Component
 @Getter
+@Slf4j
 public class TemplateRegistry {
-    private static final String BASE_PATH = "/template";
+    private static final String BASE_PATH = "template";
     private final List<TemplateInfo> templates;
 
     public TemplateRegistry() {
         templates = new ArrayList<>();
     }
 
-    // TODO: добавить защиту от неверных файлов !!!!
     @PostConstruct
-    private void scan() throws IOException {
-        ClassPathResource resource = new ClassPathResource(BASE_PATH);
-        Path rootPath = Paths.get(resource.getURI());
+    private void scan() {
+        try {
+            create();
+            save();
+        }
+        catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void create() {
+        new TemplateCreator().start();
+    }
+
+    private void save() throws IOException {
+        Path rootPath = Paths.get("template");
 
         try (Stream<Path> stream = Files.walk(rootPath)) {
             stream.filter(Files::isRegularFile)
-                    .filter(p -> p.toString().endsWith(".docx"))
+                    .filter(path -> path.toString().endsWith(".docx"))
                     .forEach(path -> {
                         String relativePath = BASE_PATH + "/" +
                                 rootPath.relativize(path).toString().replace('\\', '/');
 
-                        templates.add(TemplateInfo.createFromPath(relativePath));
+                        TemplateInfo templateInfo;
+                        try {
+                            templateInfo = TemplateInfo.createFromPath(relativePath);
+                            templates.add(templateInfo);
+                        }
+                        catch (Exception e) {
+                            logger.error(e.getMessage());
+                        }
                     });
         }
     }

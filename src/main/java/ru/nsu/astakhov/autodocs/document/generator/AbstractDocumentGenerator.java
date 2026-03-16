@@ -10,6 +10,7 @@ import ru.nsu.astakhov.autodocs.document.TemplateInfo;
 import ru.nsu.astakhov.autodocs.exceptions.GenderResolutionException;
 import ru.nsu.astakhov.autodocs.model.StudentDto;
 
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,6 +26,7 @@ import java.util.stream.Stream;
 
 import static java.util.Map.entry;
 
+// TODO: заменить строковые константы плейсхолдеров на параметры из yaml в соответствии с языком
 public class AbstractDocumentGenerator implements DocumentGenerator {
     private final RussianWordDecliner russianWordDecliner;
     private final TemplateInfo templateInfo;
@@ -36,6 +38,7 @@ public class AbstractDocumentGenerator implements DocumentGenerator {
         initOutputDirectory();
     }
 
+    // TODO: убрать видПрактикиРодительный и тд отсюда и из HELP
     private static final Map<String, Function<StudentDto, String>> RESOLVERS = Map.ofEntries(
             entry("$(fullName)", StudentDto::fullName),
             entry("$(course)", tempDto -> String.valueOf(tempDto.course().getValue())),
@@ -52,6 +55,8 @@ public class AbstractDocumentGenerator implements DocumentGenerator {
             entry("$(thesisTopic)", StudentDto::thesisTopic),
             entry("$(reviewer)", StudentDto::reviewer),
             entry("$(internshipType)", tempDto -> tempDto.internshipType().getValue()),
+            entry("$(internshipTypeGenitive)", tempDto -> tempDto.internshipType().getGenitive()),
+            entry("$(internshipTypeAccusative)", tempDto -> tempDto.internshipType().getAccusative()),
             entry("$(thesisSupervisor.name)", tempDto -> tempDto.thesisSupervisor().name()),
             entry("$(thesisSupervisor.position)", tempDto -> tempDto.thesisSupervisor().position()),
             entry("$(thesisSupervisor.degree)", tempDto -> tempDto.thesisSupervisor().degree()),
@@ -86,6 +91,8 @@ public class AbstractDocumentGenerator implements DocumentGenerator {
             entry("$(темаВКР)", StudentDto::thesisTopic),
             entry("$(рецензент)", StudentDto::reviewer),
             entry("$(видПрактики)", tempDto -> tempDto.internshipType().getValue()),
+            entry("$(видПрактикиРодительный)", tempDto -> tempDto.internshipType().getGenitive()),
+            entry("$(видПрактикиВинительный)", tempDto -> tempDto.internshipType().getAccusative()),
             entry("$(руководительВКР.имя)", tempDto -> tempDto.thesisSupervisor().name()),
             entry("$(руководительВКР.должность)", tempDto -> tempDto.thesisSupervisor().position()),
             entry("$(руководительВКР.степень)", tempDto -> tempDto.thesisSupervisor().degree()),
@@ -200,22 +207,19 @@ public class AbstractDocumentGenerator implements DocumentGenerator {
 
     @Override
     public void generate(StudentDto dto) {
-        String safeName = dto.fullName().replace(' ', '_') + '_' + templateInfo.fileName() + ".docx";
-        Path outputFilePath = Paths.get(templateInfo.documentDir(), safeName);
-        generateDocument(templateInfo, outputFilePath, dto);
+        String saveName = dto.fullName().replace(' ', '_') + '_' + templateInfo.fileName() + ".docx";
+        Path outputFilePath = Paths.get(templateInfo.documentDir(), saveName);
+        generateDocument(outputFilePath, dto);
     }
 
-    private void generateDocument(TemplateInfo templateInfo, Path outputFilePath, StudentDto dto) {
-        try (InputStream in = getClass().getResourceAsStream(templateInfo.templatePath())) {
-            if (in == null) {
-                throw new IllegalArgumentException("Шаблон документа не найден по пути: " + templateInfo.templatePath());
-            }
+    private void generateDocument(Path outputFilePath, StudentDto dto) {
+        try (InputStream in = new FileInputStream(templateInfo.templatePath())) {
 
             try (XWPFDocument doc = new XWPFDocument(in);
                  FileOutputStream out = new FileOutputStream(outputFilePath.toFile())) {
                 for (XWPFParagraph paragraph : doc.getParagraphs()) {
                     String text = paragraph.getText();
-                    if (text != null && containsAny(text)) {
+                    if (containsAny(text)) {
                         processParagraph(paragraph, dto);
                     }
                 }
@@ -278,6 +282,9 @@ public class AbstractDocumentGenerator implements DocumentGenerator {
     }
 
     private boolean containsAny(String text) {
+        if (text == null) {
+            return false;
+        }
         for (String placeholder : PLACEHOLDERS) {
             if (text.contains(placeholder)) {
                 return true;
