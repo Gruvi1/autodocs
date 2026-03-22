@@ -1,6 +1,6 @@
 package ru.nsu.astakhov.autodocs.ui.view.panel;
 
-import ru.nsu.astakhov.autodocs.document.TemplateInfo;
+import ru.nsu.astakhov.autodocs.document.PreparedTemplateInfo;
 import ru.nsu.astakhov.autodocs.document.TemplateRegistry;
 import ru.nsu.astakhov.autodocs.model.*;
 import ru.nsu.astakhov.autodocs.ui.controller.ButtonCommand;
@@ -144,9 +144,9 @@ public class GeneratorPanel extends Panel {
                 ? null
                 : Specialization.fromValue(specializationValue);
 
-        for (TemplateInfo templateInfo : templateRegistry.getTemplates()) {
-            if (templateInfo.isSuitable(selectedWorkType, selectedDegree, selectedAcademicPeriod, selectedSpecialization)) {
-                contentPanel.add(new FileBox(templateInfo), constraints);
+        for (PreparedTemplateInfo preparedTemplateInfo : templateRegistry.getTemplates()) {
+            if (preparedTemplateInfo.isSuitable(selectedWorkType, selectedDegree, selectedAcademicPeriod, selectedSpecialization)) {
+                contentPanel.add(new FileBox(preparedTemplateInfo), constraints);
 
                 ++constraints.gridx;
                 if (constraints.gridx % NUM_COLUMNS == 0) {
@@ -179,12 +179,12 @@ public class GeneratorPanel extends Panel {
         return panel;
     }
 
-    public List<TemplateInfo> getActiveFileBox() {
-        List<TemplateInfo> activeFileBox = new ArrayList<>();
+    public List<PreparedTemplateInfo> getActiveFileBox() {
+        List<PreparedTemplateInfo> activeFileBox = new ArrayList<>();
 
         for (Component comp : contentPanel.getComponents()) {
             if (comp instanceof FileBox fileBox && fileBox.isActive()) {
-                    activeFileBox.add(fileBox.getTemplateInfo());
+                    activeFileBox.add(fileBox.getPreparedTemplateInfo());
                 }
         }
         return activeFileBox;

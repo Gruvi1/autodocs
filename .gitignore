@@ -41,3 +41,6 @@ build/
 .mvn/
 .idea/
 autodocs.db
+template
+document
+scripts

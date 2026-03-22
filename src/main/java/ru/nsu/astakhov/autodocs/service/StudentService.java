@@ -3,8 +3,8 @@ package ru.nsu.astakhov.autodocs.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import ru.nsu.astakhov.autodocs.document.TemplateInfo;
-import ru.nsu.astakhov.autodocs.document.generator.AbstractDocumentGenerator;
+import ru.nsu.astakhov.autodocs.document.PreparedTemplateInfo;
+import ru.nsu.astakhov.autodocs.document.generator.DocumentGenerator;
 import ru.nsu.astakhov.autodocs.exceptions.GenderResolutionException;
 import ru.nsu.astakhov.autodocs.integration.google.GoogleSheetsService;
 import ru.nsu.astakhov.autodocs.model.*;
@@ -72,18 +72,18 @@ public class StudentService {
         }
     }
 
-    public List<StudentDto> getStudentsByGenerator(TemplateInfo templateInfo) {
-        Course course = templateInfo.getCourse();
-        Specialization specialization = templateInfo.specialization();
+    public List<StudentDto> getStudentsByGenerator(PreparedTemplateInfo preparedTemplateInfo) {
+        Course course = preparedTemplateInfo.getCourse();
+        Specialization specialization = preparedTemplateInfo.specialization();
 
         return getStudentsByCourseAndSpecialization(course, specialization);
     }
 
-    public List<GenderConflict> generateStudents(List<StudentDto> studentDtos, TemplateInfo templateInfo) {
-        Course course = templateInfo.getCourse();
-        Specialization specialization = templateInfo.specialization();
+    public List<GenderConflict> generateStudents(List<StudentDto> studentDtos, PreparedTemplateInfo preparedTemplateInfo) {
+        Course course = preparedTemplateInfo.getCourse();
+        Specialization specialization = preparedTemplateInfo.specialization();
 
-        AbstractDocumentGenerator generator = new AbstractDocumentGenerator(templateInfo);
+        DocumentGenerator generator = new DocumentGenerator(preparedTemplateInfo);
 
         List<GenderConflict> conflicts = new ArrayList<>();
 

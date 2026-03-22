@@ -259,7 +259,7 @@ public class GoogleSheetsService {
 
     private String getString(List<Object> row, int index) {
         if (index >= row.size() || row.get(index) == null) {
-            return null;
+            return "";
         }
         return row.get(index).toString().trim();
     }

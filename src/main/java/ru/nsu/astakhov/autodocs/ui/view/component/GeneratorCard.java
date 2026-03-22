@@ -1,6 +1,6 @@
 package ru.nsu.astakhov.autodocs.ui.view.component;
 
-import ru.nsu.astakhov.autodocs.document.TemplateInfo;
+import ru.nsu.astakhov.autodocs.document.PreparedTemplateInfo;
 import ru.nsu.astakhov.autodocs.model.StudentDto;
 import ru.nsu.astakhov.autodocs.ui.configs.ConfigConstants;
 import ru.nsu.astakhov.autodocs.ui.configs.ConfigManager;
@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 public class GeneratorCard extends JPanel {
-    private final TemplateInfo templateInfo;
+    private final PreparedTemplateInfo preparedTemplateInfo;
     private final Controller controller;
     private final Map<StudentDto, SelectableLabel> students;
 
@@ -29,8 +29,8 @@ public class GeneratorCard extends JPanel {
     private final Color primaryColor;
     private final Color focusColor;
 
-    public GeneratorCard(TemplateInfo templateInfo, Controller controller) {
-        this.templateInfo = templateInfo;
+    public GeneratorCard(PreparedTemplateInfo preparedTemplateInfo, Controller controller) {
+        this.preparedTemplateInfo = preparedTemplateInfo;
         this.controller = controller;
         this.students = new HashMap<>();
 
@@ -84,11 +84,11 @@ public class GeneratorCard extends JPanel {
         ++constraints.gridy;
 
         constraints.weighty = 1.0;
-        add(createStudentLinesPanel(templateInfo), constraints);
+        add(createStudentLinesPanel(preparedTemplateInfo), constraints);
     }
 
     private JPanel createTitlePanel() {
-        FileBox fileBox = new FileBox(templateInfo);
+        FileBox fileBox = new FileBox(preparedTemplateInfo);
         fileBox.setBorder(BorderFactory.createEmptyBorder());
         fileBox.setEnabled(false);
 
@@ -130,13 +130,13 @@ public class GeneratorCard extends JPanel {
         return panel;
     }
 
-    private JScrollPane createStudentLinesPanel(TemplateInfo templateInfo) {
+    private JScrollPane createStudentLinesPanel(PreparedTemplateInfo preparedTemplateInfo) {
         JPanel lines = new JPanel();
         lines.setLayout(new BoxLayout(lines, BoxLayout.Y_AXIS));
         lines.setBackground(focusColor);
         lines.setBorder(BorderFactory.createEmptyBorder(smallGap, smallGap, smallGap, smallGap));
 
-        List<StudentDto> students = controller.getStudentsByGenerator(templateInfo);
+        List<StudentDto> students = controller.getStudentsByGenerator(preparedTemplateInfo);
         for (StudentDto student : students) {
             JPanel studentLine = createStudentLine(student);
             lines.add(studentLine);

@@ -18,7 +18,7 @@ import java.util.stream.Stream;
 @Slf4j
 public class TemplateRegistry {
     private static final String BASE_PATH = "template";
-    private final List<TemplateInfo> templates;
+    private final List<PreparedTemplateInfo> templates;
 
     public TemplateRegistry() {
         templates = new ArrayList<>();
@@ -49,10 +49,10 @@ public class TemplateRegistry {
                         String relativePath = BASE_PATH + "/" +
                                 rootPath.relativize(path).toString().replace('\\', '/');
 
-                        TemplateInfo templateInfo;
+                        PreparedTemplateInfo preparedTemplateInfo;
                         try {
-                            templateInfo = TemplateInfo.createFromPath(relativePath);
-                            templates.add(templateInfo);
+                            preparedTemplateInfo = PreparedTemplateInfo.createFromPath(relativePath);
+                            templates.add(preparedTemplateInfo);
                         }
                         catch (Exception e) {
                             logger.error(e.getMessage());

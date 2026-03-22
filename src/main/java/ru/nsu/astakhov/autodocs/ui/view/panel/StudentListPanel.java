@@ -2,7 +2,7 @@ package ru.nsu.astakhov.autodocs.ui.view.panel;
 
 import lombok.Getter;
 import org.springframework.stereotype.Component;
-import ru.nsu.astakhov.autodocs.document.TemplateInfo;
+import ru.nsu.astakhov.autodocs.document.PreparedTemplateInfo;
 import ru.nsu.astakhov.autodocs.model.StudentDto;
 import ru.nsu.astakhov.autodocs.ui.controller.ButtonCommand;
 import ru.nsu.astakhov.autodocs.ui.controller.Controller;
@@ -20,7 +20,7 @@ import java.util.Map;
 public class StudentListPanel extends Panel {
     private final transient Controller controller;
     @Getter
-    private final Map<TemplateInfo, GeneratorCard> activeGeneratorCardMap;
+    private final Map<PreparedTemplateInfo, GeneratorCard> activeGeneratorCardMap;
     private final JPanel contentPanel;
 
     public StudentListPanel(Controller controller) {
@@ -64,24 +64,24 @@ public class StudentListPanel extends Panel {
         // no operation
     }
 
-    public void setGenerators(List<TemplateInfo> templatesInfo) {
+    public void setGenerators(List<PreparedTemplateInfo> templatesInfo) {
         activeGeneratorCardMap.clear();
-        for (TemplateInfo templateInfo : templatesInfo) {
-            activeGeneratorCardMap.put(templateInfo, null);
+        for (PreparedTemplateInfo preparedTemplateInfo : templatesInfo) {
+            activeGeneratorCardMap.put(preparedTemplateInfo, null);
         }
         updateStudentList();
     }
 
-    public List<TemplateInfo> getActiveGenerators() {
+    public List<PreparedTemplateInfo> getActiveGenerators() {
         return new ArrayList<>(activeGeneratorCardMap.keySet());
     }
 
     private void updateStudentList() {
         contentPanel.removeAll();
 
-        for (TemplateInfo templateInfo : activeGeneratorCardMap.keySet()) {
-            GeneratorCard generatorCard = new GeneratorCard(templateInfo, controller);
-            activeGeneratorCardMap.put(templateInfo, generatorCard);
+        for (PreparedTemplateInfo preparedTemplateInfo : activeGeneratorCardMap.keySet()) {
+            GeneratorCard generatorCard = new GeneratorCard(preparedTemplateInfo, controller);
+            activeGeneratorCardMap.put(preparedTemplateInfo, generatorCard);
             contentPanel.add(generatorCard);
         }
 
@@ -104,16 +104,16 @@ public class StudentListPanel extends Panel {
         return panel;
     }
 
-    public List<StudentDto> getAllStudents(TemplateInfo templateInfo) {
-        GeneratorCard generatorCard = activeGeneratorCardMap.get(templateInfo);
+    public List<StudentDto> getAllStudents(PreparedTemplateInfo preparedTemplateInfo) {
+        GeneratorCard generatorCard = activeGeneratorCardMap.get(preparedTemplateInfo);
         if (generatorCard != null) {
             return generatorCard.getAllStudents();
         }
         return new ArrayList<>();
     }
 
-    public List<StudentDto> getSelectedStudents(TemplateInfo templateInfo) {
-        GeneratorCard generatorCard = activeGeneratorCardMap.get(templateInfo);
+    public List<StudentDto> getSelectedStudents(PreparedTemplateInfo preparedTemplateInfo) {
+        GeneratorCard generatorCard = activeGeneratorCardMap.get(preparedTemplateInfo);
         if (generatorCard != null) {
             return generatorCard.getSelectedStudents();
         }
