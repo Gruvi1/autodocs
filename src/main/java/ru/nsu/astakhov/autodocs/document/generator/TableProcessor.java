@@ -92,17 +92,14 @@ public class TableProcessor {
     }
 
     public void removeMarkerRow(XWPFTable table, String marker) {
-        // Идём с конца к началу, чтобы индексы не смещались
         for (int i = table.getNumberOfRows() - 1; i >= 0; i--) {
             XWPFTableRow row = table.getRow(i);
 
-            // Проверяем все ячейки в строке
             for (XWPFTableCell cell : row.getTableCells()) {
                 String cellText = cell.getText();
                 if (cellText != null && cellText.contains(marker)) {
-                    // Нашли маркер - удаляем всю строку
                     table.removeRow(i);
-                    break; // Выходим из цикла по ячейкам, строка уже удалена
+                    break;
                 }
             }
         }

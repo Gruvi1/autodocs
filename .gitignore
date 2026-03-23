@@ -40,7 +40,6 @@ build/
 ### User ###
 .mvn/
 .idea/
-autodocs.db
-template
-document
-scripts
+/template
+/document
+/scripts

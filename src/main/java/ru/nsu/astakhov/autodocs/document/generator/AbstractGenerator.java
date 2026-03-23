@@ -75,14 +75,16 @@ public abstract class AbstractGenerator<T> {
                     applyTableReplacement(run, table, matcher, config, result);
                 }
             }
-            matcher.appendTail(result);
+            if (!result.isEmpty()) {
+                matcher.appendTail(result);
 
-            run.getCTR().setTArray(new CTText[0]);
-            String[] lines = result.toString().split("\n", -1);
+                run.getCTR().setTArray(new CTText[0]);
+                String[] lines = result.toString().split("\n", -1);
 
-            for (int i = 0; i < lines.length; i++) {
-                if (i > 0) run.addBreak();
-                run.setText(lines[i]);
+                for (int i = 0; i < lines.length; i++) {
+                    if (i > 0) run.addBreak();
+                    run.setText(lines[i]);
+                }
             }
         }
     }
