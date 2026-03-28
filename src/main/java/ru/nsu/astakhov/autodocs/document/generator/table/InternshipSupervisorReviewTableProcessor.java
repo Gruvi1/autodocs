@@ -1,4 +1,4 @@
-package ru.nsu.astakhov.autodocs.document.generator;
+package ru.nsu.astakhov.autodocs.document.generator.table;
 
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
@@ -10,7 +10,7 @@ import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
 
-public class TableProcessor {
+public class InternshipSupervisorReviewTableProcessor extends TableProcessor {
     public void addCompetencies(XWPFTable table, Map<String, List<String>> competencies) {
         int globalNumber = 1;
         int columnCount = 6;
@@ -47,19 +47,6 @@ public class TableProcessor {
         return globalNumber;
     }
 
-    private void removeAllCells(XWPFTableRow row) {
-        while (!row.getTableCells().isEmpty()) {
-            row.removeCell(0);
-        }
-    }
-
-    private void addTextInCell(XWPFTableCell cell, String text) {
-        XWPFRun run = cell.getParagraphs().getFirst().createRun();
-        run.setFontFamily("Times New Roman");
-        run.setFontSize(11);
-        run.setText(text);
-    }
-
     private void addLastRow(XWPFTable table, int columnCount) {
         String title = "ИТОГОВАЯ ОЦЕНКА";
         String description = "(отлично, хорошо, удовлетворительно, неудовлетворительно)";
@@ -89,19 +76,5 @@ public class TableProcessor {
         lastCell2.getParagraphs().getFirst().setAlignment(ParagraphAlignment.CENTER);
         lastCell2.setVerticalAlignment(XWPFTableCell.XWPFVertAlign.CENTER);
         addTextInCell(lastCell2, "Отлично");
-    }
-
-    public void removeMarkerRow(XWPFTable table, String marker) {
-        for (int i = table.getNumberOfRows() - 1; i >= 0; i--) {
-            XWPFTableRow row = table.getRow(i);
-
-            for (XWPFTableCell cell : row.getTableCells()) {
-                String cellText = cell.getText();
-                if (cellText != null && cellText.contains(marker)) {
-                    table.removeRow(i);
-                    break;
-                }
-            }
-        }
     }
 }

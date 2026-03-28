@@ -8,6 +8,7 @@ import java.util.Map;
 
 public class YamlConfig {
     private static final String competenciesKey = "компетенции";
+    private static final String thesisCompetenciesKey = "компетенцииВКР";
 
     private final Map<String, Object> data;
 
@@ -28,5 +29,10 @@ public class YamlConfig {
     @SuppressWarnings("unchecked")
     public Map<String, List<String>> getCompetencies() {
         return (Map<String, List<String>>) data.get(competenciesKey);
+    }
+
+    @SuppressWarnings("unchecked")
+    public Map<String, List<String>> getThesisCompetencies() {
+        return (Map<String, List<String>>) data.get(thesisCompetenciesKey);
     }
 }

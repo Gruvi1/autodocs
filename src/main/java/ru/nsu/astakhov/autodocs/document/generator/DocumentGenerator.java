@@ -79,7 +79,7 @@ public class DocumentGenerator extends AbstractGenerator<StudentDto> {
             entry("утверждениеТемы", StudentDto::orderOnApprovalTopic),
             entry("корректировкаТемы", StudentDto::orderOnCorrectionTopic),
             entry("фактический", StudentDto::actualSupervisor),
-            entry("соруководительВКР", StudentDto::thesisCoSupervisor),
+            entry("соруководительВКР.имя", StudentDto::thesisCoSupervisor),
             entry("консультантВКР", StudentDto::thesisConsultant),
             entry("темаВКР", StudentDto::thesisTopic),
             entry("рецензент", StudentDto::reviewer),
@@ -254,6 +254,6 @@ public class DocumentGenerator extends AbstractGenerator<StudentDto> {
 
     @Override
     protected void applyTableReplacement(XWPFRun run, XWPFTable table, Matcher matcher, StudentDto studentDto, StringBuilder result) {
-
+        // no operation
     }
 }
