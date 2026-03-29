@@ -250,17 +250,17 @@ public class DocumentGenerator extends AbstractGenerator<StudentDto> {
         if (!value.isBlank()) {
             run.setTextHighlightColor("white");
         }
-        else if (key.equals("$(administrativeActFromOrganization)")) {
-            value = "\"__\" __________ 2025 г. №______";
+        else if (key.equals("administrativeActFromOrganization")) {
+            value = "\"__\" __________ 20__ г. №______";
         }
-        else if (key.equals("$(thesisSupervisor.name)") ||
-                key.equals("$(thesisSupervisor.position)") ||
-                key.equals("$(thesisSupervisor.degree)")) {
+        else if (key.equals("thesisSupervisor.name") ||
+                key.equals("thesisSupervisor.position") ||
+                key.equals("thesisSupervisor.degree")) {
             value = "_____________";
             run.setTextHighlightColor("white");
         }
 
-        if (!value.isEmpty()) {
+        if (!value.isBlank()) {
             matcher.appendReplacement(result, Matcher.quoteReplacement(value));
         }
         else {
