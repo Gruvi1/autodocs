@@ -28,6 +28,7 @@ public record StudentDto(
         Supervisor organizationSupervisor,
         String administrativeActFromOrganization,
         String fullPlaceOfInternship,
-        String organizationName
+        String organizationName,
+        String dateOfPracticeAssignment
 ) {
 }

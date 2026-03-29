@@ -63,25 +63,12 @@ public class PreparedTemplateGenerator extends AbstractGenerator<YamlConfig> {
     @Override
     protected void applyReplacement(XWPFRun run, Matcher matcher, YamlConfig yamlConfig, StringBuilder result) {
         String key = matcher.group(1); // ключ без $()
-
-        String value = yamlConfig.getString(key);
-
-        if (value != null && !value.isEmpty()) {
-            // TODO: убрать костыль (нужно добавить в .yml флаг для обозначения покраски)
-            if (!key.equals("компетенцииЗаданияПрактики")) {
-                run.setTextHighlightColor("white");
-            }
-            matcher.appendReplacement(result, Matcher.quoteReplacement(value));
-        }
-        else {
-            matcher.appendReplacement(result, Matcher.quoteReplacement(matcher.group(0)));
-        }
+        applyDefaultReplacement(run, matcher, yamlConfig, key, result);
     }
 
     @Override
     protected void applyTableReplacement(XWPFRun run, XWPFTable table, Matcher matcher, YamlConfig yamlConfig, StringBuilder result) {
         String key = matcher.group(1); // ключ без $()
-
         if (key.equals("компетенции")) {
             InternshipSupervisorReviewTableProcessor tableProcessor = new InternshipSupervisorReviewTableProcessor();
             tableProcessor.removeMarkerRow(table, "компетенции");
@@ -95,11 +82,21 @@ public class PreparedTemplateGenerator extends AbstractGenerator<YamlConfig> {
             return;
         }
 
+        applyDefaultReplacement(run, matcher, yamlConfig, key, result);
+    }
+
+    private void applyDefaultReplacement(
+            XWPFRun run,
+            Matcher matcher,
+            YamlConfig yamlConfig,
+            String key,
+            StringBuilder result
+            ) {
         String value = yamlConfig.getString(key);
 
         if (value != null && !value.isEmpty()) {
             // TODO: убрать костыль (нужно добавить в .yml флаг для обозначения покраски)
-            if (!matcher.group(1).equals("компетенцииЗаданияПрактики")) {
+            if (!key.equals("компетенцииЗаданияПрактики")) {
                 run.setTextHighlightColor("white");
             }
             matcher.appendReplacement(result, Matcher.quoteReplacement(value));

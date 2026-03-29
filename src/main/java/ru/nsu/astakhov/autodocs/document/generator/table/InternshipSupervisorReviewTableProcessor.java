@@ -42,7 +42,17 @@ public class InternshipSupervisorReviewTableProcessor extends TableProcessor {
             }
             String globalNumberString = globalNumber++ + ".";
             addTextInCell(row.getCell(0), globalNumberString);
-            addTextInCell(row.getCell(1), competence);
+
+            String[] parts = competence.split("\n", -1);
+            XWPFRun competenceRun = addTextInCell(row.getCell(1), parts[0]);
+            for (int i = 1; i < parts.length; i++) {
+                competenceRun.addBreak();
+                competenceRun.setText(parts[i]);
+            }
+
+            XWPFRun markRun = addTextInCell(row.getCell(2), "X");
+            markRun.setBold(true);
+            markRun.setTextHighlightColor("yellow");
         }
         return globalNumber;
     }
@@ -58,23 +68,18 @@ public class InternshipSupervisorReviewTableProcessor extends TableProcessor {
         lastCell.getCTTc().addNewTcPr().addNewGridSpan().setVal(BigInteger.valueOf(columnCount - 4));
         lastCell.getParagraphs().getFirst().setAlignment(ParagraphAlignment.CENTER);
         lastCell.setVerticalAlignment(XWPFTableCell.XWPFVertAlign.CENTER);
-        XWPFRun lastRun = lastCell.getParagraphs().getFirst().createRun();
-        lastRun.setFontFamily("Times New Roman");
-        lastRun.setFontSize(11);
-        lastRun.setText(title);
+
+        XWPFRun lastRun = addTextInCell(lastCell, title);
         lastRun.setBold(true);
         lastRun.addBreak();
 
-        XWPFRun lastRun2 = lastCell.getParagraphs().getFirst().createRun();
-        lastRun2.setFontFamily("Times New Roman");
-        lastRun2.setFontSize(11);
-        lastRun2.setText(description);
-
+        addTextInCell(lastCell, description);
 
         XWPFTableCell lastCell2 = lastRow.createCell();
         lastCell2.getCTTc().addNewTcPr().addNewGridSpan().setVal(BigInteger.valueOf(columnCount - 2));
         lastCell2.getParagraphs().getFirst().setAlignment(ParagraphAlignment.CENTER);
         lastCell2.setVerticalAlignment(XWPFTableCell.XWPFVertAlign.CENTER);
-        addTextInCell(lastCell2, "Отлично");
+        XWPFRun markRun = addTextInCell(lastCell2, "Отлично");
+        markRun.setTextHighlightColor("yellow");
     }
 }

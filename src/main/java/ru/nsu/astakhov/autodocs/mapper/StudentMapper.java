@@ -42,6 +42,7 @@ public final class StudentMapper {
                 .administrativeActFromOrganization(entity.getAdministrativeActFromOrganization())
                 .fullPlaceOfInternship(entity.getFullPlaceOfInternship())
                 .organizationName(entity.getOrganizationName())
+                .dateOfPracticeAssignment(entity.getDateOfPracticeAssignment())
                 .build();
     }
 
@@ -77,6 +78,7 @@ public final class StudentMapper {
                 .administrativeActFromOrganization(dto.administrativeActFromOrganization())
                 .fullPlaceOfInternship(dto.fullPlaceOfInternship())
                 .organizationName(dto.organizationName())
+                .dateOfPracticeAssignment(dto.dateOfPracticeAssignment())
                 .build();
     }
 }

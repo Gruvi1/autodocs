@@ -89,6 +89,8 @@ public class StudentEntity {
 
     private String organizationName; // Наименование организации
 
+    private String dateOfPracticeAssignment; // Дата выдачи задания практик
+
     public void setEduProgram(String value) {
         EduProgram newEduProgram = EduProgram.fromValue(value);
         if (newEduProgram != null) {

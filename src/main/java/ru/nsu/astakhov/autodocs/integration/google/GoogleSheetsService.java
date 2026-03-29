@@ -248,6 +248,7 @@ public class GoogleSheetsService {
                     .administrativeActFromOrganization(getString(row, 17))
                     .fullPlaceOfInternship(getString(row, 18))
                     .organizationName(getString(row, 19))
+                    .dateOfPracticeAssignment(getString(row, 24))
                     .build();
         }
         catch (Exception e) {

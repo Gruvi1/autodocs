@@ -99,7 +99,8 @@ public class DocumentGenerator extends AbstractGenerator<StudentDto> {
             entry("руководительОрганизации.звание", tempDto -> tempDto.organizationSupervisor().title()),
             entry("актОтОрганизации", StudentDto::administrativeActFromOrganization),
             entry("местоПрактикиПолностью", StudentDto::fullPlaceOfInternship),
-            entry("наименованиеОрганизации", StudentDto::organizationName)
+            entry("наименованиеОрганизации", StudentDto::organizationName),
+            entry("датаВыдачиЗаданияПрактики", StudentDto::dateOfPracticeAssignment)
     );
 
     private static final Map<String, BiFunction<StudentDto, RussianWordDecliner, String>> ADDITIONAL_RESOLVERS = Map.ofEntries(
@@ -208,38 +209,53 @@ public class DocumentGenerator extends AbstractGenerator<StudentDto> {
 
     @Override
     protected void applyReplacement(XWPFRun run, Matcher matcher, StudentDto studentDto, StringBuilder result) {
-        String replaceable = matcher.group(1); // ключ без $()
+        String key = matcher.group(1); // ключ без $()
+        applyDefaultReplacement(run, matcher, studentDto, key, result);
+    }
 
-        Function<StudentDto, String> resolver = RESOLVERS.get(replaceable);
+    @Override
+    protected void applyTableReplacement(XWPFRun run, XWPFTable table, Matcher matcher, StudentDto studentDto, StringBuilder result) {
+        String key = matcher.group(1); // ключ без $()
+        applyDefaultReplacement(run, matcher, studentDto, key, result);
+    }
+
+    private void applyDefaultReplacement(
+            XWPFRun run,
+            Matcher matcher,
+            StudentDto studentDto,
+            String key,
+            StringBuilder result) {
+
+        Function<StudentDto, String> resolver = RESOLVERS.get(key);
         String value;
         if (resolver == null) {
-            resolver = RESOLVERS_RUS.get(replaceable);
+            resolver = RESOLVERS_RUS.get(key);
         }
 
         if (resolver != null) {
             value = resolver.apply(studentDto);
         }
         else {
-            BiFunction<StudentDto, RussianWordDecliner, String> additionalResolver = ADDITIONAL_RESOLVERS.get(replaceable);
+            BiFunction<StudentDto, RussianWordDecliner, String> additionalResolver = ADDITIONAL_RESOLVERS.get(key);
             if (additionalResolver == null) {
-                additionalResolver = ADDITIONAL_RESOLVERS_RUS.get(replaceable);
+                additionalResolver = ADDITIONAL_RESOLVERS_RUS.get(key);
             }
             value = additionalResolver.apply(studentDto, russianWordDecliner);
         }
         // TODO: пометить плейсхолдеры в документах "заявление на практику" жёлтым
         // TODO: исправить уведомление "разрешение конфликтов" при генерации. Оно не исчезает
         if (value == null) {
-            throw new IllegalStateException("Value is empty: " + replaceable);
+            throw new IllegalStateException("Value is empty: " + key + ":" + studentDto.fullName() + ":" + studentDto.dateOfPracticeAssignment());
         }
         if (!value.isBlank()) {
             run.setTextHighlightColor("white");
         }
-        else if (replaceable.equals("$(administrativeActFromOrganization)")) {
+        else if (key.equals("$(administrativeActFromOrganization)")) {
             value = "\"__\" __________ 2025 г. №______";
         }
-        else if (replaceable.equals("$(thesisSupervisor.name)") ||
-                replaceable.equals("$(thesisSupervisor.position)") ||
-                replaceable.equals("$(thesisSupervisor.degree)")) {
+        else if (key.equals("$(thesisSupervisor.name)") ||
+                key.equals("$(thesisSupervisor.position)") ||
+                key.equals("$(thesisSupervisor.degree)")) {
             value = "_____________";
             run.setTextHighlightColor("white");
         }
@@ -250,10 +266,5 @@ public class DocumentGenerator extends AbstractGenerator<StudentDto> {
         else {
             matcher.appendReplacement(result, Matcher.quoteReplacement(matcher.group(0)));
         }
-    }
-
-    @Override
-    protected void applyTableReplacement(XWPFRun run, XWPFTable table, Matcher matcher, StudentDto studentDto, StringBuilder result) {
-        // no operation
     }
 }
