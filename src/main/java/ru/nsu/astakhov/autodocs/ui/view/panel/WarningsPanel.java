@@ -8,8 +8,13 @@ import ru.nsu.astakhov.autodocs.ui.controller.Controller;
 import ru.nsu.astakhov.autodocs.ui.controller.handler.WarningsPanelEventHandler;
 import ru.nsu.astakhov.autodocs.ui.view.component.CustomLabel;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JPanel;
+import javax.swing.JScrollBar;
+import javax.swing.JScrollPane;
+import java.awt.BorderLayout;
 import java.util.List;
 
 @Component

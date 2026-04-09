@@ -9,7 +9,7 @@ import ru.nsu.astakhov.autodocs.ui.controller.Controller;
 import ru.nsu.astakhov.autodocs.ui.view.Window;
 import ru.nsu.astakhov.autodocs.util.Ini;
 
-import javax.swing.*;
+import javax.swing.SwingUtilities;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;

@@ -4,10 +4,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ru.nsu.astakhov.autodocs.ui.configs.ConfigConstants;
 import ru.nsu.astakhov.autodocs.ui.configs.ConfigManager;
-import ru.nsu.astakhov.autodocs.ui.view.panel.*;
+import ru.nsu.astakhov.autodocs.ui.view.panel.BottomPanel;
+import ru.nsu.astakhov.autodocs.ui.view.panel.NavigationPanel;
+import ru.nsu.astakhov.autodocs.ui.view.panel.PanelManager;
+import ru.nsu.astakhov.autodocs.ui.view.panel.PlaceholderPanel;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JFrame;
+import javax.swing.WindowConstants;
+import java.awt.BorderLayout;
+import java.awt.Frame;
 
 @Slf4j
 @Component

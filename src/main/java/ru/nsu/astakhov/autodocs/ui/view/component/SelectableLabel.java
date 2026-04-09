@@ -2,12 +2,14 @@ package ru.nsu.astakhov.autodocs.ui.view.component;
 
 import lombok.Getter;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.BorderFactory;
+import javax.swing.JCheckBox;
+import javax.swing.JPanel;
+import java.awt.BorderLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class SelectableLabel extends JPanel  {
+public class SelectableLabel extends JPanel {
     private final String text;
     private final JCheckBox checkBox;
     @Getter

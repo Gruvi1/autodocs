@@ -2,7 +2,11 @@ package ru.nsu.astakhov.autodocs.ui.view.panel;
 
 import ru.nsu.astakhov.autodocs.document.PreparedTemplateInfo;
 import ru.nsu.astakhov.autodocs.document.TemplateRegistry;
-import ru.nsu.astakhov.autodocs.model.*;
+import ru.nsu.astakhov.autodocs.model.AcademicPeriod;
+import ru.nsu.astakhov.autodocs.model.Degree;
+import ru.nsu.astakhov.autodocs.model.HasStringValue;
+import ru.nsu.astakhov.autodocs.model.Specialization;
+import ru.nsu.astakhov.autodocs.model.WorkType;
 import ru.nsu.astakhov.autodocs.ui.controller.ButtonCommand;
 import ru.nsu.astakhov.autodocs.ui.view.GeneratorFilters;
 import ru.nsu.astakhov.autodocs.ui.controller.Controller;
@@ -10,8 +14,19 @@ import ru.nsu.astakhov.autodocs.ui.controller.handler.GeneratorPanelEventHandler
 import ru.nsu.astakhov.autodocs.ui.view.component.CustomLabel;
 import ru.nsu.astakhov.autodocs.ui.view.component.FileBox;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollBar;
+import javax.swing.JScrollPane;
+import java.awt.BorderLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.Component;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

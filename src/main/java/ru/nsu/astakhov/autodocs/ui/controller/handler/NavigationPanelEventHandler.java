@@ -8,7 +8,7 @@ import ru.nsu.astakhov.autodocs.ui.view.panel.HelpPanel;
 import ru.nsu.astakhov.autodocs.ui.view.panel.NavigationPanel;
 import ru.nsu.astakhov.autodocs.ui.view.panel.WarningsPanel;
 
-import javax.swing.*;
+import javax.swing.JOptionPane;
 import java.awt.event.ActionEvent;
 
 @RequiredArgsConstructor

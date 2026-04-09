@@ -7,7 +7,8 @@ import ru.nsu.astakhov.autodocs.ui.controller.Controller;
 import ru.nsu.astakhov.autodocs.ui.view.panel.GeneratorPanel;
 import ru.nsu.astakhov.autodocs.ui.view.panel.StudentListPanel;
 
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
 import java.awt.event.ActionEvent;
 import java.util.List;
 

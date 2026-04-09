@@ -13,8 +13,8 @@ import ru.nsu.astakhov.autodocs.ui.Observable;
 import ru.nsu.astakhov.autodocs.ui.view.panel.PanelManager;
 import ru.nsu.astakhov.autodocs.ui.view.panel.Panel;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.SwingWorker;
+import java.awt.Frame;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;

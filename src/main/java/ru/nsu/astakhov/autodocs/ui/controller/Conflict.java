@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import ru.nsu.astakhov.autodocs.model.StudentEntity;
 
-import java.awt.*;
+import java.awt.Frame;
 import java.util.function.Consumer;
 
 @RequiredArgsConstructor

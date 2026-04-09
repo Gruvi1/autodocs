@@ -2,7 +2,11 @@ package ru.nsu.astakhov.autodocs.ui.view;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import ru.nsu.astakhov.autodocs.model.*;
+import ru.nsu.astakhov.autodocs.model.AcademicPeriod;
+import ru.nsu.astakhov.autodocs.model.Degree;
+import ru.nsu.astakhov.autodocs.model.HasStringValue;
+import ru.nsu.astakhov.autodocs.model.Specialization;
+import ru.nsu.astakhov.autodocs.model.WorkType;
 
 @RequiredArgsConstructor
 @Getter

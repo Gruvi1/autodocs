@@ -3,7 +3,9 @@ package ru.nsu.astakhov.autodocs.ui.view.font;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
-import java.awt.*;
+import java.awt.Font;
+import java.awt.FontFormatException;
+import java.awt.GraphicsEnvironment;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.EnumMap;

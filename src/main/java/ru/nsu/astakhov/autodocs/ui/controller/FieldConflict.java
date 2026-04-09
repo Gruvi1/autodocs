@@ -4,7 +4,7 @@ import lombok.Getter;
 import ru.nsu.astakhov.autodocs.model.StudentEntity;
 import ru.nsu.astakhov.autodocs.ui.view.dialog.FieldConflictDialog;
 
-import java.awt.*;
+import java.awt.Frame;
 import java.util.function.Consumer;
 
 @Getter

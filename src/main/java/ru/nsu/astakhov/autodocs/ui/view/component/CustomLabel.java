@@ -5,8 +5,9 @@ import ru.nsu.astakhov.autodocs.ui.configs.ConfigManager;
 import ru.nsu.astakhov.autodocs.ui.view.font.FontLoader;
 import ru.nsu.astakhov.autodocs.ui.view.font.FontType;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.BorderFactory;
+import javax.swing.JLabel;
+import java.awt.Color;
 
 public class CustomLabel extends JLabel {
     public CustomLabel(String text, boolean opaque) {

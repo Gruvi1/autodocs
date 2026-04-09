@@ -8,10 +8,18 @@ import ru.nsu.astakhov.autodocs.ui.view.font.FontType;
 import ru.nsu.astakhov.autodocs.ui.view.logo.LogoLoader;
 import ru.nsu.astakhov.autodocs.ui.view.logo.LogoType;
 
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JSeparator;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.*;
-import java.awt.*;
 
 @org.springframework.stereotype.Component
 public class NavigationPanel extends Panel {

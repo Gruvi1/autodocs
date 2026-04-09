@@ -14,7 +14,10 @@ import ru.nsu.astakhov.autodocs.ui.controller.Conflict;
 import ru.nsu.astakhov.autodocs.ui.controller.FieldConflict;
 import ru.nsu.astakhov.autodocs.ui.controller.GenderConflict;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;

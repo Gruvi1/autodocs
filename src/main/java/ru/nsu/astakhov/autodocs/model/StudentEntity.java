@@ -1,9 +1,25 @@
 package ru.nsu.astakhov.autodocs.model;
 
 import com.github.petrovich4j.Gender;
-import jakarta.persistence.*;
-import lombok.*;
-import ru.nsu.astakhov.autodocs.model.converters.*;
+import jakarta.persistence.AttributeOverride;
+import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import ru.nsu.astakhov.autodocs.model.converters.CourseConverter;
+import ru.nsu.astakhov.autodocs.model.converters.EduProgramConverter;
+import ru.nsu.astakhov.autodocs.model.converters.GenderConverter;
+import ru.nsu.astakhov.autodocs.model.converters.InternshipTypeConverter;
+import ru.nsu.astakhov.autodocs.model.converters.SpecializationConverter;
 
 @NoArgsConstructor
 @AllArgsConstructor

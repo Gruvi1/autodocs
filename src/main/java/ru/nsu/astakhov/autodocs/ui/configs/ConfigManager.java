@@ -5,7 +5,8 @@ import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ru.nsu.astakhov.autodocs.util.Ini;
 
-import java.awt.*;
+import java.awt.Color;
+
 
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)

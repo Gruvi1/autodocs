@@ -5,8 +5,12 @@ import ru.nsu.astakhov.autodocs.ui.controller.handler.BottomPanelEventHandler;
 import ru.nsu.astakhov.autodocs.ui.controller.Controller;
 import ru.nsu.astakhov.autodocs.ui.view.component.CustomLabel;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JLabel;
+import java.awt.Dimension;
+
 
 @Component
 public class BottomPanel extends Panel {

@@ -5,8 +5,14 @@ import ru.nsu.astakhov.autodocs.ui.view.component.RoundedButton;
 import ru.nsu.astakhov.autodocs.ui.view.font.FontLoader;
 import ru.nsu.astakhov.autodocs.ui.view.font.FontType;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.BorderFactory;
+import javax.swing.Icon;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.UIManager;
+import java.awt.BorderLayout;
+import java.awt.Frame;
 
 public class UpdatingErrorDialog extends Dialog {
     private static final String DIALOG_NAME = "Ошибка обновления данных";

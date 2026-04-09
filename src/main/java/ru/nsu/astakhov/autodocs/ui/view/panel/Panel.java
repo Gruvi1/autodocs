@@ -10,8 +10,10 @@ import ru.nsu.astakhov.autodocs.ui.controller.handler.EventHandler;
 import ru.nsu.astakhov.autodocs.ui.view.component.CustomComboBox;
 import ru.nsu.astakhov.autodocs.ui.view.component.RoundedButton;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JPanel;
+import java.awt.Color;
 
 public abstract class Panel extends JPanel implements Listener {
     protected final int smallGap;

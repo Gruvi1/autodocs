@@ -18,7 +18,6 @@ public class ThesisSupervisorReviewTableProcessor extends TableProcessor {
         }
     }
 
-
     private void addCompetence(
             XWPFTable table,
             String coreCompetence,
