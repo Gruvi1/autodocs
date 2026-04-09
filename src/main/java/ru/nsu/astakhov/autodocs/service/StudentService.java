@@ -6,8 +6,14 @@ import org.springframework.stereotype.Service;
 import ru.nsu.astakhov.autodocs.document.PreparedTemplateInfo;
 import ru.nsu.astakhov.autodocs.document.generator.DocumentGenerator;
 import ru.nsu.astakhov.autodocs.exceptions.GenderResolutionException;
-import ru.nsu.astakhov.autodocs.integration.google.GoogleSheetsService;
-import ru.nsu.astakhov.autodocs.model.*;
+import ru.nsu.astakhov.autodocs.integration.google.scanner.SheetScanner;
+import ru.nsu.astakhov.autodocs.model.Course;
+import ru.nsu.astakhov.autodocs.model.Specialization;
+import ru.nsu.astakhov.autodocs.model.StudentDto;
+import ru.nsu.astakhov.autodocs.model.StudentEntity;
+import ru.nsu.astakhov.autodocs.model.Supervisor;
+import ru.nsu.astakhov.autodocs.model.WarningList;
+import ru.nsu.astakhov.autodocs.model.WorkType;
 import ru.nsu.astakhov.autodocs.repository.StudentRepository;
 import ru.nsu.astakhov.autodocs.mapper.StudentMapper;
 import ru.nsu.astakhov.autodocs.ui.controller.Conflict;
@@ -27,7 +33,7 @@ import java.util.stream.Collectors;
 @Service
 public class StudentService {
     private final StudentRepository repository;
-    private final GoogleSheetsService googleSheetsService;
+    private final SheetScanner sheetScanner;
     private final WarningList warningList;
     private volatile boolean updateInProgress = false;
     private final Object updateLock = new Object();
@@ -109,12 +115,12 @@ public class StudentService {
     }
 
     private void scanInternshipLists() {
-        List<StudentDto> studentDtos = googleSheetsService.readAllInternshipLists();
+        List<StudentDto> studentDtos = sheetScanner.readAllInternshipLists();
         createStudents(studentDtos);
     }
 
     private List<FieldConflict> scanThesisLists() {
-        List<StudentDto> studentDtos = googleSheetsService.readAllThesisLists();
+        List<StudentDto> studentDtos = sheetScanner.readAllThesisLists();
         return updateStudents(studentDtos);
     }
 

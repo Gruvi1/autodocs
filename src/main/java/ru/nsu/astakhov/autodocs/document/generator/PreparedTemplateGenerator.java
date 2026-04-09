@@ -7,6 +7,7 @@ import org.apache.poi.xwpf.usermodel.XWPFTable;
 import ru.nsu.astakhov.autodocs.document.BaseTemplateInfo;
 import ru.nsu.astakhov.autodocs.document.YamlConfig;
 import ru.nsu.astakhov.autodocs.document.generator.table.InternshipSupervisorReviewTableProcessor;
+import ru.nsu.astakhov.autodocs.document.generator.table.ThesisCalendarScheduleTableProcessor;
 import ru.nsu.astakhov.autodocs.document.generator.table.ThesisSupervisorReviewTableProcessor;
 
 import java.io.FileOutputStream;
@@ -69,17 +70,25 @@ public class PreparedTemplateGenerator extends AbstractGenerator<YamlConfig> {
     @Override
     protected void applyTableReplacement(XWPFRun run, XWPFTable table, Matcher matcher, YamlConfig yamlConfig, StringBuilder result) {
         String key = matcher.group(1); // ключ без $()
-        if (key.equals("компетенции")) {
-            InternshipSupervisorReviewTableProcessor tableProcessor = new InternshipSupervisorReviewTableProcessor();
-            tableProcessor.removeMarkerRow(table, "компетенции");
-            tableProcessor.addCompetencies(table, yamlConfig.getCompetencies());
-            return;
-        }
-        else if (key.equals("компетенцииВКР")) {
-            ThesisSupervisorReviewTableProcessor tableProcessor = new ThesisSupervisorReviewTableProcessor();
-            tableProcessor.removeMarkerRow(table, "компетенцииВКР");
-            tableProcessor.addCompetencies(table, yamlConfig.getThesisCompetencies());
-            return;
+        switch (key) {
+            case "компетенции" -> {
+                InternshipSupervisorReviewTableProcessor tableProcessor = new InternshipSupervisorReviewTableProcessor();
+                tableProcessor.removeMarkerRow(table, "компетенции");
+                tableProcessor.addCompetencies(table, yamlConfig.getCompetencies());
+                return;
+            }
+            case "компетенцииВКР" -> {
+                ThesisSupervisorReviewTableProcessor tableProcessor = new ThesisSupervisorReviewTableProcessor();
+                tableProcessor.removeMarkerRow(table, "компетенцииВКР");
+                tableProcessor.addCompetencies(table, yamlConfig.getThesisCompetencies());
+                return;
+            }
+            case "переченьПоСтепени" -> {
+                ThesisCalendarScheduleTableProcessor tableProcessor = new ThesisCalendarScheduleTableProcessor();
+                tableProcessor.removeMarkerRow(table, "переченьПоСтепени");
+                tableProcessor.addListTopic(table, yamlConfig.getCalendarTopics());
+                return;
+            }
         }
 
         applyDefaultReplacement(run, matcher, yamlConfig, key, result);

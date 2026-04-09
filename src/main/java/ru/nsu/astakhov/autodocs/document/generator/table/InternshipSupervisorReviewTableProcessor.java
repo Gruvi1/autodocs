@@ -65,7 +65,7 @@ public class InternshipSupervisorReviewTableProcessor extends TableProcessor {
         removeAllCells(lastRow);
 
         XWPFTableCell lastCell = lastRow.createCell();
-        lastCell.getCTTc().addNewTcPr().addNewGridSpan().setVal(BigInteger.valueOf(columnCount - 4));
+        lastCell.getCTTc().addNewTcPr().addNewGridSpan().setVal(BigInteger.valueOf(columnCount - 4L));
         lastCell.getParagraphs().getFirst().setAlignment(ParagraphAlignment.CENTER);
         lastCell.setVerticalAlignment(XWPFTableCell.XWPFVertAlign.CENTER);
 
@@ -76,7 +76,7 @@ public class InternshipSupervisorReviewTableProcessor extends TableProcessor {
         addTextInCell(lastCell, description);
 
         XWPFTableCell lastCell2 = lastRow.createCell();
-        lastCell2.getCTTc().addNewTcPr().addNewGridSpan().setVal(BigInteger.valueOf(columnCount - 2));
+        lastCell2.getCTTc().addNewTcPr().addNewGridSpan().setVal(BigInteger.valueOf(columnCount - 2L));
         lastCell2.getParagraphs().getFirst().setAlignment(ParagraphAlignment.CENTER);
         lastCell2.setVerticalAlignment(XWPFTableCell.XWPFVertAlign.CENTER);
         XWPFRun markRun = addTextInCell(lastCell2, "Отлично");

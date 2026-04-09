@@ -16,23 +16,67 @@ public class RussianWordDecliner {
         return petrovich.gender(patronymic, Gender.Both);
     }
 
-    public String getStudentFormByGender(Gender gender) {
+    public String getFormalStudentByGender(Gender gender) {
         final String maleStudent = "Обучающийся";
         final String femaleStudent = "Обучающаяся";
 
         return gender == Gender.Male ? maleStudent : femaleStudent;
     }
 
-    public String getGenitiveStudentFormByGender(Gender gender) {
+    public String getGenitiveFormalStudentByGender(Gender gender) {
         final String maleGenitiveStudent = "Обучающегося";
         final String femaleGenitiveStudent = "Обучающейся";
 
         return gender == Gender.Male ? maleGenitiveStudent : femaleGenitiveStudent;
     }
 
+    public String getCommonStudentByGender(Gender gender) {
+        final String maleStudent = "Студент";
+        final String femaleStudent = "Студентка";
+
+        return gender == Gender.Male ? maleStudent : femaleStudent;
+    }
+
+    public String getInstrumentalCommonStudentByGender(Gender gender) {
+        final String maleGenitiveStudent = "студентом";
+        final String femaleGenitiveStudent = "студенткой";
+
+        return gender == Gender.Male ? maleGenitiveStudent : femaleGenitiveStudent;
+    }
+
     public String getFullNameInGenitiveCase(String fullName, Gender gender) {
         Case correctCase = Case.Genitive;
+        return getFullNameInCorrectCase(fullName, gender, correctCase);
+    }
 
+    public String getFullNameInInstrumentalCase(String fullName, Gender gender) {
+        Case correctCase = Case.Instrumental;
+        return getFullNameInCorrectCase(fullName, gender, correctCase);
+    }
+
+    // И. О. Фамилия
+    public String getAbbreviatedName(String fullName) {
+        String[] nameParts = fullName.split(" ");
+
+        char name = nameParts[1].charAt(0);
+        char patronymic = nameParts[2].charAt(0);
+        String surname = nameParts[0];
+
+        return name + ". " + patronymic + ". " + surname;
+    }
+
+    // Фамилия И. О.
+    public String getAbbreviatedName2(String fullName) {
+        String[] nameParts = fullName.split(" ");
+
+        char name = nameParts[1].charAt(0);
+        char patronymic = nameParts[2].charAt(0);
+        String surname = nameParts[0];
+
+        return surname + " " + name + ". " + patronymic + ".";
+    }
+
+    private String getFullNameInCorrectCase(String fullName, Gender gender, Case correctCase) {
         String[] nameParts = fullName.split(" ");
 
         if (nameParts.length == 3) {

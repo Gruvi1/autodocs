@@ -6,6 +6,7 @@ import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import ru.nsu.astakhov.autodocs.document.RussianWordDecliner;
 import ru.nsu.astakhov.autodocs.document.PreparedTemplateInfo;
+import ru.nsu.astakhov.autodocs.document.generator.table.ThesisFrontPageTableProcessor;
 import ru.nsu.astakhov.autodocs.exceptions.GenderResolutionException;
 import ru.nsu.astakhov.autodocs.model.StudentDto;
 
@@ -16,6 +17,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Locale;
 import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -35,87 +37,89 @@ public class DocumentGenerator extends AbstractGenerator<StudentDto> {
     }
 
     private static final Map<String, Function<StudentDto, String>> RESOLVERS = Map.ofEntries(
-            entry("fullName", StudentDto::fullName),
+            entry("fullname", StudentDto::fullName),
             entry("course", tempDto -> String.valueOf(tempDto.course().getValue())),
             entry("email", StudentDto::email),
-            entry("phoneNumber", StudentDto::phoneNumber),
-            entry("eduProgram", tempDto -> tempDto.eduProgram().getValue()),
-            entry("groupName", StudentDto::groupName),
+            entry("phonenumber", StudentDto::phoneNumber),
+            entry("eduprogram", tempDto -> tempDto.eduProgram().getValue()),
+            entry("groupname", StudentDto::groupName),
             entry("specialization", tempDto -> tempDto.specialization().getValue()),
-            entry("orderOnApprovalTopic", StudentDto::orderOnApprovalTopic),
-            entry("orderOnCorrectionTopic", StudentDto::orderOnCorrectionTopic),
-            entry("actualSupervisor", StudentDto::actualSupervisor),
-            entry("thesisCoSupervisor", StudentDto::thesisCoSupervisor),
-            entry("thesisConsultant", StudentDto::thesisConsultant),
-            entry("thesisTopic", StudentDto::thesisTopic),
+            entry("orderonapprovaltopic", StudentDto::orderOnApprovalTopic),
+            entry("orderoncorrectiontopic", StudentDto::orderOnCorrectionTopic),
+            entry("actualsupervisor", StudentDto::actualSupervisor),
+            entry("thesiscosupervisor", StudentDto::thesisCoSupervisor),
+            entry("thesisconsultant", StudentDto::thesisConsultant),
+            entry("thesistopic", StudentDto::thesisTopic),
             entry("reviewer", StudentDto::reviewer),
-            entry("internshipType", tempDto -> tempDto.internshipType().getValue()),
-            entry("thesisSupervisor.name", tempDto -> tempDto.thesisSupervisor().name()),
-            entry("thesisSupervisor.position", tempDto -> tempDto.thesisSupervisor().position()),
-            entry("thesisSupervisor.degree", tempDto -> tempDto.thesisSupervisor().degree()),
-            entry("thesisSupervisor.title", tempDto -> tempDto.thesisSupervisor().title()),
-            entry("fullOrganizationName", StudentDto::fullOrganizationName),
-            entry("NSUSupervisor.name", tempDto -> tempDto.NSUSupervisor().name()),
-            entry("NSUSupervisor.position", tempDto -> tempDto.NSUSupervisor().position()),
-            entry("NSUSupervisor.degree", tempDto -> tempDto.NSUSupervisor().degree()),
-            entry("NSUSupervisor.title", tempDto -> tempDto.NSUSupervisor().title()),
-            entry("organizationSupervisor.name", tempDto -> tempDto.organizationSupervisor().name()),
-            entry("organizationSupervisor.position", tempDto -> tempDto.organizationSupervisor().position()),
-            entry("organizationSupervisor.degree", tempDto -> tempDto.organizationSupervisor().degree()),
-            entry("organizationSupervisor.title", tempDto -> tempDto.organizationSupervisor().title()),
-            entry("administrativeActFromOrganization", StudentDto::administrativeActFromOrganization),
-            entry("fullPlaceOfInternship", StudentDto::fullPlaceOfInternship),
-            entry("organizationName", StudentDto::organizationName)
+            entry("internshiptype", tempDto -> tempDto.internshipType().getValue()),
+            entry("thesissupervisor.name", tempDto -> tempDto.thesisSupervisor().name()),
+            entry("thesissupervisor.position", tempDto -> tempDto.thesisSupervisor().position()),
+            entry("thesissupervisor.degree", tempDto -> tempDto.thesisSupervisor().degree()),
+            entry("thesissupervisor.title", tempDto -> tempDto.thesisSupervisor().title()),
+            entry("fullorganizationname", StudentDto::fullOrganizationName),
+            entry("nsusupervisor.name", tempDto -> tempDto.NSUSupervisor().name()),
+            entry("nsusupervisor.position", tempDto -> tempDto.NSUSupervisor().position()),
+            entry("nsusupervisor.degree", tempDto -> tempDto.NSUSupervisor().degree()),
+            entry("nsusupervisor.title", tempDto -> tempDto.NSUSupervisor().title()),
+            entry("organizationsupervisor.name", tempDto -> tempDto.organizationSupervisor().name()),
+            entry("organizationsupervisor.position", tempDto -> tempDto.organizationSupervisor().position()),
+            entry("organizationsupervisor.degree", tempDto -> tempDto.organizationSupervisor().degree()),
+            entry("organizationsupervisor.title", tempDto -> tempDto.organizationSupervisor().title()),
+            entry("administrativeactfromorganization", StudentDto::administrativeActFromOrganization),
+            entry("fullplaceofinternship", StudentDto::fullPlaceOfInternship),
+            entry("organizationname", StudentDto::organizationName)
     );
 
     private static final Map<String, Function<StudentDto, String>> RESOLVERS_RUS = Map.ofEntries(
-            entry("полноеИмя", StudentDto::fullName),
+            entry("полноеимя", StudentDto::fullName),
             entry("курс", tempDto -> String.valueOf(tempDto.course().getValue())),
             entry("почта", StudentDto::email),
             entry("телефон", StudentDto::phoneNumber),
-            entry("образПрограмма", tempDto -> tempDto.eduProgram().getValue()),
+            entry("образпрограмма", tempDto -> tempDto.eduProgram().getValue()),
             entry("группа", StudentDto::groupName),
             entry("специализация", tempDto -> tempDto.specialization().getValue()),
-            entry("утверждениеТемы", StudentDto::orderOnApprovalTopic),
-            entry("корректировкаТемы", StudentDto::orderOnCorrectionTopic),
+            entry("утверждениетемы", StudentDto::orderOnApprovalTopic),
+            entry("корректировкатемы", StudentDto::orderOnCorrectionTopic),
             entry("фактический", StudentDto::actualSupervisor),
-            entry("соруководительВКР.имя", StudentDto::thesisCoSupervisor),
-            entry("консультантВКР", StudentDto::thesisConsultant),
-            entry("темаВКР", StudentDto::thesisTopic),
+            entry("соруководительвкр.имя", StudentDto::thesisCoSupervisor),
+            entry("соруководительвкр.должность", tempDto -> "TODO: ЗАГЛУШКА"),
+            entry("консультантвкр", StudentDto::thesisConsultant),
+            entry("темавкр", StudentDto::thesisTopic),
             entry("рецензент", StudentDto::reviewer),
-            entry("видПрактики", tempDto -> tempDto.internshipType().getValue()),
-            entry("руководительВКР.имя", tempDto -> tempDto.thesisSupervisor().name()),
-            entry("руководительВКР.должность", tempDto -> tempDto.thesisSupervisor().position()),
-            entry("руководительВКР.степень", tempDto -> tempDto.thesisSupervisor().degree()),
-            entry("руководительВКР.звание", tempDto -> tempDto.thesisSupervisor().title()),
-            entry("полноеИмяОрганизации", StudentDto::fullOrganizationName),
-            entry("руководительНГУ.имя", tempDto -> tempDto.NSUSupervisor().name()),
-            entry("руководительНГУ.должность", tempDto -> tempDto.NSUSupervisor().position()),
-            entry("руководительНГУ.степень", tempDto -> tempDto.NSUSupervisor().degree()),
-            entry("руководительНГУ.звание", tempDto -> tempDto.NSUSupervisor().title()),
-            entry("руководительОрганизации.имя", tempDto -> tempDto.organizationSupervisor().name()),
-            entry("руководительОрганизации.должность", tempDto -> tempDto.organizationSupervisor().position()),
-            entry("руководительОрганизации.степень", tempDto -> tempDto.organizationSupervisor().degree()),
-            entry("руководительОрганизации.звание", tempDto -> tempDto.organizationSupervisor().title()),
-            entry("актОтОрганизации", StudentDto::administrativeActFromOrganization),
-            entry("местоПрактикиПолностью", StudentDto::fullPlaceOfInternship),
-            entry("наименованиеОрганизации", StudentDto::organizationName),
-            entry("датаВыдачиЗаданияПрактики", StudentDto::dateOfPracticeAssignment)
+            entry("видпрактики", tempDto -> tempDto.internshipType().getValue()),
+            entry("руководительвкр.имя", tempDto -> tempDto.thesisSupervisor().name()),
+            entry("руководительвкр.должность", tempDto -> tempDto.thesisSupervisor().position()),
+            entry("руководительвкр.степень", tempDto -> tempDto.thesisSupervisor().degree()),
+            entry("руководительвкр.звание", tempDto -> tempDto.thesisSupervisor().title()),
+            entry("руководительвкр.работангу", tempDto -> "TODO: ЗАГЛУШКА"),
+            entry("полноеимяорганизации", StudentDto::fullOrganizationName),
+            entry("руководительнгу.имя", tempDto -> tempDto.NSUSupervisor().name()),
+            entry("руководительнгу.должность", tempDto -> tempDto.NSUSupervisor().position()),
+            entry("руководительнгу.степень", tempDto -> tempDto.NSUSupervisor().degree()),
+            entry("руководительнгу.звание", tempDto -> tempDto.NSUSupervisor().title()),
+            entry("руководительорганизации.имя", tempDto -> tempDto.organizationSupervisor().name()),
+            entry("руководительорганизации.должность", tempDto -> tempDto.organizationSupervisor().position()),
+            entry("руководительорганизации.степень", tempDto -> tempDto.organizationSupervisor().degree()),
+            entry("руководительорганизации.звание", tempDto -> tempDto.organizationSupervisor().title()),
+            entry("актоторганизации", StudentDto::administrativeActFromOrganization),
+            entry("местопрактикиполностью", StudentDto::fullPlaceOfInternship),
+            entry("наименованиеорганизации", StudentDto::organizationName),
+            entry("датавыдачизаданияпрактики", StudentDto::dateOfPracticeAssignment)
     );
 
     private static final Map<String, BiFunction<StudentDto, RussianWordDecliner, String>> ADDITIONAL_RESOLVERS = Map.ofEntries(
-            entry("genitiveStudentForm", (student, decliner) -> {
+            entry("genitivestudentform", (student, decliner) -> {
                 Gender gender = student.gender();
                 if (gender != null) {
-                    return decliner.getGenitiveStudentFormByGender(gender);
+                    return decliner.getGenitiveFormalStudentByGender(gender);
                 }
                 String[] nameParts = student.fullName().split(" ");
                 if (nameParts.length != 3 || (gender = decliner.getGenderByPatronymic(nameParts[2])) == Gender.Both) {
                     throw new GenderResolutionException(student);
                 }
-                return decliner.getGenitiveStudentFormByGender(gender);
+                return decliner.getGenitiveFormalStudentByGender(gender);
             }),
-            entry("genitiveFullName", (student, decliner) -> {
+            entry("genitivefullname", (student, decliner) -> {
                 String fullName = student.fullName();
                 Gender gender = student.gender();
                 if (gender != null) {
@@ -127,32 +131,32 @@ public class DocumentGenerator extends AbstractGenerator<StudentDto> {
                 }
                 return decliner.getFullNameInGenitiveCase(fullName, gender);
             }),
-            entry("studentForm", (student, decliner) -> {
+            entry("studentform", (student, decliner) -> {
                 Gender gender = student.gender();
                 if (gender != null) {
-                    return decliner.getStudentFormByGender(gender);
+                    return decliner.getFormalStudentByGender(gender);
                 }
                 String[] nameParts = student.fullName().split(" ");
                 if (nameParts.length != 3 || (gender = decliner.getGenderByPatronymic(nameParts[2])) == Gender.Both) {
                     throw new GenderResolutionException(student);
                 }
-                return decliner.getStudentFormByGender(gender);
+                return decliner.getFormalStudentByGender(gender);
             })
     );
 
     private static final Map<String, BiFunction<StudentDto, RussianWordDecliner, String>> ADDITIONAL_RESOLVERS_RUS = Map.ofEntries(
-            entry("полОбучающегося", (student, decliner) -> {
+            entry("полобучающегося", (student, decliner) -> {
                 Gender gender = student.gender();
                 if (gender != null) {
-                    return decliner.getGenitiveStudentFormByGender(gender);
+                    return decliner.getGenitiveFormalStudentByGender(gender);
                 }
                 String[] nameParts = student.fullName().split(" ");
                 if (nameParts.length != 3 || (gender = decliner.getGenderByPatronymic(nameParts[2])) == Gender.Both) {
                     throw new GenderResolutionException(student);
                 }
-                return decliner.getGenitiveStudentFormByGender(gender);
+                return decliner.getGenitiveFormalStudentByGender(gender);
             }),
-            entry("полноеИмяРодительный", (student, decliner) -> {
+            entry("полноеимяродительный", (student, decliner) -> {
                 String fullName = student.fullName();
                 Gender gender = student.gender();
                 if (gender != null) {
@@ -164,17 +168,59 @@ public class DocumentGenerator extends AbstractGenerator<StudentDto> {
                 }
                 return decliner.getFullNameInGenitiveCase(fullName, gender);
             }),
-            entry("полОбучающийся", (student, decliner) -> {
+            entry("полобучающийся", (student, decliner) -> {
                 Gender gender = student.gender();
                 if (gender != null) {
-                    return decliner.getStudentFormByGender(gender);
+                    return decliner.getFormalStudentByGender(gender);
                 }
                 String[] nameParts = student.fullName().split(" ");
                 if (nameParts.length != 3 || (gender = decliner.getGenderByPatronymic(nameParts[2])) == Gender.Both) {
                     throw new GenderResolutionException(student);
                 }
-                return decliner.getStudentFormByGender(gender);
-            })
+                return decliner.getFormalStudentByGender(gender);
+            }),
+            entry("полстудент", (student, decliner) -> {
+                Gender gender = student.gender();
+                if (gender != null) {
+                    return decliner.getCommonStudentByGender(gender);
+                }
+                String[] nameParts = student.fullName().split(" ");
+                if (nameParts.length != 3 || (gender = decliner.getGenderByPatronymic(nameParts[2])) == Gender.Both) {
+                    throw new GenderResolutionException(student);
+                }
+                return decliner.getCommonStudentByGender(gender);
+            }),
+            entry("иофамилиястудента", (student, decliner) ->
+                    decliner.getAbbreviatedName(student.fullName())
+            ),
+            entry("полстудентом", (student, decliner) -> {
+                Gender gender = student.gender();
+                if (gender != null) {
+                    return decliner.getInstrumentalCommonStudentByGender(gender);
+                }
+                String[] nameParts = student.fullName().split(" ");
+                if (nameParts.length != 3 || (gender = decliner.getGenderByPatronymic(nameParts[2])) == Gender.Both) {
+                    throw new GenderResolutionException(student);
+                }
+                return decliner.getInstrumentalCommonStudentByGender(gender);
+            }),
+            entry("полноеимятворительный", (student, decliner) -> {
+                String fullName = student.fullName();
+                Gender gender = student.gender();
+                if (gender != null) {
+                    return decliner.getFullNameInInstrumentalCase(fullName, gender);
+                }
+                String[] nameParts = fullName.split(" ");
+                if (nameParts.length != 3 || (gender = decliner.getGenderByPatronymic(nameParts[2])) == Gender.Both) {
+                    throw new GenderResolutionException(student);
+                }
+                return decliner.getFullNameInInstrumentalCase(fullName, gender);
+            }),
+            entry("руководительвкр.имякратко", (student, decliner) ->
+                decliner.getAbbreviatedName2(student.thesisSupervisor().name())
+            ),
+            entry("полноеимякратко", (student, decliner) ->
+                    decliner.getAbbreviatedName2(student.fullName()))
     );
 
     private void initOutputDirectory() {
@@ -216,6 +262,12 @@ public class DocumentGenerator extends AbstractGenerator<StudentDto> {
     @Override
     protected void applyTableReplacement(XWPFRun run, XWPFTable table, Matcher matcher, StudentDto studentDto, StringBuilder result) {
         String key = matcher.group(1); // ключ без $()
+        if (key.equals("соруководительТитульник")) {
+            ThesisFrontPageTableProcessor tableProcessor = new ThesisFrontPageTableProcessor();
+            tableProcessor.removeMarkerRow(table, "соруководительТитульник");
+            tableProcessor.addCoSupervisor(table);
+            return;
+        }
         applyDefaultReplacement(run, matcher, studentDto, key, result);
     }
 
@@ -225,20 +277,24 @@ public class DocumentGenerator extends AbstractGenerator<StudentDto> {
             StudentDto studentDto,
             String key,
             StringBuilder result) {
-
-        Function<StudentDto, String> resolver = RESOLVERS.get(key);
+        String normalizedKey = key.toLowerCase(Locale.ROOT);
+        Function<StudentDto, String> resolver = RESOLVERS.get(normalizedKey);
         String value;
+        System.out.println(normalizedKey);
         if (resolver == null) {
-            resolver = RESOLVERS_RUS.get(key);
+            resolver = RESOLVERS_RUS.get(normalizedKey);
         }
 
         if (resolver != null) {
             value = resolver.apply(studentDto);
         }
         else {
-            BiFunction<StudentDto, RussianWordDecliner, String> additionalResolver = ADDITIONAL_RESOLVERS.get(key);
+            BiFunction<StudentDto, RussianWordDecliner, String> additionalResolver = ADDITIONAL_RESOLVERS.get(normalizedKey);
             if (additionalResolver == null) {
-                additionalResolver = ADDITIONAL_RESOLVERS_RUS.get(key);
+                additionalResolver = ADDITIONAL_RESOLVERS_RUS.get(normalizedKey);
+            }
+            if (additionalResolver == null) {
+                throw new RuntimeException("Resolver is null by key: " + key);
             }
             value = additionalResolver.apply(studentDto, russianWordDecliner);
         }
