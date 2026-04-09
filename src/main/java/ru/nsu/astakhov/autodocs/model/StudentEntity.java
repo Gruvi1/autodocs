@@ -107,6 +107,15 @@ public class StudentEntity {
 
     private String dateOfPracticeAssignment; // Дата выдачи задания практик
 
+    private String thesisCoSupervisorDegree; // Ученая степень соруководителя ВКР
+
+    private String thesisCoSupervisorTitle; // Звание соруководителя ВКР
+
+    private String thesisCoSupervisorPositionAndJob; // Должность соруководителя ВКР, место работы
+
+    private String thesisSupervisorJob; // Место работы руководителя ВКР
+
+
     public void setEduProgram(String value) {
         EduProgram newEduProgram = EduProgram.fromValue(value);
         if (newEduProgram != null) {

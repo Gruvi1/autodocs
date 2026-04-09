@@ -9,7 +9,9 @@ import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTText;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -27,20 +29,30 @@ public abstract class AbstractGenerator<T> {
         }
 
         for (XWPFTable table : document.getTables()) {
-            List<XWPFParagraph> paragraphsToProcess = new ArrayList<>();
-            for (XWPFTableRow row : table.getRows()) {
-                for (XWPFTableCell cell : row.getTableCells()) {
-                    for (XWPFParagraph paragraph : cell.getParagraphs()) {
-                        if (containsAny(paragraph.getText())) {
-                            paragraphsToProcess.add(paragraph);
+            Set<XWPFParagraph> processed = new HashSet<>();
+            boolean hasChanges = true;
+
+            while (hasChanges) {
+                hasChanges = false;
+                List<XWPFParagraph> paragraphsToProcess = new ArrayList<>();
+                for (XWPFTableRow row : table.getRows()) {
+                    for (XWPFTableCell cell : row.getTableCells()) {
+                        for (XWPFParagraph paragraph : cell.getParagraphs()) {
+                            if (!processed.contains(paragraph) && containsAny(paragraph.getText())) {
+                                paragraphsToProcess.add(paragraph);
+                                processed.add(paragraph);
+                                hasChanges = true;
+                            }
                         }
                     }
                 }
+
+                for (XWPFParagraph paragraph : paragraphsToProcess) {
+                    processTableParagraph(table, paragraph, config);
+                }
             }
 
-            for (XWPFParagraph paragraph : paragraphsToProcess) {
-                processTableParagraph(table, paragraph, config);
-            }
+
         }
     }
 

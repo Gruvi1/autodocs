@@ -19,7 +19,15 @@ public enum ThesisColumnType {
     THESIS_CONSULTANT_NAME(10),
     THESIS_TOPIC(11),
     ACTUAL_SUPERVISOR(12),
-    REVIEWER(13);
+
+    // Only for masters
+    REVIEWER(13),
+
+    // Only for 4th bachelors and 2nd masters
+    THESIS_CO_SUPERVISOR_DEGREE(14),
+    THESIS_CO_SUPERVISOR_TITLE(15),
+    THESIS_CO_SUPERVISOR_POSITION_AND_JOB(16),
+    THESIS_SUPERVISOR_JOB(17);
 
     private final int columnNumber;
 }

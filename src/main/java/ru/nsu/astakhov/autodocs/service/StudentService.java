@@ -218,7 +218,6 @@ public class StudentService {
                 .collect(Collectors.toMap(StudentEntity::getFullName, Function.identity()));
 
         List<StudentEntity> entitiesToSave = new ArrayList<>();
-
         List<FieldConflict> collisions = new ArrayList<>();
 
         for (StudentDto dto : validDtos) {
@@ -229,7 +228,7 @@ public class StudentService {
             }
             else {
                 checkCollision(entity, dto, collisions);
-                mergeFromThesis(entity, dto); // TODO: временно мержим всё(плохо) из ВКР, но коллизии переопределим позже
+                mergeFromThesis(entity, dto); // TODO: временно мержим всё (плохо) из ВКР, но коллизии переопределим позже
             }
             entitiesToSave.add(entity);
         }
@@ -298,6 +297,10 @@ public class StudentService {
         entity.setThesisConsultant(dto.thesisConsultant());
         entity.setThesisTopic(dto.thesisTopic());
         entity.setReviewer(dto.reviewer());
+        entity.setThesisCoSupervisorDegree(dto.thesisCoSupervisorDegree());
+        entity.setThesisCoSupervisorTitle(dto.thesisCoSupervisorTitle());
+        entity.setThesisCoSupervisorPositionAndJob(dto.thesisCoSupervisorPositionAndJob());
+        entity.setThesisSupervisorJob(dto.thesisSupervisorJob());
     }
 
     private boolean isNullOrBlank(String field) {

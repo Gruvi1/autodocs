@@ -40,6 +40,9 @@ public class ThesisStrategy implements SheetStrategy {
             return null;
         }
 
+        // flag for scanning additional data about co-supervisors and thesis supervisors
+        boolean isSpecial = course == Course.FOURTH || course == Course.SECOND;
+
         try {
             return StudentDto.builder()
                     .fullName(readCellAsString(row, FULL_NAME.getColumnNumber()))
@@ -56,6 +59,10 @@ public class ThesisStrategy implements SheetStrategy {
                     .thesisConsultant(readCellAsString(row, THESIS_CONSULTANT_NAME.getColumnNumber()))
                     .thesisTopic(readCellAsString(row, THESIS_TOPIC.getColumnNumber()))
                     .reviewer(course.getValue() == 4 ? null : readCellAsString(row, REVIEWER.getColumnNumber()))
+                    .thesisCoSupervisorDegree(!isSpecial ? null : readCellAsString(row, THESIS_CO_SUPERVISOR_DEGREE.getColumnNumber()))
+                    .thesisCoSupervisorTitle(!isSpecial ? null : readCellAsString(row, THESIS_CO_SUPERVISOR_TITLE.getColumnNumber()))
+                    .thesisCoSupervisorPositionAndJob(!isSpecial ? null : readCellAsString(row, THESIS_CO_SUPERVISOR_POSITION_AND_JOB.getColumnNumber()))
+                    .thesisSupervisorJob(!isSpecial ? null : readCellAsString(row, THESIS_SUPERVISOR_JOB.getColumnNumber()))
                     .build();
         }
         catch (IllegalArgumentException e) {

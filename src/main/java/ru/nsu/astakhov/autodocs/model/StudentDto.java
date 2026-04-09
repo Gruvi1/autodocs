@@ -29,6 +29,10 @@ public record StudentDto(
         String administrativeActFromOrganization,
         String fullPlaceOfInternship,
         String organizationName,
-        String dateOfPracticeAssignment
+        String dateOfPracticeAssignment,
+        String thesisCoSupervisorDegree,
+        String thesisCoSupervisorTitle,
+        String thesisCoSupervisorPositionAndJob,
+        String thesisSupervisorJob
 ) {
 }

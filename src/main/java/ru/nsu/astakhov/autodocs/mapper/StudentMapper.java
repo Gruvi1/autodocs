@@ -43,6 +43,10 @@ public final class StudentMapper {
                 .fullPlaceOfInternship(entity.getFullPlaceOfInternship())
                 .organizationName(entity.getOrganizationName())
                 .dateOfPracticeAssignment(entity.getDateOfPracticeAssignment())
+                .thesisCoSupervisorDegree(entity.getThesisCoSupervisorDegree())
+                .thesisCoSupervisorTitle(entity.getThesisCoSupervisorTitle())
+                .thesisCoSupervisorPositionAndJob(entity.getThesisCoSupervisorPositionAndJob())
+                .thesisSupervisorJob(entity.getThesisSupervisorJob())
                 .build();
     }
 
@@ -79,6 +83,10 @@ public final class StudentMapper {
                 .fullPlaceOfInternship(dto.fullPlaceOfInternship())
                 .organizationName(dto.organizationName())
                 .dateOfPracticeAssignment(dto.dateOfPracticeAssignment())
+                .thesisCoSupervisorDegree(dto.thesisCoSupervisorDegree())
+                .thesisCoSupervisorTitle(dto.thesisCoSupervisorTitle())
+                .thesisCoSupervisorPositionAndJob(dto.thesisCoSupervisorPositionAndJob())
+                .thesisSupervisorJob(dto.thesisSupervisorJob())
                 .build();
     }
 }

@@ -82,7 +82,6 @@ public class DocumentGenerator extends AbstractGenerator<StudentDto> {
             entry("корректировкатемы", StudentDto::orderOnCorrectionTopic),
             entry("фактический", StudentDto::actualSupervisor),
             entry("соруководительвкр.имя", StudentDto::thesisCoSupervisor),
-            entry("соруководительвкр.должность", tempDto -> "TODO: ЗАГЛУШКА"),
             entry("консультантвкр", StudentDto::thesisConsultant),
             entry("темавкр", StudentDto::thesisTopic),
             entry("рецензент", StudentDto::reviewer),
@@ -91,7 +90,6 @@ public class DocumentGenerator extends AbstractGenerator<StudentDto> {
             entry("руководительвкр.должность", tempDto -> tempDto.thesisSupervisor().position()),
             entry("руководительвкр.степень", tempDto -> tempDto.thesisSupervisor().degree()),
             entry("руководительвкр.звание", tempDto -> tempDto.thesisSupervisor().title()),
-            entry("руководительвкр.работангу", tempDto -> "TODO: ЗАГЛУШКА"),
             entry("полноеимяорганизации", StudentDto::fullOrganizationName),
             entry("руководительнгу.имя", tempDto -> tempDto.NSUSupervisor().name()),
             entry("руководительнгу.должность", tempDto -> tempDto.NSUSupervisor().position()),
@@ -104,7 +102,11 @@ public class DocumentGenerator extends AbstractGenerator<StudentDto> {
             entry("актоторганизации", StudentDto::administrativeActFromOrganization),
             entry("местопрактикиполностью", StudentDto::fullPlaceOfInternship),
             entry("наименованиеорганизации", StudentDto::organizationName),
-            entry("датавыдачизаданияпрактики", StudentDto::dateOfPracticeAssignment)
+            entry("датавыдачизаданияпрактики", StudentDto::dateOfPracticeAssignment),
+            entry("соруководительвкр.степень", StudentDto::thesisCoSupervisorDegree),
+            entry("соруководительвкр.звание", StudentDto::thesisCoSupervisorTitle),
+            entry("соруководительвкр.должность.работангу", StudentDto::thesisCoSupervisorPositionAndJob),
+            entry("руководительвкр.работангу", StudentDto::thesisSupervisorJob)
     );
 
     private static final Map<String, BiFunction<StudentDto, RussianWordDecliner, String>> ADDITIONAL_RESOLVERS = Map.ofEntries(
@@ -220,7 +222,11 @@ public class DocumentGenerator extends AbstractGenerator<StudentDto> {
                 decliner.getAbbreviatedName2(student.thesisSupervisor().name())
             ),
             entry("полноеимякратко", (student, decliner) ->
-                    decliner.getAbbreviatedName2(student.fullName()))
+                    decliner.getAbbreviatedName2(student.fullName())
+            ),
+            entry("соруководительвкр.имякратко", (student, decliner) ->
+                    decliner.getAbbreviatedName2(student.thesisCoSupervisor())
+            )
     );
 
     private void initOutputDirectory() {
@@ -265,7 +271,9 @@ public class DocumentGenerator extends AbstractGenerator<StudentDto> {
         if (key.equals("соруководительТитульник")) {
             ThesisFrontPageTableProcessor tableProcessor = new ThesisFrontPageTableProcessor();
             tableProcessor.removeMarkerRow(table, "соруководительТитульник");
-            tableProcessor.addCoSupervisor(table);
+            if (studentDto.thesisCoSupervisor() != null && !studentDto.thesisCoSupervisor().isBlank()) {
+                tableProcessor.addCoSupervisor(table);
+            }
             return;
         }
         applyDefaultReplacement(run, matcher, studentDto, key, result);
@@ -280,7 +288,6 @@ public class DocumentGenerator extends AbstractGenerator<StudentDto> {
         String normalizedKey = key.toLowerCase(Locale.ROOT);
         Function<StudentDto, String> resolver = RESOLVERS.get(normalizedKey);
         String value;
-        System.out.println(normalizedKey);
         if (resolver == null) {
             resolver = RESOLVERS_RUS.get(normalizedKey);
         }
@@ -301,7 +308,7 @@ public class DocumentGenerator extends AbstractGenerator<StudentDto> {
         // TODO: пометить плейсхолдеры в документах "заявление на практику" жёлтым
         // TODO: исправить уведомление "разрешение конфликтов" при генерации. Оно не исчезает
         if (value == null) {
-            throw new IllegalStateException("Value is empty: " + key + ":" + studentDto.fullName() + ":" + studentDto.dateOfPracticeAssignment());
+            throw new IllegalStateException("Value is empty: " + key + ":" + studentDto.fullName() + ":" + studentDto.thesisSupervisorJob());
         }
         if (!value.isBlank()) {
             run.setTextHighlightColor("white");
