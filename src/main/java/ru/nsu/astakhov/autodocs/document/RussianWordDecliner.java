@@ -20,32 +20,44 @@ public class RussianWordDecliner {
         final String maleStudent = "Обучающийся";
         final String femaleStudent = "Обучающаяся";
 
-        return gender == Gender.Male ? maleStudent : femaleStudent;
+        return gender == Gender.Female ? femaleStudent : maleStudent;
     }
 
     public String getGenitiveFormalStudentByGender(Gender gender) {
         final String maleGenitiveStudent = "Обучающегося";
         final String femaleGenitiveStudent = "Обучающейся";
 
-        return gender == Gender.Male ? maleGenitiveStudent : femaleGenitiveStudent;
+        return gender == Gender.Female ? femaleGenitiveStudent : maleGenitiveStudent;
     }
 
     public String getCommonStudentByGender(Gender gender) {
         final String maleStudent = "Студент";
         final String femaleStudent = "Студентка";
 
-        return gender == Gender.Male ? maleStudent : femaleStudent;
+        return gender == Gender.Female ? femaleStudent : maleStudent;
+    }
+
+    public String getDativeStudentByGender(Gender gender) {
+        final String maleDativeStudent = "Студенту";
+        final String femaleDativeStudent = "Студентке";
+
+        return gender == Gender.Female ? femaleDativeStudent : maleDativeStudent;
     }
 
     public String getInstrumentalCommonStudentByGender(Gender gender) {
-        final String maleGenitiveStudent = "студентом";
-        final String femaleGenitiveStudent = "студенткой";
+        final String maleInstrumentalStudent = "студентом";
+        final String femaleInstrumentalStudent = "студенткой";
 
-        return gender == Gender.Male ? maleGenitiveStudent : femaleGenitiveStudent;
+        return gender == Gender.Female ? femaleInstrumentalStudent : maleInstrumentalStudent;
     }
 
     public String getFullNameInGenitiveCase(String fullName, Gender gender) {
         Case correctCase = Case.Genitive;
+        return getFullNameInCorrectCase(fullName, gender, correctCase);
+    }
+
+    public String getFullNameInDativeCase(String fullName, Gender gender) {
+        Case correctCase = Case.Dative;
         return getFullNameInCorrectCase(fullName, gender, correctCase);
     }
 

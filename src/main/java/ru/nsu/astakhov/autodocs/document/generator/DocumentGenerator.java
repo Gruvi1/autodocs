@@ -6,6 +6,7 @@ import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import ru.nsu.astakhov.autodocs.document.RussianWordDecliner;
 import ru.nsu.astakhov.autodocs.document.PreparedTemplateInfo;
+import ru.nsu.astakhov.autodocs.document.generator.table.ThesisAssignmentTableProcessor;
 import ru.nsu.astakhov.autodocs.document.generator.table.ThesisFrontPageTableProcessor;
 import ru.nsu.astakhov.autodocs.exceptions.GenderResolutionException;
 import ru.nsu.astakhov.autodocs.model.StudentDto;
@@ -226,7 +227,30 @@ public class DocumentGenerator extends AbstractGenerator<StudentDto> {
             ),
             entry("соруководительвкр.имякратко", (student, decliner) ->
                     decliner.getAbbreviatedName2(student.thesisCoSupervisor())
-            )
+            ),
+            entry("полстуденту", (student, decliner) -> {
+                Gender gender = student.gender();
+                if (gender != null) {
+                    return decliner.getDativeStudentByGender(gender);
+                }
+                String[] nameParts = student.fullName().split(" ");
+                if (nameParts.length != 3 || (gender = decliner.getGenderByPatronymic(nameParts[2])) == Gender.Both) {
+                    throw new GenderResolutionException(student);
+                }
+                return decliner.getDativeStudentByGender(gender);
+            }),
+            entry("полноеимядательный", (student, decliner) -> {
+                String fullName = student.fullName();
+                Gender gender = student.gender();
+                if (gender != null) {
+                    return decliner.getFullNameInDativeCase(fullName, gender);
+                }
+                String[] nameParts = fullName.split(" ");
+                if (nameParts.length != 3 || (gender = decliner.getGenderByPatronymic(nameParts[2])) == Gender.Both) {
+                    throw new GenderResolutionException(student);
+                }
+                return decliner.getFullNameInDativeCase(fullName, gender);
+            })
     );
 
     private void initOutputDirectory() {
@@ -268,15 +292,25 @@ public class DocumentGenerator extends AbstractGenerator<StudentDto> {
     @Override
     protected void applyTableReplacement(XWPFRun run, XWPFTable table, Matcher matcher, StudentDto studentDto, StringBuilder result) {
         String key = matcher.group(1); // ключ без $()
-        if (key.equals("соруководительТитульник")) {
-            ThesisFrontPageTableProcessor tableProcessor = new ThesisFrontPageTableProcessor();
-            tableProcessor.removeMarkerRow(table, "соруководительТитульник");
-            if (studentDto.thesisCoSupervisor() != null && !studentDto.thesisCoSupervisor().isBlank()) {
-                tableProcessor.addCoSupervisor(table);
+        boolean hasCoSupervisor = studentDto.thesisCoSupervisor() != null && !studentDto.thesisCoSupervisor().isBlank();
+
+        switch (key) {
+            case "соруководительТитульник" -> {
+                ThesisFrontPageTableProcessor tableProcessor = new ThesisFrontPageTableProcessor();
+                tableProcessor.removeMarkerRow(table, key);
+                if (hasCoSupervisor) {
+                    tableProcessor.addCoSupervisor(table);
+                }
             }
-            return;
+            case "соруководительЗадание" -> {
+                ThesisAssignmentTableProcessor tableProcessor = new ThesisAssignmentTableProcessor();
+                tableProcessor.removeMarkerRow(table, key);
+                if (hasCoSupervisor) {
+                    tableProcessor.addCoSupervisor(table);
+                }
+            }
+            default -> applyDefaultReplacement(run, matcher, studentDto, key, result);
         }
-        applyDefaultReplacement(run, matcher, studentDto, key, result);
     }
 
     private void applyDefaultReplacement(

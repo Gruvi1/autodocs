@@ -73,25 +73,21 @@ public class PreparedTemplateGenerator extends AbstractGenerator<YamlConfig> {
         switch (key) {
             case "компетенции" -> {
                 InternshipSupervisorReviewTableProcessor tableProcessor = new InternshipSupervisorReviewTableProcessor();
-                tableProcessor.removeMarkerRow(table, "компетенции");
+                tableProcessor.removeMarkerRow(table, key);
                 tableProcessor.addCompetencies(table, yamlConfig.getCompetencies());
-                return;
             }
             case "компетенцииВКР" -> {
                 ThesisSupervisorReviewTableProcessor tableProcessor = new ThesisSupervisorReviewTableProcessor();
-                tableProcessor.removeMarkerRow(table, "компетенцииВКР");
+                tableProcessor.removeMarkerRow(table, key);
                 tableProcessor.addCompetencies(table, yamlConfig.getThesisCompetencies());
-                return;
             }
             case "переченьПоСтепени" -> {
                 ThesisCalendarScheduleTableProcessor tableProcessor = new ThesisCalendarScheduleTableProcessor();
-                tableProcessor.removeMarkerRow(table, "переченьПоСтепени");
+                tableProcessor.removeMarkerRow(table, key);
                 tableProcessor.addListTopic(table, yamlConfig.getCalendarTopics());
-                return;
             }
+            default -> applyDefaultReplacement(run, matcher, yamlConfig, key, result);
         }
-
-        applyDefaultReplacement(run, matcher, yamlConfig, key, result);
     }
 
     private void applyDefaultReplacement(
