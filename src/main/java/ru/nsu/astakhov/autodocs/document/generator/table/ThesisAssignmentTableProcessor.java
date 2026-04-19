@@ -37,7 +37,7 @@ public class ThesisAssignmentTableProcessor extends TableProcessor {
 
         XWPFTableRow row6 = removeAllCells(table.createRow());
         XWPFTableCell row6Cell1 = row6.createCell();
-        addTextInCell(row6Cell1, "«…»…………………20…г.");
+        addTextInCell(row6Cell1, "$(общаяДатаПодписи)");
         row6.createCell();
     }
 }

@@ -250,6 +250,26 @@ public class DocumentGenerator extends AbstractGenerator<StudentDto> {
                     throw new GenderResolutionException(student);
                 }
                 return decliner.getFullNameInDativeCase(fullName, gender);
+            }),
+            entry("общаядатаподписи", (student, decliner) -> {
+                String orderOnCorrection = student.orderOnCorrectionTopic();
+                String date;
+                if (orderOnCorrection != null &&  !orderOnCorrection.isBlank()) {
+                    date = orderOnCorrection.split(" ")[2];
+                }
+                else {
+                    date = student.orderOnApprovalTopic().split(" ")[2];
+                }
+                return date;
+            }),
+            entry("корректировкатемыеслиесть", (student, decliner) -> {
+                String orderOnCorrection = student.orderOnCorrectionTopic();
+                if (orderOnCorrection == null || !orderOnCorrection.isBlank()) {
+                    return "";
+                }
+                else {
+                    return ", скорректирована распоряжением проректора по учебной работе " + orderOnCorrection;
+                }
             })
     );
 
