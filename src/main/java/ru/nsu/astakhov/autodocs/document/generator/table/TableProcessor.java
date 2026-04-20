@@ -39,9 +39,13 @@ public abstract class TableProcessor {
     }
 
     protected XWPFRun addTextInCell(XWPFTableCell cell, String text) {
+        return addTextInCell(cell, text, 11);
+    }
+
+    protected XWPFRun addTextInCell(XWPFTableCell cell, String text, int fontSize) {
         XWPFRun run = cell.getParagraphs().getFirst().createRun();
         run.setFontFamily("Times New Roman");
-        run.setFontSize(11);
+        run.setFontSize(fontSize);
         run.setText(text);
         return run;
     }

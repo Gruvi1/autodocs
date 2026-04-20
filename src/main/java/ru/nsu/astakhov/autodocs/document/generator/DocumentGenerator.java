@@ -264,8 +264,8 @@ public class DocumentGenerator extends AbstractGenerator<StudentDto> {
             }),
             entry("корректировкатемыеслиесть", (student, decliner) -> {
                 String orderOnCorrection = student.orderOnCorrectionTopic();
-                if (orderOnCorrection == null || !orderOnCorrection.isBlank()) {
-                    return "";
+                if (orderOnCorrection == null || orderOnCorrection.isBlank()) {
+                    return ".";
                 }
                 else {
                     return ", скорректирована распоряжением проректора по учебной работе " + orderOnCorrection;
@@ -313,6 +313,7 @@ public class DocumentGenerator extends AbstractGenerator<StudentDto> {
     protected void applyTableReplacement(XWPFRun run, XWPFTable table, Matcher matcher, StudentDto studentDto, StringBuilder result) {
         String key = matcher.group(1); // ключ без $()
         boolean hasCoSupervisor = studentDto.thesisCoSupervisor() != null && !studentDto.thesisCoSupervisor().isBlank();
+        boolean hasThesisConsultant = studentDto.thesisConsultant() != null && !studentDto.thesisConsultant().isBlank();
 
         switch (key) {
             case "соруководительТитульник" -> {
@@ -327,6 +328,13 @@ public class DocumentGenerator extends AbstractGenerator<StudentDto> {
                 tableProcessor.removeMarkerRow(table, key);
                 if (hasCoSupervisor) {
                     tableProcessor.addCoSupervisor(table);
+                }
+            }
+            case "консультантВКРЕслиЕсть" -> {
+                ThesisAssignmentTableProcessor tableProcessor = new ThesisAssignmentTableProcessor();
+                tableProcessor.removeMarkerRow(table, key);
+                if (hasThesisConsultant) {
+                    tableProcessor.addThesisConsultant(table);
                 }
             }
             default -> applyDefaultReplacement(run, matcher, studentDto, key, result);
@@ -377,7 +385,17 @@ public class DocumentGenerator extends AbstractGenerator<StudentDto> {
             run.setTextHighlightColor("white");
         }
 
-        if (!value.isBlank()) {
+        boolean replaceWithValue = !value.isBlank()
+                || normalizedKey.equals("руководительвкр.степень")
+                || normalizedKey.equals("руководительвкр.звание")
+                || normalizedKey.equals("руководительнгу.степень")
+                || normalizedKey.equals("руководительнгу.звание")
+                || normalizedKey.equals("руководительорганизации.степень")
+                || normalizedKey.equals("руководительорганизации.звание")
+                || normalizedKey.equals("соруководительвкр.степень")
+                || normalizedKey.equals("соруководительвкр.звание");
+
+        if (replaceWithValue) {
             matcher.appendReplacement(result, Matcher.quoteReplacement(value));
         }
         else {

@@ -1,5 +1,6 @@
 package ru.nsu.astakhov.autodocs.document.generator.table;
 
+import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
@@ -20,7 +21,7 @@ public class ThesisAssignmentTableProcessor extends TableProcessor {
 
         XWPFTableRow row3 = removeAllCells(table.createRow());
         XWPFTableCell row3Cell1 = row3.createCell();
-        XWPFRun run3 = addTextInCell(row3Cell1, "$(соруководительВКР.степень), $(соруководительВКР.звание)");
+        XWPFRun run3 = addTextInCell(row3Cell1, "$(соруководительВКР.степень) $(соруководительВКР.звание)");
         run3.setTextHighlightColor("yellow");
         row3.createCell();
 
@@ -39,5 +40,24 @@ public class ThesisAssignmentTableProcessor extends TableProcessor {
         XWPFTableCell row6Cell1 = row6.createCell();
         addTextInCell(row6Cell1, "$(общаяДатаПодписи)");
         row6.createCell();
+    }
+
+    public void addThesisConsultant(XWPFTable table) {
+        String text1 = "Консультанты по разделам ВКР (при необходимости, с указанием разделов):";
+        String text2 = "………………………………";
+        String text3 = ", $(консультантВКР)";
+        String text4 = "(раздел, ФИО)";
+        XWPFTableRow row = removeAllCells(table.createRow());
+
+        XWPFTableCell cell = row.createCell();
+        cell.getParagraphs().getFirst().setAlignment(ParagraphAlignment.LEFT);
+
+        addTextInCell(cell, text1, 12);
+        addTextInCell(cell, "").addBreak();
+        XWPFRun run2 = addTextInCell(cell, text2, 12);
+        run2.setTextHighlightColor("yellow");
+        addTextInCell(cell, text3, 12);
+        addTextInCell(cell, "").addBreak();
+        addTextInCell(cell, text4, 8);
     }
 }

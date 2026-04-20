@@ -15,7 +15,7 @@ public class ThesisFrontPageTableProcessor extends TableProcessor {
         XWPFTableRow row2 = removeAllCells(table.createRow());
         row2.createCell();
         XWPFTableCell row2Cell2 = row2.createCell();
-        XWPFRun run2 = addTextInCell(row2Cell2, "$(соруководительВКР.степень), $(соруководительВКР.звание)");
+        XWPFRun run2 = addTextInCell(row2Cell2, "$(соруководительВКР.степень) $(соруководительВКР.звание)");
         run2.setTextHighlightColor("yellow");
 
         XWPFTableRow row3 = removeAllCells(table.createRow());
@@ -38,6 +38,6 @@ public class ThesisFrontPageTableProcessor extends TableProcessor {
         XWPFTableRow row6 = removeAllCells(table.createRow());
         row6.createCell();
         XWPFTableCell row6Cell2 = row6.createCell();
-        addTextInCell(row6Cell2, "«…»…………………20…г.");
+        addTextInCell(row6Cell2, "«……» мая 2026 г.");
     }
 }
