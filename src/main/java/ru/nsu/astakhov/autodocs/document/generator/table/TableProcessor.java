@@ -50,6 +50,7 @@ public abstract class TableProcessor {
         return run;
     }
 
+    // TODO: удалить?
     protected void removeIndent(XWPFParagraph paragraph) {
         CTP ctp = paragraph.getCTP();
         CTPPr ppr = ctp.getPPr();
@@ -78,5 +79,10 @@ public abstract class TableProcessor {
         borders.setLeft(border);
         borders.setBottom(border);
         borders.setRight(border);
+    }
+
+    protected void removeIndentation(XWPFRun run) {
+        XWPFParagraph paragraph = (XWPFParagraph) run.getParent();
+        paragraph.setIndentationFirstLine(0);
     }
 }

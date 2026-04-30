@@ -1,7 +1,5 @@
 package ru.nsu.astakhov.autodocs.document.generator.table;
 
-import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
-import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
@@ -27,9 +25,7 @@ public class ThesisFrontPageTableProcessor extends TableProcessor {
         if (isColored) {
             run.setTextHighlightColor("yellow");
         }
-        XWPFParagraph paragraph = (XWPFParagraph) run.getParent();
-        paragraph.setAlignment(ParagraphAlignment.LEFT);
-        paragraph.setIndentationFirstLine(0);
+        removeIndentation(run);
 
         return run;
     }
