@@ -46,8 +46,10 @@ public class InternshipSupervisorReviewTableProcessor extends TableProcessor {
             String[] parts = competence.split("\n", -1);
             XWPFRun competenceRun = addTextInCell(row.getCell(1), parts[0]);
             for (int i = 1; i < parts.length; i++) {
-                competenceRun.addBreak();
-                competenceRun.setText(parts[i]);
+                if (!parts[i].isBlank()) {
+                    competenceRun.addBreak();
+                    competenceRun.setText(parts[i]);
+                }
             }
 
             XWPFRun markRun = addTextInCell(row.getCell(2), "X");
