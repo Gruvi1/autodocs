@@ -12,10 +12,44 @@ import java.util.List;
 import java.util.Map;
 
 public class ThesisSupervisorReviewTableProcessor extends TableProcessor {
+    private XWPFTable table;
+
     public void addCompetencies(XWPFTable table, Map<String, List<String>> competencies) {
         for (String key : competencies.keySet()) {
             addCompetence(table, key, competencies.get(key));
         }
+    }
+
+    public void addCoSupervisor(XWPFTable table) {
+        this.table = table;
+
+        addRow("Соруководитель", false, "", false);
+        addRow("$(соруководительВКР.имя)", true, "________________________", false);
+        addRow("$(соруководительвкр.должность.работангу)", true, "                       подпись", false);
+        // TODO: убрать явную дату
+        addRow("«31» мая 2026 г.", false, "", false);
+    }
+
+    private void addRow(String text1, boolean isColored1, String text2, boolean isColored2) {
+        int fontSize = 12;
+
+        XWPFTableRow row = removeAllCells(table.createRow());
+        addCell(row, text1, isColored1, fontSize);
+        addCell(row, text2, isColored2, fontSize);
+    }
+
+    private void addCell(XWPFTableRow row, String text, boolean isColored, int fontSize) {
+        // TODO: ну это пиздец :D
+        if (text.equals("                       подпись")) {
+            fontSize = 8;
+        }
+
+        XWPFTableCell cell = row.createCell();
+        XWPFRun run = addTextInCell(cell, text, fontSize);
+        if (isColored) {
+            run.setTextHighlightColor("yellow");
+        }
+        removeIndentation(run);
     }
 
     private void addCompetence(
@@ -27,22 +61,28 @@ public class ThesisSupervisorReviewTableProcessor extends TableProcessor {
         XWPFTableRow coreRow = table.createRow();
         removeAllCells(coreRow);
         XWPFTableCell coreCell = coreRow.createCell();
+        setCellBorders(coreCell);
         XWPFTableCell coreCell2 = coreRow.createCell();
+        setCellBorders(coreCell2);
         XWPFRun run = addTextInCell(coreCell, coreCompetence);
         run.setBold(true);
 
-
-        CTTc cell1 = coreCell2.getCTTc();
-        CTTcPr tcPr1 = cell1.isSetTcPr() ? cell1.getTcPr() : cell1.addNewTcPr();
+        CTTc cttCell1 = coreCell2.getCTTc();
+        CTTcPr tcPr1 = cttCell1.isSetTcPr() ? cttCell1.getTcPr() : cttCell1.addNewTcPr();
         tcPr1.addNewVMerge().setVal(STMerge.RESTART);
-
 
         for (String competence : competencies) {
             XWPFTableRow row  = table.createRow();
             removeAllCells(row);
-            addTextInCell(row.createCell(), competence);
-            CTTc cell2 = row.createCell().getCTTc();
-            CTTcPr tcPr2 = cell2.isSetTcPr() ? cell2.getTcPr() : cell2.addNewTcPr();
+
+            XWPFTableCell cell1 = row.createCell();
+            addTextInCell(cell1, competence);
+            setCellBorders(cell1);
+
+            XWPFTableCell cell2 = row.createCell();
+            setCellBorders(cell2);
+            CTTc cttCell2 = cell2.getCTTc();
+            CTTcPr tcPr2 = cttCell2.isSetTcPr() ? cttCell2.getTcPr() : cttCell2.addNewTcPr();
             tcPr2.addNewVMerge().setVal(STMerge.CONTINUE);
         }
     }

@@ -8,6 +8,7 @@ import ru.nsu.astakhov.autodocs.document.RussianWordDecliner;
 import ru.nsu.astakhov.autodocs.document.PreparedTemplateInfo;
 import ru.nsu.astakhov.autodocs.document.generator.table.ThesisAssignmentTableProcessor;
 import ru.nsu.astakhov.autodocs.document.generator.table.ThesisFrontPageTableProcessor;
+import ru.nsu.astakhov.autodocs.document.generator.table.ThesisSupervisorReviewTableProcessor;
 import ru.nsu.astakhov.autodocs.exceptions.GenderResolutionException;
 import ru.nsu.astakhov.autodocs.model.StudentDto;
 
@@ -337,6 +338,13 @@ public class DocumentGenerator extends AbstractGenerator<StudentDto> {
                     tableProcessor.addThesisConsultant(table);
                 }
             }
+            case "соруководительОтзыв" -> {
+                ThesisSupervisorReviewTableProcessor tableProcessor = new ThesisSupervisorReviewTableProcessor();
+                tableProcessor.removeMarkerRow(table, key);
+                if (hasCoSupervisor) {
+                    tableProcessor.addCoSupervisor(table);
+                }
+            }
             default -> applyDefaultReplacement(run, matcher, studentDto, key, result);
         }
     }
@@ -393,7 +401,13 @@ public class DocumentGenerator extends AbstractGenerator<StudentDto> {
                 || normalizedKey.equals("руководительорганизации.степень")
                 || normalizedKey.equals("руководительорганизации.звание")
                 || normalizedKey.equals("соруководительвкр.степень")
-                || normalizedKey.equals("соруководительвкр.звание");
+                || normalizedKey.equals("соруководительвкр.звание")
+                || normalizedKey.equals("рецензент");
+
+        if (normalizedKey.equals("руководительвкр.звание") && value.isBlank()
+        || normalizedKey.equals("рецензент") && value.isBlank()) {
+            value = " ";
+        }
 
         if (replaceWithValue) {
             matcher.appendReplacement(result, Matcher.quoteReplacement(value));
