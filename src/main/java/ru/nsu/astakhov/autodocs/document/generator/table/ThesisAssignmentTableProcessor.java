@@ -10,35 +10,35 @@ public class ThesisAssignmentTableProcessor extends TableProcessor {
     public void addCoSupervisor(XWPFTable table) {
         XWPFTableRow row1 = removeAllCells(table.createRow());
         XWPFTableCell row1Cell1 = row1.createCell();
-        addTextInCell(row1Cell1, "Соруководитель ВКР");
+        addTextInCell(row1Cell1, "Соруководитель ВКР", 12);
         row1.createCell();
 
         XWPFTableRow row2 = removeAllCells(table.createRow());
         XWPFTableCell row2Cell1 = row2.createCell();
-        XWPFRun run2 = addTextInCell(row2Cell1, "$(соруководительВКР.должность.работаНГУ)");
+        XWPFRun run2 = addTextInCell(row2Cell1, "$(соруководительВКР.должность.работаНГУ)", 12);
         run2.setTextHighlightColor("yellow");
         row2.createCell();
 
         XWPFTableRow row3 = removeAllCells(table.createRow());
         XWPFTableCell row3Cell1 = row3.createCell();
-        XWPFRun run3 = addTextInCell(row3Cell1, "$(соруководительВКР.степень.звание)");
+        XWPFRun run3 = addTextInCell(row3Cell1, "$(соруководительВКР.степень.звание)", 12);
         run3.setTextHighlightColor("yellow");
         row3.createCell();
 
         XWPFTableRow row4 = removeAllCells(table.createRow());
         XWPFTableCell row4Cell1 = row4.createCell();
-        XWPFRun run4 = addTextInCell(row4Cell1, "$(соруководительвкр.имяКратко)/…………..");
+        XWPFRun run4 = addTextInCell(row4Cell1, "$(соруководительвкр.имяКратко)/…………..", 12);
         run4.setTextHighlightColor("yellow");
         row4.createCell();
 
         XWPFTableRow row5 = removeAllCells(table.createRow());
         XWPFTableCell row5Cell1 = row5.createCell();
-        addTextInCell(row5Cell1, "             (ФИО) / (подпись)");
+        addTextInCell(row5Cell1, "             (ФИО) / (подпись)", 8);
         row5.createCell();
 
         XWPFTableRow row6 = removeAllCells(table.createRow());
         XWPFTableCell row6Cell1 = row6.createCell();
-        addTextInCell(row6Cell1, "$(общаяДатаПодписи)");
+        addTextInCell(row6Cell1, "$(общаяДатаПодписи)", 12);
         row6.createCell();
     }
 
